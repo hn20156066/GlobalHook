@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalHook", "GlobalHook\Gl
 		{8BDEA4ED-3D01-4CFC-B112-AE583BE4C934} = {8BDEA4ED-3D01-4CFC-B112-AE583BE4C934}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GlobalHookDll", "Dll\Dll.vcxproj", "{8BDEA4ED-3D01-4CFC-B112-AE583BE4C934}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dll", "Dll\Dll.vcxproj", "{8BDEA4ED-3D01-4CFC-B112-AE583BE4C934}"
 EndProject
 Global
 	GlobalSection(Performance) = preSolution
