@@ -171,6 +171,14 @@ namespace GH {
 			public IntPtr lpData;
 		}
 
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+		public struct COPYDATASTRUCT_LONG_ARRAY {
+			public IntPtr dwData;
+			public int cbData;
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 255)]
+			public long[] lpData;
+		}
+
 		public enum MOD_KEY : int {
 			ALT = 0x0001,
 			CTRL = 0x0002,

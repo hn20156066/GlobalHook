@@ -47,7 +47,8 @@ bool isFitWindows(true);
 bool isFitDisplay(true);
 bool isFitTaskbar(true);
 bool KeyHook(false);
-Neighbor neighbor{ 0 };
+//Neighbor neighbor{ 0 };
+intptr_t neighbors[255]{ 0 };
 std::vector<Movement> movement;
 TCHAR parentWindowText[255]{ 0 };
 TCHAR configWindowText[255]{ 0 };
@@ -560,7 +561,11 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				}
 				else {
 					// 移動中ウィンドウ
+					memset(neighbors, 0, sizeof(intptr_t) * 255);
+					int ncnt = 1;
 					if (isFitWindows) {
+						neighbors[0] = (intptr_t)mhex->hwnd;
+
 						for (int i = 0; i < (int)windows.size(); ++i) {
 							if (windows[i] == NULL) continue;
 
@@ -573,8 +578,10 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 							if (Magnet(mhex->hwnd, dif, rect[1], srcPos, minDiff, extSize, tempPos) != 0) {
 								if (GetKeyState(nGroupKey) & 0x8000) {
-									neighbor.parent = (intptr_t)windows[i];
-									neighbor.child = (intptr_t)windows[nMoving];
+									neighbors[ncnt] = (intptr_t)windows[i];
+									//neighbor.parent = (intptr_t)windows[i];
+									//neighbor.child = (intptr_t)windows[nMoving];
+									ncnt++;
 									bMagnetflag = true;
 								}
 							}
@@ -671,12 +678,12 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				bMoving = false;
 				ReleaseCapture();
 
-				if (bAddGroupFlag) {
+				if (bAddGroupFlag && neighbors[1] != NULL) {
 					parentHwnd = FindWindowEx(NULL, NULL, NULL, parentWindowText);
 
 					cdsNeighbor.dwData = 0;
-					cdsNeighbor.cbData = sizeof(Neighbor);
-					cdsNeighbor.lpData = &neighbor;
+					cdsNeighbor.cbData = sizeof(intptr_t) * 255;
+					cdsNeighbor.lpData = neighbors;
 
 					SendMessage(parentHwnd, WM_COPYDATA, 0, (LPARAM)&cdsNeighbor);
 

@@ -50,12 +50,21 @@ namespace GH {
 			switch (m.Msg) {
 
 				case WinAPI.WM_COPYDATA: // DLLからデータを受信
-					// 受信したデータを元の型にキャストして、追加する
-					WinAPI.COPYDATASTRUCT cds = (WinAPI.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT));
+										 // 受信したデータを元の型にキャストして、追加する
+										 //WinAPI.COPYDATASTRUCT cds = (WinAPI.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT));
 
-					WinAPI.Neighbor neighbor = (WinAPI.Neighbor)Marshal.PtrToStructure(cds.lpData, typeof(WinAPI.Neighbor));
-					GroupManager.AddItem(ref neighbor.parent, ref neighbor.child);
-					
+					//WinAPI.Neighbor neighbor = (WinAPI.Neighbor)Marshal.PtrToStructure(cds.lpData, typeof(WinAPI.Neighbor));
+					//GroupManager.AddItem(ref neighbor.parent, ref neighbor.child);
+
+					WinAPI.COPYDATASTRUCT_LONG_ARRAY cds = (WinAPI.COPYDATASTRUCT_LONG_ARRAY)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT_LONG_ARRAY));
+
+					for (int i = 0; i < cds.lpData.Length; ++i) {
+						if (cds.lpData[i] != 0) {
+							long h = (long)Marshal.PtrToStructure((IntPtr)cds.lpData[i], typeof(long));
+							Console.WriteLine(h);
+						}
+					}
+
 					break;
 
 				case WinAPI.WM_HOTKEY:
