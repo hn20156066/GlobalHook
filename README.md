@@ -1,27 +1,25 @@
 # GlobalHookProject
-Name
 ====
 
 Overview
 
-## Description
+## 概要
 
-## Demo
 
-## VS. 
+## 動作環境
+Windows10
+64bitのアプリケーション
+以下のアプリケーションには使用できません。
+・Excel・WordなどのMicrosoftOffice
+・タスクマネージャーなどのシステム
+・
 
-## Requirement
-
-## Usage
-
-## Install
+## 使用方法
 
 ## Contribution
 
 ## Licence
 
-[MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)
-
 ## Author
 
-[tcnksm](https://github.com/tcnksm)
+[hn20156066](https://github.com/hn20156066)
