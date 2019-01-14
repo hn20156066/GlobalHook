@@ -10,10 +10,10 @@ Overview
 Windows10  
 64bitのアプリケーション  
 動作しないもの  
-・32bitのアプリケーション  
-・Excel・WordなどのMicrosoftOffice  
-・タスクマネージャーなどのシステムアプリケーション  
-・UWPアプリ  
++ 32bitのアプリケーション  
++ Excel・WordなどのMicrosoftOffice  
++ タスクマネージャーなどのシステムアプリケーション  
++ UWPアプリ  
 
 ## 使用方法
 
