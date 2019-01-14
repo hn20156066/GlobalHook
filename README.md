@@ -7,12 +7,13 @@ Overview
 
 
 ## 動作環境
-Windows10
-64bitのアプリケーション
-以下のアプリケーションには使用できません。
-・Excel・WordなどのMicrosoftOffice
-・タスクマネージャーなどのシステム
-・
+Windows10  
+64bitのアプリケーション  
+動作しないもの  
+・32bitのアプリケーション  
+・Excel・WordなどのMicrosoftOffice  
+・タスクマネージャーなどのシステムアプリケーション  
+・UWPアプリ  
 
 ## 使用方法
 
