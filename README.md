@@ -3,19 +3,20 @@
 
 Overview
 
-## ŠT—v
+## æ¦‚è¦
 
 
-## “®ìŠÂ‹«
+## å‹•ä½œç’°å¢ƒ
 Windows10  
-64bit‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“  
-“®ì‚µ‚È‚¢‚à‚Ì  
-+ 32bit‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“  
-+ ExcelEWord‚È‚Ç‚ÌMicrosoftOffice  
-+ ƒ^ƒXƒNƒ}ƒl[ƒWƒƒ[‚È‚Ç‚ÌƒVƒXƒeƒ€ƒAƒvƒŠƒP[ƒVƒ‡ƒ“  
-+ UWPƒAƒvƒŠ  
+64bitã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ 
 
-## Žg—p•û–@
+å‹•ä½œã—ãªã„ã‚‚ã®  
++ 32bitã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³  
++ Excelãƒ»Wordãªã©ã®MicrosoftOffice  
++ ã‚¿ã‚¹ã‚¯ãƒžãƒãƒ¼ã‚¸ãƒ£ãƒ¼ãªã©ã®ã‚·ã‚¹ãƒ†ãƒ ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³  
++ UWPã‚¢ãƒ—ãƒª  
+
+## ä½¿ç”¨æ–¹æ³•
 
 ## Contribution
 
