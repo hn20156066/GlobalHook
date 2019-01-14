@@ -546,18 +546,6 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 						SetWindowPos(movement[i].hwnd, NULL, rect[1].left, rect[1].top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 					}
 
-					//TCHAR buf[1024] = { 0 };
-					//for (int i = 0; i < (int)tempdif.size(); ++i) {
-					//	swprintf_s(buf, TEXT("%s %d,%d "), buf, tempdif[i].x, tempdif[i].y);
-					//}
-					//hWinAppHandle = FindWindow(WinAppClassName, NULL);
-					//if (hWinAppHandle != NULL) {
-					//	HWND hChildWinHandle = FindWindowEx(hWinAppHandle, NULL, ChildWinClassName, NULL);
-					//	if (hChildWinHandle != NULL) {
-					//		SendMessage(hChildWinHandle, WM_SETTEXT, 0, (LPARAM)buf);
-					//	}
-					//}
-
 				}
 				else {
 					// 移動中ウィンドウ
@@ -1285,21 +1273,4 @@ void ModifiedRect(HWND hwnd, RECT& rect) {
 	rect.top = (LONG)round((double)rect.top / scale.cy);
 	rect.right = (LONG)round((double)rect.right / scale.cx);
 	rect.bottom = (LONG)round((double)rect.bottom / scale.cy);
-}
-
-void GetWindowRect3(HWND hwnd, RECT& rect) {
-	if (IsAeroEnabled()) {
-		TCHAR name[255];
-		GetClassName(hwnd, name, 255);
-		if (lstrcmpiW(name, TEXT("MozillaWindowClass")) == 0) {
-			GetWindowRect(hwnd, &rect);
-
-		}
-		else {
-			DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rect, sizeof(RECT));
-		}
-	}
-	else {
-		GetWindowRect(hwnd, &rect);
-	}
 }

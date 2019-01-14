@@ -20,6 +20,9 @@ namespace GH
 			if (GHManager.Initialize() == 0) {
 				Application.Run(GHManager.Launcher);
 			}
+			else {
+				MessageBox.Show("アプリケーションの起動に失敗しました。", "Error");
+			}
         }
     }
 }
