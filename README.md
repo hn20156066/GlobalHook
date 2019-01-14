@@ -21,8 +21,6 @@ Windows10
 + タスクマネージャーなどのシステムアプリケーション  
 + UWPアプリ  
 
-## Licence
-
-## Author
+## 作者
 
 [hn20156066](https://github.com/hn20156066)
