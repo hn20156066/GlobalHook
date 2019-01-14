@@ -21,10 +21,6 @@ Windows10
 + タスクマネージャーなどのシステムアプリケーション  
 + UWPアプリ  
 
-## 使用方法
-
-## Contribution
-
 ## Licence
 
 ## Author
