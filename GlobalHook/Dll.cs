@@ -22,7 +22,9 @@ namespace GH {
 		[return: MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
 		public static extern long KeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 		[DllImport("GlobalHookDll.dll", CharSet = CharSet.Unicode)]
-		private static extern void SetParentWindowText(char[] windowText);
+		private static extern void SetLauncherWindowText(char[] windowText);
+		[DllImport("GlobalHookDll.dll", CharSet = CharSet.Unicode)]
+		private static extern void SetSubWindowText(char[] mysetlist, char[] itemlist);
 		[DllImport("GlobalHookDll.dll", CharSet = CharSet.Unicode)]
 		public static extern void SetConfigWindowText(char[] windowText);
 		[DllImport("GlobalHookDll.dll")]
@@ -74,10 +76,11 @@ namespace GH {
 
 		private static bool DllLoadSuccess = false;
 
-		public static bool StartHook(string parentFormText) {
+		public static bool StartHook(string launcherText, string mysetText, string itemlistText) {
 
 			try {
-				SetParentWindowText(parentFormText.ToCharArray());
+				SetLauncherWindowText(launcherText.ToCharArray());
+				SetSubWindowText(mysetText.ToCharArray(), itemlistText.ToCharArray());
 				DllLoadSuccess = SetHook() != -1;
 			}
 			catch(Exception ex) {

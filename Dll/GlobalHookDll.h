@@ -21,7 +21,8 @@ extern "C" {
 	//_DLLEXPORT intptr_t GetParentWindow();
 	//_DLLEXPORT intptr_t GetChildWindow();
 	_DLLEXPORT DSIZE GetScale2(intptr_t hwnd);
-	_DLLEXPORT void SetParentWindowText(TCHAR windowText[]);
+	_DLLEXPORT void SetLauncherWindowText(TCHAR windowText[]);
+	_DLLEXPORT void SetSubWindowText(TCHAR mysetlist[], TCHAR itemlist[]);
 	_DLLEXPORT void SetConfigWindowText(TCHAR windowText[]);
 	_DLLEXPORT int SetHook();
 	_DLLEXPORT int ResetHook();

@@ -50,7 +50,9 @@ bool KeyHook(false);
 //Neighbor neighbor{ 0 };
 intptr_t neighbors[255]{ 0 };
 std::vector<Movement> movement;
-TCHAR parentWindowText[255]{ 0 };
+TCHAR launcherWindowText[255]{ 0 };
+TCHAR mysetlistWindowText[255]{ 0 };
+TCHAR itemlistWindowText[255]{ 0 };
 TCHAR configWindowText[255]{ 0 };
 #pragma data_seg()
 
@@ -105,9 +107,16 @@ _DLLEXPORT DSIZE GetScale2(intptr_t hwnd) {
 	return scale;
 }
 
-_DLLEXPORT void SetParentWindowText(TCHAR windowText[]) {
-	memset(parentWindowText, 0, sizeof(TCHAR) * 255);
-	lstrcpyn(parentWindowText, windowText, 255);
+_DLLEXPORT void SetLauncherWindowText(TCHAR windowText[]) {
+	memset(launcherWindowText, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(launcherWindowText, windowText, 255);
+}
+
+_DLLEXPORT void SetSubWindowText(TCHAR mysetlist[], TCHAR itemlist[]) {
+	memset(mysetlistWindowText, 0, sizeof(TCHAR) * 255);
+	memset(itemlistWindowText, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(mysetlistWindowText, mysetlist, 255);
+	lstrcpyn(itemlistWindowText, itemlist, 255);
 }
 
 _DLLEXPORT void SetConfigWindowText(TCHAR windowText[]) {
@@ -177,7 +186,7 @@ _DLLEXPORT UINT GetMoveKey() {
 }
 
 _DLLEXPORT void GetWindows(intptr_t* arr, int length) {
-	for (int i = 0; i < windows.size() && i < length; ++i) {
+	for (int i = 0; i < (int)windows.size() && i < length; ++i) {
 		if (windows[i] == NULL) {
 			arr[i] = 0;
 		}
@@ -245,7 +254,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					{
 						UINT nCount = 0;
 						windows.clear();
-						parentHwnd = FindWindowEx(NULL, NULL, NULL, parentWindowText);
+						parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
 						EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
 
 						RECT rect[2];
@@ -464,10 +473,8 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					struct { int x, y; } baseIdx = { 0, 0 };
 					POINT srcDif = { 0,0 };
 					memset(neighbors, 0, sizeof(intptr_t) * 255);
-					for (int i = 0; i < (int)movement.size(); ++i) {
-						neighbors[i] = (intptr_t)movement[i].hwnd;
-					}
-					int ncnt = movement.size();
+					neighbors[0] = (intptr_t)movement[0].hwnd;
+					int ncnt = 1;
 
 					// 移動ウィンドウがひっつく位置を取得
 					for (int i = 0; i < (int)movement.size(); ++i) {
@@ -502,7 +509,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 							if ((tdir = Magnet(movement[i].hwnd, dif, rect[1], srcPos, minDiff, extSize, tempPos)) != 0) {
 								if (GetKeyState(nGroupKey) & 0x8000) {
-									neighbors[ncnt] = (intptr_t)windows[i];
+									neighbors[ncnt] = (intptr_t)windows[j];
 									ncnt++;
 									bMagnetflag = true;
 								}
@@ -532,6 +539,10 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 								baseIdx.y = i;
 							}
 						}
+					}
+
+					for (int i = 1; i < (int)movement.size(); ++i) {
+						neighbors[ncnt++] = (intptr_t)movement[i].hwnd;
 					}
 
 					GetWindowRect2(movement[baseIdx.x].hwnd, &rect[0]);
@@ -680,7 +691,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				ReleaseCapture();
 
 				if (bAddGroupFlag && neighbors[1] != NULL) {
-					parentHwnd = FindWindowEx(NULL, NULL, NULL, parentWindowText);
+					parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
 
 					cdsNeighbor.dwData = 0;
 					cdsNeighbor.cbData = sizeof(intptr_t) * 255;
@@ -771,8 +782,17 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 
 	GetWindowText(hWnd, windowText, 255);
 
-	if (_tcsncmp(parentWindowText, windowText, 255) == 0) {
-		return TRUE;
+	TCHAR* excludeWindowText[4] = {
+		launcherWindowText,
+		mysetlistWindowText,
+		itemlistWindowText,
+		configWindowText
+	};
+
+	for (int i = 0; i < 4; ++i) {
+		if (_tcsncmp(excludeWindowText[i], windowText, 255) == 0) {
+			return TRUE;
+		}
 	}
 
 	// 可視かつ親のウィンドウを表示＆格納

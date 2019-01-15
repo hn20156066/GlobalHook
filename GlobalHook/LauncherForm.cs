@@ -62,7 +62,7 @@ namespace GH {
 						Console.WriteLine(cds.lpData[i] + ":" + stringBuilder);
 					}
 
-					//GroupManager.AddItems(ref dest);
+					GroupManager.AddItems(ref dest);
 
 					break;
 
@@ -83,7 +83,9 @@ namespace GH {
 		private void Launcher_Load(object sender, EventArgs e) {
 
 			Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
-			
+			GHManager.MysetList.Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
+			GHManager.ItemList.Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
+
 			// タスクトレイに追加
 			AddNotifyIcon();
 
@@ -104,7 +106,7 @@ namespace GH {
 			Controls.Add(MysetIcon.control);
 			
 			// フック開始
-			if (!Dll.StartHook(Text)) {
+			if (!Dll.StartHook(Text, GHManager.MysetList.Text, GHManager.ItemList.Text)) {
 				Application.Exit();
 			}
 

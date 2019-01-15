@@ -128,38 +128,89 @@ namespace GH {
 		/// <summary>
 		/// 複数のアイテムを追加
 		/// </summary>
-		/// <param name="items">追加するウィンドウハンドル</param>
+		/// <param name="hwnds">追加するウィンドウハンドル</param>
 		/// <returns></returns>
-		public static bool AddItems(ref long[] items, bool concurrent) {
-			if (items.Length < 2) return false;
-			int moving = InGroup(ref items[0]);
-			int idx = -1;
-			if (!concurrent) {
-				// 新規グループ
-				if (moving == -1) {
-					AddGroup();
-					GroupList.Last().AddItem(ref items[0]);
-					for (int i = 1; i < items.Length; ++i) {
-						if ((idx = InGroup(ref items[i])) != -1) {
-							GroupList[idx].DeleteItem(ref items[i]);
-						}
-						GroupList.Last().AddItem(ref items[i]);
+		public static bool AddItems(ref long[] hwnds) {
+			if (hwnds.Length < 2) return false;
+
+			int[] index = new int[hwnds.Length];
+			for (int i = 0; i < hwnds.Length; ++i) index[i] = InGroup(ref hwnds[i]);
+			var items = new { hwnds, index };
+
+			// ウィンドウ移動
+			if (hwnds.Length == 2) {
+				// 移動ウィンドウが非グループ
+				if (items.index[0] == -1) {
+					// ひっつくウィンドウが非グループ
+					if (items.index[1] == -1) {
+						AddGroup();
+						GroupList.Last().AddItem(ref items.hwnds[0]);
+						GroupList.Last().AddItem(ref items.hwnds[1]);
+					}
+					else {
+						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
 					}
 				}
 				else {
-					int src = InGroup(ref items[1]);
-
-					for (int i = 1; i < items.Length; ++i) {
-						if ((idx = InGroup(ref items[i])) != -1) {
-							GroupList[idx].DeleteItem(ref items[i]);
+					// ひっつくウィンドウが非グループ
+					if (items.index[1] == -1) {
+						GroupList[items.index[0]].AddItem(ref items.hwnds[1]);
+					}
+					else {
+						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						GroupList[items.index[0]].DeleteItem(ref items.hwnds[0]);
+					}
+				}
+			}			
+			else {
+				// 移動ウィンドウが非グループ
+				if (items.index[0] == -1) {
+					// ひっつくウィンドウが非グループ
+					if (items.index[1] == -1) {
+						AddGroup();
+						GroupList.Last().AddItem(ref items.hwnds[0]);
+						GroupList.Last().AddItem(ref items.hwnds[1]);
+						for (int i = 2; i < items.hwnds.Length; ++i) {
+							GroupList.Last().AddItem(ref items.hwnds[i]);
+							if (items.index[i] != -1) {
+								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+							}
 						}
-						GroupList[moving].AddItem(ref items[i]);
+					}
+					else {
+						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						for (int i = 2; i < items.hwnds.Length; ++i) {
+							GroupList[items.index[1]].AddItem(ref items.hwnds[i]);
+							if (items.index[i] != -1) {
+								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+							}
+						}
+					}
+				}
+				else {
+					// ひっつくウィンドウが非グループ
+					if (items.index[1] == -1) {
+						GroupList[items.index[0]].AddItem(ref items.hwnds[1]);
+						for (int i = 2; i < items.hwnds.Length; ++i) {
+							GroupList[items.index[0]].AddItem(ref items.hwnds[i]);
+							if (items.index[i] != -1) {
+								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+							}
+						}
+					}
+					else {
+						GroupList[items.index[0]].DeleteItem(ref items.hwnds[0]);
+						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						for (int i = 2; i < items.hwnds.Length; ++i) {
+							GroupList[items.index[1]].AddItem(ref items.hwnds[i]);
+							if (items.index[i] != -1) {
+								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+							}
+						}
 					}
 				}
 			}
-			else {
 
-			}
 			return true;
 		}
 
