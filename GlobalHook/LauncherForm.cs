@@ -51,21 +51,18 @@ namespace GH {
 
 				case WinAPI.WM_COPYDATA: // DLLからデータを受信
 										 // 受信したデータを元の型にキャストして、追加する
-										 //WinAPI.COPYDATASTRUCT cds = (WinAPI.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT));
-
-					//WinAPI.Neighbor neighbor = (WinAPI.Neighbor)Marshal.PtrToStructure(cds.lpData, typeof(WinAPI.Neighbor));
-					//GroupManager.AddItem(ref neighbor.parent, ref neighbor.child);
 
 					WinAPI.COPYDATASTRUCT_LONG_ARRAY cds = (WinAPI.COPYDATASTRUCT_LONG_ARRAY)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT_LONG_ARRAY));
-					StringBuilder stringBuilder = new StringBuilder(8);
+					StringBuilder stringBuilder = new StringBuilder(255);
 					long[] dest = new long[255];
 					for (int i = 0, j = 0; i < cds.lpData.Length; ++i) {
 						if (cds.lpData[i] == 0) continue;
 						if (WinAPI.GetWindowText((IntPtr)cds.lpData[i], stringBuilder, stringBuilder.Capacity) == 0) continue;
 						dest[j++] = cds.lpData[i];
+						Console.WriteLine(cds.lpData[i] + ":" + stringBuilder);
 					}
 
-					GroupManager.AddItems(ref dest);
+					//GroupManager.AddItems(ref dest);
 
 					break;
 

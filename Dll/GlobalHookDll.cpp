@@ -463,6 +463,11 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					POINT basePos = { mhex->pt.x - rect[1].left, mhex->pt.y - rect[1].top };
 					struct { int x, y; } baseIdx = { 0, 0 };
 					POINT srcDif = { 0,0 };
+					memset(neighbors, 0, sizeof(intptr_t) * 255);
+					for (int i = 0; i < (int)movement.size(); ++i) {
+						neighbors[i] = (intptr_t)movement[i].hwnd;
+					}
+					int ncnt = movement.size();
 
 					// 移動ウィンドウがひっつく位置を取得
 					for (int i = 0; i < (int)movement.size(); ++i) {
@@ -493,7 +498,17 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 							if (IsRectNull(rect[1])) continue;
 
-							dir |= Magnet(movement[i].hwnd, dif, rect[1], srcPos, minDiff, extSize, tempPos);
+							int tdir = 0;
+
+							if ((tdir = Magnet(movement[i].hwnd, dif, rect[1], srcPos, minDiff, extSize, tempPos)) != 0) {
+								if (GetKeyState(nGroupKey) & 0x8000) {
+									neighbors[ncnt] = (intptr_t)windows[i];
+									ncnt++;
+									bMagnetflag = true;
+								}
+							}
+
+							dir |= tdir;
 						}
 
 						if (isFitDisplay) {
