@@ -567,8 +567,6 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 							if (Magnet(mhex->hwnd, dif, rect[1], srcPos, minDiff, extSize, tempPos) != 0) {
 								if (GetKeyState(nGroupKey) & 0x8000) {
 									neighbors[ncnt] = (intptr_t)windows[i];
-									//neighbor.parent = (intptr_t)windows[i];
-									//neighbor.child = (intptr_t)windows[nMoving];
 									ncnt++;
 									bMagnetflag = true;
 								}
@@ -957,8 +955,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.left - dif.x - srcPos.x - ptCurFromLT.x) < minDiff.cx) {
 				minDiff.cx = abs(rect2.left - dif.x - srcPos.x - ptCurFromLT.x);
 				tempPos.x = rect2.left + ptCurFromLT.x - dif.x;
-				dir |= 0x01;
 			}
+				dir |= 0x01;
 		}
 	}
 	// 他のウィンドウの右側
@@ -967,8 +965,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.right - dif.x - srcPos.x - ptCurFromLT.x) < minDiff.cx) {
 				minDiff.cx = abs(rect2.right - dif.x - srcPos.x - ptCurFromLT.x);
 				tempPos.x = rect2.right + ptCurFromLT.x - dif.x;
-				dir |= 0x01;
 			}
+				dir |= 0x01;
 		}
 	}
 	// 移動中のウィンドウの右側
@@ -978,8 +976,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.right - dif.x - srcPos.x - ptCurFromLT.x) < minDiff.cx) {
 				minDiff.cx = abs(rect2.right - dif.x - srcPos.x - ptCurFromLT.x);
 				tempPos.x = rect2.right - extSize.cx + ptCurFromLT.x - dif.x;
-				dir |= 0x04;
 			}
+				dir |= 0x04;
 		}
 	}
 	// 他のウィンドウの左側
@@ -988,8 +986,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.left - dif.x - srcPos.x - ptCurFromLT.x) < minDiff.cx) {
 				minDiff.cx = abs(rect2.left - dif.x - srcPos.x - ptCurFromLT.x);
 				tempPos.x = rect2.left - extSize.cx + ptCurFromLT.x - dif.x;
-				dir |= 0x04;
 			}
+				dir |= 0x04;
 		}
 	}
 	// 移動中のウィンドウの上
@@ -999,8 +997,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.top - srcPos.y - ptCurFromLT.y) < minDiff.cy) {
 				minDiff.cy = abs(rect2.top - srcPos.y - ptCurFromLT.y);
 				tempPos.y = rect2.top + ptCurFromLT.y;
-				dir |= 0x02;
 			}
+				dir |= 0x02;
 		}
 	}
 	// 他のウィンドウの下
@@ -1009,8 +1007,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.bottom - srcPos.y - ptCurFromLT.y) < minDiff.cy) {
 				minDiff.cy = abs(rect2.bottom - srcPos.y - ptCurFromLT.y);
 				tempPos.y = rect2.bottom + ptCurFromLT.y;
-				dir |= 0x02;
 			}
+				dir |= 0x02;
 		}
 	}
 	// 移動中のウィンドウの下
@@ -1020,8 +1018,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.bottom - srcPos.y - ptCurFromLT.y) < minDiff.cy) {
 				minDiff.cy = abs(rect2.bottom - srcPos.y - ptCurFromLT.y);
 				tempPos.y = rect2.bottom - extSize.cy + ptCurFromLT.y;
-				dir |= 0x08;
 			}
+				dir |= 0x08;
 		}
 	}
 	// 他のウィンドウの上
@@ -1030,8 +1028,8 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 			if (abs(rect2.top - srcPos.y - ptCurFromLT.y) < minDiff.cy) {
 				minDiff.cy = abs(rect2.top - srcPos.y - ptCurFromLT.y);
 				tempPos.y = rect2.top - extSize.cy + ptCurFromLT.y;
-				dir |= 0x08;
 			}
+				dir |= 0x08;
 		}
 	}
 

@@ -126,6 +126,37 @@ namespace GH {
 		}
 
 		/// <summary>
+		/// 複数のアイテムを追加
+		/// </summary>
+		/// <param name="items">追加するウィンドウハンドル</param>
+		/// <returns></returns>
+		public static bool AddItems(ref long[] items) {
+			if (items.Length < 2) return false;
+			int parent = InGroup(ref items[0]);
+			int idx = -1;
+			if (parent == -1) {
+				AddGroup();
+				GroupList.Last().AddItem(ref items[0]);
+				for (int i = 1; i < items.Length; ++i) {
+					if ((idx = InGroup(ref items[i])) != -1) {
+						GroupList[idx].DeleteItem(ref items[i]);
+					}
+					GroupList.Last().AddItem(ref items[i]);
+				}
+			}
+			else {
+				for (int i = 1; i < items.Length; ++i) {
+					if ((idx = InGroup(ref items[i])) != -1) {
+						GroupList[idx].DeleteItem(ref items[i]);
+					}
+					GroupList[parent].AddItem(ref items[i]);
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		/// アイテムの追加
 		/// </summary>
 		/// <param name="parent">ウィンドウのハンドル</param>

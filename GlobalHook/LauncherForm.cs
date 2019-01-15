@@ -57,13 +57,15 @@ namespace GH {
 					//GroupManager.AddItem(ref neighbor.parent, ref neighbor.child);
 
 					WinAPI.COPYDATASTRUCT_LONG_ARRAY cds = (WinAPI.COPYDATASTRUCT_LONG_ARRAY)Marshal.PtrToStructure(m.LParam, typeof(WinAPI.COPYDATASTRUCT_LONG_ARRAY));
-
-					for (int i = 0; i < cds.lpData.Length; ++i) {
-						if (cds.lpData[i] != 0) {
-							long h = (long)Marshal.PtrToStructure((IntPtr)cds.lpData[i], typeof(long));
-							Console.WriteLine(h);
-						}
+					StringBuilder stringBuilder = new StringBuilder(8);
+					long[] dest = new long[255];
+					for (int i = 0, j = 0; i < cds.lpData.Length; ++i) {
+						if (cds.lpData[i] == 0) continue;
+						if (WinAPI.GetWindowText((IntPtr)cds.lpData[i], stringBuilder, stringBuilder.Capacity) == 0) continue;
+						dest[j++] = cds.lpData[i];
 					}
+
+					GroupManager.AddItems(ref dest);
 
 					break;
 
