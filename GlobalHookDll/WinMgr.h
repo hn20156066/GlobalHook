@@ -5,7 +5,7 @@ class WinMgr {
 private:
 
 
-	static Window noFitWindows[255];
+	//static Window noFitWindows[255];
 
 public:
 	static std::vector<HWND> windows;

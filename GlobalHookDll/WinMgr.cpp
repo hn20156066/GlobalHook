@@ -1,4 +1,6 @@
-#include "GlobalHookDll.h"
+#include "stdafx.h"
+
+BOOL(__stdcall *WinMgr::GetWindowRect2)(HWND, LPRECT);
 
 BOOL CALLBACK WinMgr::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	INT* lpCount = (INT *)lParam;

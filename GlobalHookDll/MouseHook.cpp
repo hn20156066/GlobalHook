@@ -1,4 +1,7 @@
-#include "GlobalHookDll.h"
+#include "stdafx.h"
+
+HWND MouseHook::parentHwnd;
+COPYDATASTRUCT MouseHook::cdsNeighbor;
 
 bool MouseHook::Init() {
 	MouseHook::mHook = SetWindowsHookEx(WH_MOUSE, MouseHookProc, DLL::hInst, 0);

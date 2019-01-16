@@ -1,6 +1,6 @@
 #pragma once
 
-class MouseHook {
+class _DLLEXPORT MouseHook {
 
 private:
 

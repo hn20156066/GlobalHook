@@ -1,6 +1,7 @@
 #pragma once
 
 extern "C" {
+	_DLLEXPORT LRESULT CALLBACK CwpHook::CwpHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
