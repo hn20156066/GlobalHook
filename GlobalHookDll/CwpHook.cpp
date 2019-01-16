@@ -17,35 +17,33 @@ LRESULT CALLBACK CwpHook::CwpHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (nCode == HC_ACTION) {
 		switch (p->message) {
 			case WM_SYSCOMMAND:
-				GetScale(p->hwnd, scale);
+				WinMgr::GetScale(p->hwnd, scale);
 
 				switch (wp) {
 					case SC_MOVE: // 移動開始時
 					{
-						UINT nCount = 0;
-						windows.clear();
-						parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
-						EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
+						WinMgr::UpdateWindows();
+						parentHwnd = FindWindowEx(NULL, NULL, NULL, WinMgr::launcherWindowText);
 
 						RECT rect[2];
 
 						GetWindowRect(p->hwnd, &rect[0]);
-						GetWindowRect2(p->hwnd, &rect[1]);
-						ModifiedRect(p->hwnd, rect[1]);
+						WinMgr::GetWindowRect2(p->hwnd, &rect[1]);
+						WinMgr::ModifiedRect(p->hwnd, rect[1]);
 
 						// 移動するウィンドウの番号を取得
-						nMoving = GetWindowIndex(p->hwnd);
+						WinMgr::nMoving = WinMgr::GetWindowIndex(p->hwnd);
 
 						// 番号取得に失敗した場合終了
-						if (nMoving < 0) break;
-						if (nMoving >= windows.size()) break;
+						if (WinMgr::nMoving < 0) break;
+						if (WinMgr::nMoving >= WinMgr::windows.size()) break;
 
-						movement.clear();
+						WinMgr::movement.clear();
 						Movement move;
-						move.hwnd = windows[nMoving];
-						movement.push_back(move);
+						move.hwnd = WinMgr::windows[WinMgr::nMoving];
+						WinMgr::movement.push_back(move);
 
-						if (GetKeyState(nMoveKey) & 0x8000) {
+						if (GetKeyState(WinMgr::nMoveKey) & 0x8000) {
 							RECT src, ref;
 
 							int added = 0;
@@ -56,29 +54,29 @@ LRESULT CALLBACK CwpHook::CwpHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 								for (int q = 0; q < 2; ++q) {
 									// すべてのウィンドウ
-									for (int i = 0; i < (int)windows.size(); ++i) {
+									for (int i = 0; i < (int)WinMgr::windows.size(); ++i) {
 										// 表示されているウィンドウのみ
-										if (!IsWindowVisible(windows[i])) continue;
+										if (!IsWindowVisible(WinMgr::windows[i])) continue;
 
 										// すでに登録されていたら次へ
-										auto itr = std::find(movement.begin(), movement.end(), windows[i]);
-										size_t index = std::distance(movement.begin(), itr);
-										if (index != movement.size())
+										auto itr = std::find(WinMgr::movement.begin(), WinMgr::movement.end(), WinMgr::windows[i]);
+										size_t index = std::distance(WinMgr::movement.begin(), itr);
+										if (index != WinMgr::movement.size())
 											continue;
 
 										// ウィンドウサイズ取得
-										GetWindowRect2(windows[i], &ref);
-										ModifiedRect(windows[i], ref);
+										WinMgr::GetWindowRect2(WinMgr::windows[i], &ref);
+										WinMgr::ModifiedRect(WinMgr::windows[i], ref);
 
 										// 登録ウィンドウすべて
-										for (int j = 0; j < (int)movement.size(); ++j) {
+										for (int j = 0; j < (int)WinMgr::movement.size(); ++j) {
 											// ウィンドウサイズ取得
-											GetWindowRect2(movement[j].hwnd, &src);
-											ModifiedRect(movement[j].hwnd, src);
+											WinMgr::GetWindowRect2(WinMgr::movement[j].hwnd, &src);
+											WinMgr::ModifiedRect(WinMgr::movement[j].hwnd, src);
 
-											if (MatchNeighborWindow(src, ref)) {
-												move.hwnd = windows[i];
-												movement.push_back(move);
+											if (WinMgr::MatchNeighborWindow(src, ref)) {
+												move.hwnd = WinMgr::windows[i];
+												WinMgr::movement.push_back(move);
 												added++;
 
 												break;
@@ -88,38 +86,38 @@ LRESULT CALLBACK CwpHook::CwpHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
 								}
 							} while (added != 0);
 
-							for (int i = 0; i < (int)movement.size(); ++i) {
-								if (movement[i].hwnd == p->hwnd) continue;
-								SetWindowPos(movement[i].hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
-								SetWindowPos(movement[i].hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+							for (int i = 0; i < (int)WinMgr::movement.size(); ++i) {
+								if (WinMgr::movement[i].hwnd == p->hwnd) continue;
+								SetWindowPos(WinMgr::movement[i].hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+								SetWindowPos(WinMgr::movement[i].hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 							}
 							SetWindowPos(p->hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 							SetWindowPos(p->hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 						}
 						SendMessage(p->hwnd, WM_CANCELMODE, 0, 0);
-						bMoving = true;
+						WinMgr::bMoving = true;
 						SetCapture(p->hwnd);
 						GetWindowRect(p->hwnd, &rect[0]);
-						GetWindowRect2(p->hwnd, &rect[1]);
-						ModifiedRect(p->hwnd, rect[1]);
+						WinMgr::GetWindowRect2(p->hwnd, &rect[1]);
+						WinMgr::ModifiedRect(p->hwnd, rect[1]);
 
 						POINT dif = { rect[1].left - rect[0].left, rect[1].top - rect[0].top };
 						LONG x = (LONG)((double)LOWORD(p->lParam));
 						LONG y = (LONG)((double)HIWORD(p->lParam));
-						ptCurFromLT.x = x + dif.x - rect[1].left;
-						ptCurFromLT.y = y + dif.y - rect[1].top;
+						WinMgr::ptCurFromLT.x = x + dif.x - rect[1].left;
+						WinMgr::ptCurFromLT.y = y + dif.y - rect[1].top;
 
-						TCHAR buf[1024] = { 0 };
-						swprintf_s(buf, TEXT("%d,%d "), dif.x, dif.y);
-						hWinAppHandle = FindWindow(WinAppClassName, NULL);
-						if (hWinAppHandle != NULL) {
-							HWND hChildWinHandle = FindWindowEx(hWinAppHandle, NULL, ChildWinClassName, NULL);
-							if (hChildWinHandle != NULL) {
-								SendMessage(hChildWinHandle, WM_SETTEXT, 0, (LPARAM)buf);
-							}
-						}
+						//TCHAR buf[1024] = { 0 };
+						//swprintf_s(buf, TEXT("%d,%d "), dif.x, dif.y);
+						//hWinAppHandle = FindWindow(WinAppClassName, NULL);
+						//if (hWinAppHandle != NULL) {
+						//	HWND hChildWinHandle = FindWindowEx(hWinAppHandle, NULL, ChildWinClassName, NULL);
+						//	if (hChildWinHandle != NULL) {
+						//		SendMessage(hChildWinHandle, WM_SETTEXT, 0, (LPARAM)buf);
+						//	}
+						//}
 
-						CallNextHookEx(hookCwp, nCode, wParam, lParam);
+						CallNextHookEx(CwpHook::cHook, nCode, wParam, lParam);
 						break;
 					}
 					case SC_SIZE:

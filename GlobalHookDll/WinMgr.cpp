@@ -1,6 +1,6 @@
 #include "GlobalHookDll.h"
 
-BOOL CALLBACK WindowController::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
+BOOL CALLBACK WinMgr::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	INT* lpCount = (INT *)lParam;
 	LONG style = GetWindowLong(hWnd, GWL_STYLE);
 	LONG exstyle = GetWindowLong(hWnd, GWL_EXSTYLE);
@@ -34,7 +34,7 @@ BOOL CALLBACK WindowController::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	return TRUE;
 }
 
-int WindowController::Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE extSize, POINT& tempPos) {
+int WinMgr::Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE extSize, POINT& tempPos) {
 	DSIZE scale;
 	GetScale(hwnd, scale);
 
@@ -132,7 +132,7 @@ int WindowController::Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, S
 	return dir;
 }
 
-int WindowController::GetWindowIndex(HWND& hwnd) {
+int WinMgr::GetWindowIndex(HWND& hwnd) {
 	if (hwnd == NULL) return -1;
 
 	for (int i = 0; i < (int)windows.size(); i++) {
@@ -142,4 +142,131 @@ int WindowController::GetWindowIndex(HWND& hwnd) {
 	}
 
 	return -1;
+}
+
+bool WinMgr::IsRectNull(RECT& rect) {
+	return ((rect.left | rect.top | rect.right | rect.bottom) == 0x00);
+}
+
+void WinMgr::SetDwmapi() {
+	if (IsAeroEnabled()) {
+		GetWindowRect2 = DwmGetWindowAttribute_;
+	}
+	else {
+		GetWindowRect2 = GetWindowRect;
+	}
+}
+
+// Aeroが有効か判定 / 有効=TRUE
+bool WinMgr::IsAeroEnabled() {
+	BOOL bAero = FALSE;
+
+	DwmIsCompositionEnabled(&bAero);
+
+	return bAero != FALSE;
+}
+
+// GetWindowsRect の引数と戻り値の型を合わせる
+BOOL __stdcall WinMgr::DwmGetWindowAttribute_(HWND hWnd, LPRECT lpRect) {
+	HRESULT h = DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, lpRect, sizeof(RECT));
+	return SUCCEEDED(h);
+}
+
+// スケールの取得
+void WinMgr::GetScale(HWND hwnd, DSIZE& dSize) {
+	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+	MONITORINFOEX monInfo;
+	monInfo.cbSize = sizeof(MONITORINFOEX);
+	GetMonitorInfo(hMonitor, &monInfo);
+
+	// モニター物理座標
+	DEVMODE devMode;
+	devMode.dmSize = sizeof(DEVMODE);
+	devMode.dmDriverExtra = sizeof(POINTL);
+	devMode.dmFields = DM_POSITION;
+	EnumDisplaySettings(monInfo.szDevice, ENUM_CURRENT_SETTINGS, &devMode);
+
+	// ワーク物理座標
+	SIZE logicalDesktopSize;
+	logicalDesktopSize.cx = monInfo.rcMonitor.right - monInfo.rcMonitor.left;
+	logicalDesktopSize.cy = monInfo.rcMonitor.bottom - monInfo.rcMonitor.top;
+
+	dSize.cx = (double)devMode.dmPelsWidth / (double)logicalDesktopSize.cx;
+	dSize.cy = (double)devMode.dmPelsHeight / (double)logicalDesktopSize.cy;
+}
+
+// モニターの物理座標を取得
+void WinMgr::GetMonitorRect(HWND hwnd, RECT& rect) {
+	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+	MONITORINFOEX monInfo;
+	monInfo.cbSize = sizeof(MONITORINFOEX);
+	GetMonitorInfo(hMonitor, &monInfo);
+
+	DEVMODE devMode;
+	devMode.dmSize = sizeof(DEVMODE);
+	devMode.dmDriverExtra = sizeof(POINTL);
+	devMode.dmFields = DM_POSITION;
+	EnumDisplaySettings(monInfo.szDevice, ENUM_CURRENT_SETTINGS, &devMode);
+
+	rect.left = devMode.dmPosition.x;
+	rect.top = devMode.dmPosition.y;
+	rect.right = devMode.dmPosition.x + devMode.dmPelsWidth;
+	rect.bottom = devMode.dmPosition.y + devMode.dmPelsHeight;
+
+	ModifiedRect(hwnd, rect);
+}
+
+// ワークの論理座標を取得
+void WinMgr::GetWorkRect(HWND hwnd, RECT& rect) {
+	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+	MONITORINFOEX monInfo;
+	monInfo.cbSize = sizeof(MONITORINFOEX);
+	GetMonitorInfo(hMonitor, &monInfo);
+
+	// 物理座標系のワーク矩形
+	rect = monInfo.rcWork;
+}
+
+void WinMgr::ModifiedRect(HWND hwnd, RECT& rect) {
+	DSIZE scale;
+	GetScale(hwnd, scale);
+	rect.left = (LONG)round((double)rect.left / scale.cx);
+	rect.top = (LONG)round((double)rect.top / scale.cy);
+	rect.right = (LONG)round((double)rect.right / scale.cx);
+	rect.bottom = (LONG)round((double)rect.bottom / scale.cy);
+}
+
+void WinMgr::UpdateWindows() {
+	UINT nCount = 0;
+	windows.clear();
+	EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
+}
+
+void WinMgr::GetWindows(intptr_t* hwnds, int length) {
+	for (int i = 0; i < (int)windows.size() && i < length; ++i) {
+		if (windows[i] == NULL) {
+			hwnds[i] = 0;
+		}
+		else {
+			hwnds[i] = (intptr_t)windows[i];
+		}
+	}
+}
+
+bool WinMgr::MatchNeighborWindow(const RECT& rect1, const RECT& rect2) {
+
+	if (rect1.left == rect2.left || rect1.left == rect2.right ||
+		rect1.right == rect2.left || rect1.right == rect2.right) {
+		if (rect2.bottom >= rect1.top && rect1.bottom >= rect2.top) {
+			return true;
+		}
+	}
+	if (rect1.top == rect2.top || rect1.top == rect2.bottom ||
+		rect1.bottom == rect2.top || rect1.bottom == rect2.bottom) {
+		if (rect2.right >= rect1.left && rect1.right >= rect2.left) {
+			return true;
+		}
+	}
+
+	return false;
 }
