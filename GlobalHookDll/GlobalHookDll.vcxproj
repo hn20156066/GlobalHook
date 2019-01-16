@@ -159,12 +159,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CwpHook.h" />
-    <ClInclude Include="export.h" />
     <ClInclude Include="GlobalHookDll.h" />
+    <ClInclude Include="Hook.h" />
     <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="MouseHook.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="struct.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WindowController.h" />
   </ItemGroup>
@@ -182,7 +181,6 @@
     <ClCompile Include="WindowController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="GlobalHookDll.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

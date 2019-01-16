@@ -3,13 +3,13 @@
 class MouseHook {
 
 private:
-
-	static HHOOK mHook;
+	Hook* mHook;
+	const int id;
 
 public:
 
-	static bool Init();
-	static bool Fin();
-	static LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
+	MouseHook(HINSTANCE hInst);
+	~MouseHook();
+
 
 };
