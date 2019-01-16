@@ -3,6 +3,12 @@
 
 #define _DLLEXPORT __declspec(dllexport)
 
+#include "Hook.h"
+#include "MouseHook.h"
+#include "CwpHook.h"
+#include "KeyboardHook.h"
+#include "WindowController.h"
+
 struct Window
 {
 	char* className;

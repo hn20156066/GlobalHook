@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "GlobalHookDll.h"
 
-#define IDM_TEST 200
 
 typedef struct {
 	HWND hwnd;
@@ -15,10 +14,10 @@ typedef struct {
 	}
 } Movement;
 
-typedef struct {
-	intptr_t parent;
-	intptr_t child;
-} Neighbor;
+//typedef struct {
+//	intptr_t parent;
+//	intptr_t child;
+//} Neighbor;
 
 typedef struct {
 	unsigned int keyflag;
@@ -716,27 +715,9 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	return CallNextHookEx(hookMouse, nCode, wParam, lParam);
 }
 
-void EditSystemMenu(HWND hwnd) {
-	HMENU hMenu = GetSystemMenu(hwnd, FALSE);
-
-	/*MENUITEMINFO mi;
-	memset(&mi, 0, sizeof(MENUITEMINFO));
-	mi.cbSize = sizeof(MENUITEMINFO);
-	mi.fMask = MIIM_TYPE | MIIM_ID;
-	mi.fType = MFT_STRING;
-	mi.wID = IDM_TEST;
-	wsprintf(mi.dwTypeData, TEXT("test"));
-	mi.cch = lstrlen(TEXT("test"));
-
-	InsertMenuItem(hMenu, 0, TRUE, &mi);
-	*/
-
-	InsertMenu(hMenu, 0, MF_BYPOSITION, IDM_TEST, L"test");
-}
-
 _DLLEXPORT int SetHook() {
 	if (hInst == NULL) return 0;
-
+		
 	hookCwp = SetWindowsHookEx(WH_CALLWNDPROC, (HOOKPROC)CwpProc, hInst, 0);
 	hookKeyboard = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC)KeyboardProc, hInst, 0);
 	hookMouse = SetWindowsHookEx(WH_MOUSE, (HOOKPROC)MouseProc, hInst, 0);
@@ -744,12 +725,6 @@ _DLLEXPORT int SetHook() {
 	UINT nCount = 0;
 	windows.clear();
 	EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
-
-	//for (int i = 0; i < GROUP_MAX * WINDOW_MAX; ++i)
-	//{
-	//	if (windows[i].hwnd == NULL) continue;
-	//	EditSystemMenu(windows[i].hwnd);
-	//}
 
 	if (hookCwp == NULL || hookMouse == NULL || hookKeyboard == NULL) {
 		//ƒtƒbƒNŽ¸”s
