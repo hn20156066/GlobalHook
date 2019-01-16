@@ -1,6 +1,4 @@
-#include "stdafx.h"
-
-HWND CwpHook::parentHwnd;
+#include "GlobalHookDll.h"
 
 bool CwpHook::Init() {
 	CwpHook::cHook = SetWindowsHookEx(WH_MOUSE, CwpHookProc, DLL::hInst, 0);

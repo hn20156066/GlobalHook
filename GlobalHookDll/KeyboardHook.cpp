@@ -1,6 +1,4 @@
-#include "stdafx.h"
-
-HWND KeyboardHook::configHwnd;
+#include "GlobalHookDll.h"
 
 bool KeyboardHook::Init() {
 	KeyboardHook::kHook = SetWindowsHookEx(WH_MOUSE, KeyboardHookProc, DLL::hInst, 0);
@@ -12,9 +10,9 @@ bool KeyboardHook::Fin() {
 }
 
 LRESULT CALLBACK KeyboardHook::KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
-	if (WinMgr::KeyHook) {
+	if (KeyHook) {
 		if (nCode == HC_ACTION) {
-			configHwnd = FindWindowEx(NULL, NULL, NULL, WinMgr::configWindowText);
+			configHwnd = FindWindowEx(NULL, NULL, NULL, configWindowText);
 
 			KBDLLHOOKSTRUCT* pk = (KBDLLHOOKSTRUCT*)lParam;
 			Key key;
@@ -51,5 +49,5 @@ LRESULT CALLBACK KeyboardHook::KeyboardHookProc(int nCode, WPARAM wParam, LPARAM
 		}
 	}
 
-	return CallNextHookEx(KeyboardHook::kHook, nCode, wParam, lParam);
+	return CallNextHookEx(hookKeyboard, nCode, wParam, lParam);
 }

@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-//#include "GlobalHookDll.h"
-
-HINSTANCE DLL::hInst;
+#include "GlobalHookDll.h"
 
 #pragma data_seg(".shareddata")
 HHOOK CwpHook::cHook(NULL);
@@ -20,7 +18,7 @@ int WinMgr::nGroupKey(VK_SHIFT);
 int WinMgr::nMoveKey(VK_CONTROL);
 bool WinMgr::bAddGroupFlag(false);
 std::vector<HWND> WinMgr::windows;
-//Window WinMgr::noFitWindows[255];
+Window WinMgr::noFitWindows[255];
 int WinMgr::nFitRange(10);
 int WinMgr::nFitRangeMax(100);
 int WinMgr::nFitRangeMin(0);

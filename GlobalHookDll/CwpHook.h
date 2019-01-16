@@ -1,6 +1,6 @@
 #pragma once
 
-class _DLLEXPORT CwpHook {
+class CwpHook {
 
 private:
 

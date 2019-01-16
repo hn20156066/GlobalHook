@@ -1,11 +1,10 @@
 #pragma once
 
-class _DLLEXPORT KeyboardHook {
+class KeyboardHook {
 
 private:
 
 	static HHOOK kHook;
-	static HWND configHwnd;
 
 public:
 

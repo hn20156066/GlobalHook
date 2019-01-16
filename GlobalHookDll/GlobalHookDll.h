@@ -1,7 +1,14 @@
 #pragma once
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #define _DLLEXPORT __declspec(dllexport)
+
+#include "struct.h"
+
+#include "MouseHook.h"
+#include "CwpHook.h"
+#include "KeyboardHook.h"
+#include "WinMgr.h"
 
 
 
