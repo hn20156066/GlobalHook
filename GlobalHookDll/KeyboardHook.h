@@ -1,14 +1,15 @@
 #pragma once
 
 class KeyboardHook {
+
 private:
-	
-	Hook* kHook;
+
+	static HHOOK kHook;
 
 public:
 
-	KeyboardHook(HINSTANCE hInst);
-	~KeyboardHook();
-
+	static bool Init();
+	static bool Fin();
+	static LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 };

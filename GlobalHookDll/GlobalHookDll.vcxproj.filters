@@ -36,7 +36,10 @@
     <ClInclude Include="KeyboardHook.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Hook.h">
+    <ClInclude Include="export.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -64,5 +67,6 @@
     <None Include="GlobalHookDll.def">
       <Filter>ソース ファイル</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>
