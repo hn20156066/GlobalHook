@@ -5,7 +5,6 @@ class CwpHook {
 private:
 
 	static HHOOK cHook;
-	static HWND parentHwnd;
 
 public:
 

@@ -8,7 +8,7 @@
 #include "MouseHook.h"
 #include "CwpHook.h"
 #include "KeyboardHook.h"
-#include "WinMgr.h"
+#include "WindowController.h"
 
 
 

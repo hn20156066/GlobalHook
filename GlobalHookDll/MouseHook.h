@@ -5,8 +5,6 @@ class MouseHook {
 private:
 
 	static HHOOK mHook;
-	static HWND parentHwnd;
-	static COPYDATASTRUCT cdsNeighbor;
 
 public:
 
