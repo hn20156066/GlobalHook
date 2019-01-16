@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include "GlobalHookDll.h"
 
-#define IDM_TEST 200
-
 typedef struct {
 	HWND hwnd;
 	POINT temp;
@@ -68,8 +66,6 @@ HWND hWinAppHandle;
 
 BOOL(__stdcall *GetWindowRect2)(HWND, LPRECT);
 
-//static void GetWindowRect3(HWND, RECT&);
-
 static void SetDwmapi();
 static bool IsAeroEnabled();
 static BOOL __stdcall DwmGetWindowAttribute_(HWND, LPRECT);
@@ -77,29 +73,11 @@ static int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDif
 static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
 static int GetWindowIndex(HWND& hwnd);
 static bool IsRectNull(RECT& rect);
-static void NeighborWindowRegister(); // 隣接ウィンドウを登録
-static void BeforeWindowMoving(const CWPSTRUCT* p); // ウィンドウ移動前
-static void BeforeWindowSizing(const CWPSTRUCT* p); // ウィンドウサイズ変更前
 static bool MatchNeighborWindow(const RECT& rect1, const RECT& rect2);
 void GetMonitorRect(HWND hwnd, RECT& rect);
 void GetWorkRect(HWND hwnd, RECT& rect);
 void GetScale(HWND hwnd, DSIZE& scale);
 void ModifiedRect(HWND hwnd, RECT& rect);
-//void GetWindowRect_(HWND hwnd, RECT rect[2]);
-
-//_DLLEXPORT intptr_t GetParentWindow()
-//{
-//	intptr_t parent = neighbor[0];
-//	neighbor[0] = 0;
-//	return parent;
-//}
-//
-//_DLLEXPORT intptr_t GetChildWindow()
-//{
-//	intptr_t child = neighbor[1];
-//	neighbor[1] = 0;
-//	return child;
-//}
 
 _DLLEXPORT DSIZE GetScale2(intptr_t hwnd) {
 	DSIZE scale;
@@ -441,8 +419,8 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	POINT dif = { 0, 0 };
 	bool bMagnetflag = false;
 	//// 最大化ウィンドウを無視
-	//if (IsZoomed(mhex->hwnd))
-	//	return CallNextHookEx(hookMouse, nCode, wParam, lParam);
+	if (IsZoomed(mhex->hwnd))
+		return CallNextHookEx(hookMouse, nCode, wParam, lParam);
 
 	DSIZE scale;
 	GetScale(mhex->hwnd, scale);
@@ -716,24 +694,6 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	return CallNextHookEx(hookMouse, nCode, wParam, lParam);
 }
 
-void EditSystemMenu(HWND hwnd) {
-	HMENU hMenu = GetSystemMenu(hwnd, FALSE);
-
-	/*MENUITEMINFO mi;
-	memset(&mi, 0, sizeof(MENUITEMINFO));
-	mi.cbSize = sizeof(MENUITEMINFO);
-	mi.fMask = MIIM_TYPE | MIIM_ID;
-	mi.fType = MFT_STRING;
-	mi.wID = IDM_TEST;
-	wsprintf(mi.dwTypeData, TEXT("test"));
-	mi.cch = lstrlen(TEXT("test"));
-
-	InsertMenuItem(hMenu, 0, TRUE, &mi);
-	*/
-
-	InsertMenu(hMenu, 0, MF_BYPOSITION, IDM_TEST, L"test");
-}
-
 _DLLEXPORT int SetHook() {
 	if (hInst == NULL) return 0;
 
@@ -744,12 +704,6 @@ _DLLEXPORT int SetHook() {
 	UINT nCount = 0;
 	windows.clear();
 	EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
-
-	//for (int i = 0; i < GROUP_MAX * WINDOW_MAX; ++i)
-	//{
-	//	if (windows[i].hwnd == NULL) continue;
-	//	EditSystemMenu(windows[i].hwnd);
-	//}
 
 	if (hookCwp == NULL || hookMouse == NULL || hookKeyboard == NULL) {
 		//フック失敗
@@ -807,171 +761,6 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 
 	return TRUE;
 }
-
-//int Magnet(int src, int ref, RECT& rect2, MoveInfo& mv)
-//{
-//	int d = 0;
-//	int bPos, mPos, sPos;
-//	int var1, var2, var3, var4;
-//	bool b1, b2;
-//
-//	bPos = ref == 0 ? rect2.left - 7 :
-//		ref == 2 ? rect2.right - 7 :
-//		ref == 1 ? rect2.top :
-//		ref == 3 ? rect2.bottom : 0;
-//
-//	mPos = src % 2 == 0 ? mv.pt.x - ptCurFromLT.x : mv.pt.y - ptCurFromLT.y;
-//
-//	sPos = src >= 2 ? ref % 2 == 0 ? mv.size.cx : mv.size.cy : 0;
-//
-//	b1 = src <= 1 ? bPos - nFitRange < mPos && mPos < bPos + nFitRange :
-//		bPos + nFitRange > mPos + sPos && mPos + sPos > bPos - nFitRange;
-// 
-//	if (b1)
-//	{
-//		b2 = src % 2 == 0 ? (rect2.top - mv.size.cy - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange) :
-//			(rect2.left - mv.size.cx - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange);
-//
-//		if (b2)
-//		{
-//			if (abs(bPos - mPos) < src % 2 == 0 ? mv.minx : mv.miny)
-//			{
-//				if (ref % 2 == 0)
-//				{
-//					mv.minx = abs(bPos - mPos);
-//					mv.temp.x = bPos - sPos + mPos;
-//					d = ref == 0 ? 0x01 : 0x04;
-//				}
-//				else
-//				{
-//					mv.miny = abs(bPos - mPos);
-//					mv.temp.y = bPos - sPos + mPos;
-//					d = ref == 1 ? 0x01 : 0x04;
-//				}
-//
-//				d = 1 ^ src;
-//			}
-//		}
-//	}
-//
-//	return d;
-//}
-
-//int Magnet(RECT& rect2, MoveInfo& mv)
-//{
-//	int dir = 0;
-//
-//	// 移動中のウィンドウの左側
-//	// 他のウィンドウの左側
-//	if (rect2.left - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.left - 7 + nFitRange)
-//	{
-//		if (rect2.top - mv.size.cy - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange)
-//		{
-//			if (abs(rect2.left - 7 - mv.pt.x - ptCurFromLT.x) < mv.minx)
-//			{
-//				mv.minx = abs(rect2.left - 7 - mv.pt.x - ptCurFromLT.x);
-//				mv.temp.x = rect2.left + ptCurFromLT.x - 7;
-//				dir |= 0x01;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの右側
-//	if (rect2.right - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange)
-//	{
-//		if (rect2.top - mv.size.cy - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange)
-//		{
-//			if (abs(rect2.right - 7 - mv.pt.x - ptCurFromLT.x) < mv.minx)
-//			{
-//				mv.minx = abs(rect2.right - 7 - mv.pt.x - ptCurFromLT.x);
-//				mv.temp.x = rect2.right + ptCurFromLT.x - 7;
-//				dir |= 0x01;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの右側
-//	// 他のウィンドウの右側
-//	if (rect2.right - 7 + nFitRange > mv.pt.x - ptCurFromLT.x + mv.size.cx && mv.pt.x - ptCurFromLT.x + mv.size.cx > rect2.right - 7 - nFitRange)
-//	{
-//		if (rect2.top - mv.size.cy - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange)
-//		{
-//			if (abs(rect2.right - 7 - mv.pt.x - ptCurFromLT.x) < mv.minx)
-//			{
-//				mv.minx = abs(rect2.right - 7 - mv.pt.x - ptCurFromLT.x);
-//				mv.temp.x = rect2.right - mv.size.cx + ptCurFromLT.x - 7;
-//				dir |= 0x04;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの左側
-//	if (rect2.left - 7 + nFitRange > mv.pt.x - ptCurFromLT.x + mv.size.cx && mv.pt.x - ptCurFromLT.x + mv.size.cx > rect2.left - 7 - nFitRange)
-//	{
-//		if (rect2.top - mv.size.cy - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange)
-//		{
-//			if (abs(rect2.left - 7 - mv.pt.x - ptCurFromLT.x) < mv.minx)
-//			{
-//				mv.minx = abs(rect2.left - 7 - mv.pt.x - ptCurFromLT.x);
-//				mv.temp.x = rect2.left - mv.size.cx + ptCurFromLT.x - 7;
-//				dir |= 0x04;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの上
-//	// 他のウィンドウの上
-//	if (rect2.top - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.top + nFitRange)
-//	{
-//		if (rect2.left - mv.size.cx - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange)
-//		{
-//			if (abs(rect2.top - mv.pt.y - ptCurFromLT.y) < mv.miny)
-//			{
-//				mv.miny = abs(rect2.top - mv.pt.y - ptCurFromLT.y);
-//				mv.temp.y = rect2.top + ptCurFromLT.y;
-//				dir |= 0x02;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの下
-//	if (rect2.bottom - nFitRange < mv.pt.y - ptCurFromLT.y && mv.pt.y - ptCurFromLT.y < rect2.bottom + nFitRange)
-//	{
-//		if (rect2.left - mv.size.cx - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange)
-//		{
-//			if (abs(rect2.bottom - mv.pt.y - ptCurFromLT.y) < mv.miny)
-//			{
-//				mv.miny = abs(rect2.bottom - mv.pt.y - ptCurFromLT.y);
-//				mv.temp.y = rect2.bottom + ptCurFromLT.y;
-//				dir |= 0x02;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの下
-//	// 他のウィンドウの下
-//	if (rect2.bottom + nFitRange > mv.pt.y - ptCurFromLT.y + mv.size.cy && mv.pt.y - ptCurFromLT.y + mv.size.cy > rect2.bottom - nFitRange)
-//	{
-//		if (rect2.left - mv.size.cx - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange)
-//		{
-//			if (abs(rect2.bottom - mv.pt.y - ptCurFromLT.y) < mv.miny)
-//			{
-//				mv.miny = abs(rect2.bottom - mv.pt.y - ptCurFromLT.y);
-//				mv.temp.y = rect2.bottom - mv.size.cy + ptCurFromLT.y;
-//				dir |= 0x08;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの上
-//	if (rect2.top + nFitRange > mv.pt.y - ptCurFromLT.y + mv.size.cy && mv.pt.y - ptCurFromLT.y + mv.size.cy > rect2.top - nFitRange)
-//	{
-//		if (rect2.left - mv.size.cx - 7 - nFitRange < mv.pt.x - ptCurFromLT.x && mv.pt.x - ptCurFromLT.x < rect2.right - 7 + nFitRange)
-//		{
-//			if (abs(rect2.top - mv.pt.y - ptCurFromLT.y) < mv.miny)
-//			{
-//				mv.miny = abs(rect2.top - mv.pt.y - ptCurFromLT.y);
-//				mv.temp.y = rect2.top - mv.size.cy + ptCurFromLT.y;
-//				dir |= 0x08;
-//			}
-//		}
-//	}
-//
-//	return dir;
-//}
 
 int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE extSize, POINT& tempPos) {
 	DSIZE scale;
@@ -1071,104 +860,6 @@ int Magnet(HWND& hwnd, POINT dif, RECT& rect2, POINT srcPos, SIZE& minDiff, SIZE
 	return dir;
 }
 
-//int Magnet(HWND& hwnd, POINT dif, RECT& rect2, int x, int y, int& minx, int& miny, int aeroh, int aerow, int& tempX, int& tempY) {
-//	DSIZE scale;
-//	GetScale(hwnd, scale);
-//
-//	POINT fit;
-//	fit.x = (LONG)((double)nFitRange / scale.cx);
-//	fit.y = (LONG)((double)nFitRange / scale.cy);
-//	//int dif = (int)((double)7 / scale.cx);
-//
-//	int dir = 0;
-//	// 移動中のウィンドウの左側
-//	// 他のウィンドウの左側
-//	if (rect2.left - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.left - dif.x + fit.x) {
-//		if (rect2.top - aeroh - dif.y - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.bottom - dif.y + fit.y) {
-//			if (abs(rect2.left - dif.x - x - ptCurFromLT.x) < minx) {
-//				minx = abs(rect2.left - dif.x - x - ptCurFromLT.x);
-//				tempX = rect2.left + ptCurFromLT.x - dif.x;
-//				dir |= 0x01;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの右側
-//	if (rect2.right - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.right - dif.x + fit.x) {
-//		if (rect2.top - aeroh - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.bottom + fit.y) {
-//			if (abs(rect2.right - dif.x - x - ptCurFromLT.x) < minx) {
-//				minx = abs(rect2.right - dif.x - x - ptCurFromLT.x);
-//				tempX = rect2.right + ptCurFromLT.x - dif.x;
-//				dir |= 0x01;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの右側
-//	// 他のウィンドウの右側
-//	if (rect2.right - dif.x + fit.x > x - ptCurFromLT.x + aerow && x - ptCurFromLT.x + aerow > rect2.right - dif.x - fit.x) {
-//		if (rect2.top - aeroh - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.bottom + fit.y) {
-//			if (abs(rect2.right - dif.x - x - ptCurFromLT.x) < minx) {
-//				minx = abs(rect2.right - dif.x - x - ptCurFromLT.x);
-//				tempX = rect2.right - aerow + ptCurFromLT.x - dif.x;
-//				dir |= 0x04;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの左側
-//	if (rect2.left - dif.x + fit.x > x - ptCurFromLT.x + aerow && x - ptCurFromLT.x + aerow > rect2.left - dif.x - fit.x) {
-//		if (rect2.top - aeroh - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.bottom + fit.y) {
-//			if (abs(rect2.left - dif.x - x - ptCurFromLT.x) < minx) {
-//				minx = abs(rect2.left - dif.x - x - ptCurFromLT.x);
-//				tempX = rect2.left - aerow + ptCurFromLT.x - dif.x;
-//				dir |= 0x04;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの上
-//	// 他のウィンドウの上
-//	if (rect2.top - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.top + fit.y) {
-//		if (rect2.left - aerow - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.right - dif.x + fit.x) {
-//			if (abs(rect2.top - y - ptCurFromLT.y) < miny) {
-//				miny = abs(rect2.top - y - ptCurFromLT.y);
-//				tempY = rect2.top + ptCurFromLT.y;
-//				dir |= 0x02;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの下
-//	if (rect2.bottom - fit.y < y - ptCurFromLT.y && y - ptCurFromLT.y < rect2.bottom + fit.y) {
-//		if (rect2.left - aerow - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.right - dif.x + fit.x) {
-//			if (abs(rect2.bottom - y - ptCurFromLT.y) < miny) {
-//				miny = abs(rect2.bottom - y - ptCurFromLT.y);
-//				tempY = rect2.bottom + ptCurFromLT.y;
-//				dir |= 0x02;
-//			}
-//		}
-//	}
-//	// 移動中のウィンドウの下
-//	// 他のウィンドウの下
-//	if (rect2.bottom + fit.y > y - ptCurFromLT.y + aeroh && y - ptCurFromLT.y + aeroh > rect2.bottom - fit.y) {
-//		if (rect2.left - aerow - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.right - dif.x + fit.x) {
-//			if (abs(rect2.bottom - y - ptCurFromLT.y) < miny) {
-//				miny = abs(rect2.bottom - y - ptCurFromLT.y);
-//				tempY = rect2.bottom - aeroh + ptCurFromLT.y;
-//				dir |= 0x08;
-//			}
-//		}
-//	}
-//	// 他のウィンドウの上
-//	if (rect2.top + fit.y > y - ptCurFromLT.y + aeroh && y - ptCurFromLT.y + aeroh > rect2.top - fit.y) {
-//		if (rect2.left - aerow - dif.x - fit.x < x - ptCurFromLT.x && x - ptCurFromLT.x < rect2.right - dif.x + fit.x) {
-//			if (abs(rect2.top - y - ptCurFromLT.y) < miny) {
-//				miny = abs(rect2.top - y - ptCurFromLT.y);
-//				tempY = rect2.top - aeroh + ptCurFromLT.y;
-//				dir |= 0x08;
-//			}
-//		}
-//	}
-//
-//	return dir;
-//}
-
 bool IsRectNull(RECT& rect) {
 	return ((rect.left | rect.top | rect.right | rect.bottom) == 0x00);
 }
@@ -1209,24 +900,7 @@ BOOL __stdcall DwmGetWindowAttribute_(HWND hWnd, LPRECT lpRect) {
 	return SUCCEEDED(h);
 }
 
-void NeighborWindowRegister() {
-
-}
-
-void BeforeWindowMoving(const CWPSTRUCT* p) {
-
-}
-
-void BeforeWindowSizing(const CWPSTRUCT* p) {
-
-}
-
 bool MatchNeighborWindow(const RECT& rect1, const RECT& rect2) {
-	//bool w = (rect1.left == rect2.left || rect1.left == rect2.right ||
-	//	rect1.right == rect2.left || rect1.right == rect1.right);
-
-	//bool h = (rect1.top == rect2.top || rect1.top == rect2.bottom ||
-	//	rect1.bottom == rect2.top || rect1.bottom || rect2.bottom);
 
 	if (rect1.left == rect2.left || rect1.left == rect2.right ||
 		rect1.right == rect2.left || rect1.right == rect2.right) {

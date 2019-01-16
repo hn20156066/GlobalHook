@@ -18,8 +18,6 @@ extern "C" {
 	_DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-	//_DLLEXPORT intptr_t GetParentWindow();
-	//_DLLEXPORT intptr_t GetChildWindow();
 	_DLLEXPORT DSIZE GetScale2(intptr_t hwnd);
 	_DLLEXPORT void SetLauncherWindowText(TCHAR windowText[]);
 	_DLLEXPORT void SetSubWindowText(TCHAR mysetlist[], TCHAR itemlist[]);
