@@ -57,9 +57,9 @@ namespace GH {
 					long[] dest = new long[255];
 					for (int i = 0, j = 0; i < cds.lpData.Length; ++i) {
 						if (cds.lpData[i] == 0) continue;
+						if (dest.Contains(cds.lpData[i])) continue;
 						if (WinAPI.GetWindowText((IntPtr)cds.lpData[i], stringBuilder, stringBuilder.Capacity) == 0) continue;
 						dest[j++] = cds.lpData[i];
-						Console.WriteLine(cds.lpData[i] + ":" + stringBuilder);
 					}
 
 					GroupManager.AddItems(ref dest);
@@ -218,6 +218,11 @@ namespace GH {
 				// グループとグループアイテムの情報を更新
 				GroupManager.UpdateGroup();
 			}
+		}
+
+		private void MenuItem_ResetDLL_Click(object sender, EventArgs e) {
+			Dll.EndHook();
+			Dll.StartHook(Text, GHManager.MysetList.Text, GHManager.ItemList.Text);
 		}
 
 		/// <summary>
@@ -460,7 +465,11 @@ namespace GH {
 				ContextMenu = notifyIconMenu
 			};
 
-			MenuItem menuItem = new MenuItem("設定(&S)", MenuItem_Config_Click);
+			MenuItem menuItem = new MenuItem("DLLの再起動", MenuItem_ResetDLL_Click);
+			notifyIconMenu.MenuItems.Add(menuItem);
+			menuItem = new MenuItem("-");
+			notifyIconMenu.MenuItems.Add(menuItem);
+			menuItem = new MenuItem("設定(&S)", MenuItem_Config_Click);
 			notifyIconMenu.MenuItems.Add(menuItem);
 			menuItem = new MenuItem("-");
 			notifyIconMenu.MenuItems.Add(menuItem);
