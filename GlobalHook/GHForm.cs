@@ -29,6 +29,9 @@ namespace GH {
 			AnimationStopwatch = new Stopwatch();
 			Shown += (sender, e) => TopMost = true;
 			Enter += (sender, e) => HideTimer.Stop();
+			TempControl = new Control();
+			Controls.Add(TempControl);
+			NoSelectItem();
 		}
 
 		// マウス操作
@@ -51,6 +54,9 @@ namespace GH {
 				_SelectIndex = value;
 			}
 		}
+
+		// 何も選択しないときの選択するコントロール
+		private Control TempControl { get; set; }
 
 		// タスクのトークン
 		private CancellationTokenSource TokenSource { get; set; }
@@ -706,6 +712,11 @@ namespace GH {
 					_SelectIndex = 0;
 				}
 			}
+		}
+
+		public void NoSelectItem() {
+			TempControl.Focus();
+			TempControl.Select();
 		}
 
 		/// <summary>

@@ -17,7 +17,7 @@ namespace GH {
 		/// <summary>
 		/// グループアイテム
 		/// </summary>
-		public List<GroupItem> GroupItems;
+		public List<GroupItem> Items;
 
 		/// <summary>
 		/// グループアイコン
@@ -41,7 +41,7 @@ namespace GH {
 		/// </summary>
 		/// <param name="name">グループ名</param>
 		public Group() {
-			GroupItems = new List<GroupItem>();
+			Items = new List<GroupItem>();
 			icon = new GHIcon(SkinImage.Launcher_Item, FormType.Launcher);
 			icon.control.MouseEnter += new EventHandler(Group_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Group_Control_Leave);
@@ -87,7 +87,7 @@ namespace GH {
 		/// メニューの すべて閉じる をクリックした時のイベント
 		/// </summary>
 		private void MenuItem_AllClose_Click(object sender, EventArgs e) {
-			foreach (var item in GroupItems) {
+			foreach (var item in Items) {
 				WinAPI.SendMessage((IntPtr)item.Handle, WinAPI.WM_CLOSE, 0, 0);
 			}
 		}
@@ -105,19 +105,19 @@ namespace GH {
 		private void MenuItem_AutoTile_Click(object sender, EventArgs e) {
 
 			int tileCnt = 0;
-			if (GroupItems.Count == 1) {
-				if (GHProcess.IsMinimize((IntPtr)GroupItems.First().Handle)) {
+			if (Items.Count == 1) {
+				if (GHProcess.IsMinimize((IntPtr)Items.First().Handle)) {
 					return;
 				}
-				DwmAPI.GetWindowRect((IntPtr)GroupItems[0].Handle, out Rectangle rect);
-				GroupItems[0].PrevRect = rect;
-				GHProcess.Maximize((IntPtr)GroupItems[0].Handle);
+				DwmAPI.GetWindowRect((IntPtr)Items[0].Handle, out Rectangle rect);
+				Items[0].PrevRect = rect;
+				GHProcess.Maximize((IntPtr)Items[0].Handle);
 				tileCnt++;
 			}
 			else {
-				int column = (int)(Math.Ceiling((decimal)((GroupItems.Count - 1) / 7.0f)) + 1);
+				int column = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
 				int[] row = new int[column];
-				int cnt = GroupItems.Count;
+				int cnt = Items.Count;
 				int col = column;
 				for (int i = 0; i < row.Length; ++i) {
 					row[i] = (int)(Math.Floor((decimal)(cnt / col)));
@@ -142,7 +142,7 @@ namespace GH {
 				for (int i = 0; i < column; ++i) {
 					height = (workRect.Height / row[i]);
 					for (int j = 0; j < row[i]; ++j) {
-						Handle = (IntPtr)GroupItems[n].Handle;
+						Handle = (IntPtr)Items[n].Handle;
 						if (GHProcess.IsMinimize(Handle)) {
 							GHProcess.Normalize(Handle);
 						}
@@ -150,7 +150,7 @@ namespace GH {
 						DwmAPI.GetWindowRect(Handle, out Rectangle rect2);
 						int dif = rect2.Left - rect1.left;
 
-						GroupItems[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
+						Items[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
 						WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * i - dif + workRect.Left, height * j + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
 						WinAPI.SetWindowPos(Handle, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
 						++n;
@@ -163,7 +163,7 @@ namespace GH {
 		}
 
 		private void MenuItem_AutoTilePrev_Click(object sender, EventArgs e) {
-			foreach (var item in GroupItems) {
+			foreach (var item in Items) {
 				if (GHProcess.IsMinimize((IntPtr)item.Handle)) {
 					GHProcess.Normalize((IntPtr)item.Handle);
 				}
@@ -191,7 +191,7 @@ namespace GH {
 			if (hwnd == 0L)
 				return;
 
-			GroupItems.Add(new GroupItem(ref hwnd));
+			Items.Add(new GroupItem(ref hwnd));
 
 		}
 
@@ -204,13 +204,13 @@ namespace GH {
 			int n = InGroup(ref hwnd);
 
 			if (n != -1) {
-				DeleteItem(GroupItems[n]);
+				DeleteItem(Items[n]);
 			}
 		}
 
 		public void DeleteItem(int idx) {
-			if (0 <= idx && idx < GroupItems.Count) {
-				DeleteItem(GroupItems[idx]);
+			if (0 <= idx && idx < Items.Count) {
+				DeleteItem(Items[idx]);
 			}
 		}
 
@@ -221,7 +221,7 @@ namespace GH {
 		public void DeleteItem(GroupItem item) {
 
 			item.icon.control.Dispose();
-			GroupItems.Remove(item);
+			Items.Remove(item);
 			item = null;
 		}
 
@@ -242,7 +242,7 @@ namespace GH {
 		/// <param name="graph">描画先</param>
 		public void DrawItems(ref Graphics graph) {
 
-			foreach (var item in GroupItems) {
+			foreach (var item in Items) {
 				item.Draw(ref graph);
 			}
 
@@ -259,7 +259,7 @@ namespace GH {
 			int column = GHManager.Settings.Style.ItemList.Column;
 			int baseX = rect.X;
 
-			foreach (var item in GroupItems.Select((item, i) => new { item, i })) {
+			foreach (var item in Items.Select((item, i) => new { item, i })) {
 				item.item.icon.SetRect(ref rect);
 				rect.X += itemSize + pad;
 
@@ -277,8 +277,8 @@ namespace GH {
 		/// <returns></returns>
 		public int InGroup(ref long hwnd) {
 
-			for (int i = 0; i < GroupItems.Count; ++i) {
-				if (GroupItems[i].Handle == hwnd) {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].Handle == hwnd) {
 					return i;
 				}
 			}
@@ -351,15 +351,15 @@ namespace GH {
 		/// <returns></returns>
 		public bool GroupUpdate() {
 
-			for (int i = 0; i < GroupItems.Count; ++i) {
-				if (!GroupItems[i].UpdateItem()) {
-					DeleteItem(GroupItems[i]);
+			for (int i = 0; i < Items.Count; ++i) {
+				if (!Items[i].UpdateItem()) {
+					DeleteItem(Items[i]);
 				}
 			}
 
 			SetGroupIcon();
 
-			if (GroupItems.Count <= 0) {
+			if (Items.Count <= 0) {
 				return false;
 			}
 			else {
@@ -372,8 +372,8 @@ namespace GH {
 		/// アイテムリストにアイテムを追加
 		/// </summary>
 		public void AddItems() {
-			for (int i = 0; i < GroupItems.Count; ++i) {
-				GHManager.ItemList.Controls.Add(GroupItems[i].icon.control);
+			for (int i = 0; i < Items.Count; ++i) {
+				GHManager.ItemList.Controls.Add(Items[i].icon.control);
 			}
 		}
 
@@ -382,19 +382,19 @@ namespace GH {
 		/// </summary>
 		public void SwitchShowOrHide() {
 
-			if (GroupItems.Count <= 0)
+			if (Items.Count <= 0)
 				return;
 
-			IntPtr hwnd = (IntPtr)GroupItems[0].Handle;
+			IntPtr hwnd = (IntPtr)Items[0].Handle;
 
 			if (GHProcess.IsMinimize(hwnd)) {
-				for (int i = 0; i < GroupItems.Count; ++i) {
-					GHProcess.Normalize((IntPtr)GroupItems[i].Handle);
+				for (int i = 0; i < Items.Count; ++i) {
+					GHProcess.Normalize((IntPtr)Items[i].Handle);
 				}
 			}
 			else {
-				for (int i = 0; i < GroupItems.Count; ++i) {
-					GHProcess.Minimize((IntPtr)GroupItems[i].Handle);
+				for (int i = 0; i < Items.Count; ++i) {
+					GHProcess.Minimize((IntPtr)Items[i].Handle);
 				}
 			}
 
@@ -405,16 +405,25 @@ namespace GH {
 		/// </summary>
 		/// <returns></returns>
 		public int GetActiveItem() {
-			for (int i = 0; i < GroupItems.Count; ++i) {
-				if (GroupItems[i].icon.control.Focused) {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].icon.control.Focused) {
 					return i;
 				}
 			}
 			return -1;
 		}
 
-		public bool AtIndex(int idx) {
-			return 0 <= idx && idx < GroupItems.Count;
+		public bool CheckRange(int idx) {
+			return 0 <= idx && idx < Items.Count;
+		}
+
+		public int GetActiveIndex() {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].icon.IsEntered) {
+					return i;
+				}
+			}
+			return -1;
 		}
 
 		/// <summary>
@@ -422,15 +431,15 @@ namespace GH {
 		/// </summary>
 		/// <param name="show"></param>
 		public void ShowOrHideWindows(bool show) {
-			if (GroupItems.Count > 0) {
+			if (Items.Count > 0) {
 				if (show) {
-					for (int i = 0; i < GroupItems.Count; ++i) {
-						GHProcess.Normalize((IntPtr)GroupItems[i].Handle);
+					for (int i = 0; i < Items.Count; ++i) {
+						GHProcess.Normalize((IntPtr)Items[i].Handle);
 					}
 				}
 				else {
-					for (int i = 0; i < GroupItems.Count; ++i) {
-						GHProcess.Minimize((IntPtr)GroupItems[i].Handle);
+					for (int i = 0; i < Items.Count; ++i) {
+						GHProcess.Minimize((IntPtr)Items[i].Handle);
 					}
 				}
 			}
@@ -443,7 +452,7 @@ namespace GH {
 
 			int lsize = GHManager.Settings.Style.Launcher.ItemSize;
 			int isize = lsize / 2;
-			int cnt = GroupItems.Count;
+			int cnt = Items.Count;
 			int x = 0, y = 0;
 			System.Drawing.Drawing2D.CompositingQuality compositingQuality;
 			System.Drawing.Drawing2D.SmoothingMode smoothingMode;
@@ -479,13 +488,13 @@ namespace GH {
 					img = null;
 				}
 				else if (GHManager.Settings.GroupIconStyle == 1) {
-					g.DrawImage(GroupItems[0].icon.image, 0, 0, lsize, lsize);
+					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
 				}
 				else {
 					cnt = (cnt > 4) ? 4 : cnt;
 
 					for (int i = 0; i < cnt; ++i) {
-						g.DrawImage(GroupItems[i].icon.image, x, y, isize, isize);
+						g.DrawImage(Items[i].icon.image, x, y, isize, isize);
 						x += isize;
 						if (i == 1) {
 							x = 0;

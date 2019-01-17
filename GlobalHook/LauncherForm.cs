@@ -104,7 +104,7 @@ namespace GH {
 				}
 			};
 			Controls.Add(MysetIcon.control);
-			
+
 			// フック開始
 			if (!Dll.StartHook(Text, GHManager.MysetList.Text, GHManager.ItemList.Text)) {
 				Application.Exit();
@@ -277,15 +277,17 @@ namespace GH {
 			else {
 				MouseActive = false;
 			}
-			int cnt = 0;
-			for (int i = 0; i < GroupManager.GroupList.Count; ++i) {
-				if (GroupManager.GroupList[i].icon.IsEntered) {
-					SelectIndex = i + 1;
-					cnt++;
-				}
+			int cnt = GroupManager.GetActiveIndex();
+			if (cnt != -1) {
+				SelectIndex = cnt + 1;
 			}
-			if (cnt == 0) {
-				SelectIndex = 0;
+			else {
+				if (MysetIcon.IsEntered) {
+					SelectIndex = 0;
+				}
+				else if (cnt == 0) {
+					SelectIndex = -1;
+				}
 			}
 		}
 
@@ -315,7 +317,7 @@ namespace GH {
 		}
 
 		protected override void Update_Bounds() {
-			int cnt = GroupManager.GroupList.Count + 1;
+			int cnt = GroupManager.Items.Count + 1;
 			GHBaseStyle style = GHManager.Settings.Style.Launcher;
 			bool isVertical = GHManager.IsVertical;
 
@@ -478,7 +480,7 @@ namespace GH {
 		}
 
 		protected override int GetItemCount() {
-			return GroupManager.GroupList.Count + 1;
+			return GroupManager.Items.Count + 1;
 		}
 
 		public void SelectNextGroup(int next = 1) {
@@ -500,8 +502,8 @@ namespace GH {
 					MysetIcon.control.Focus();
 				}
 				else {
-					if (GroupManager.AtIndex(SelectIndex - 1)) {
-						GroupManager.GroupList[SelectIndex - 1].icon.control.Focus();
+					if (GroupManager.CheckRange(SelectIndex - 1)) {
+						GroupManager.Items[SelectIndex - 1].icon.control.Focus();
 					}
 				}
 			}

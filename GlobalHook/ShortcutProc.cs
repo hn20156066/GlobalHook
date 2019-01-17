@@ -38,17 +38,29 @@ namespace GH {
 			if (GHManager.Launcher.FormVisible) {
 				FormType n = GHManager.GetActiveForm();
 				if (n == FormType.Launcher) {
-					int idx = GHManager.Launcher.SelectIndex - 1;
-					if (0 <= idx && idx < GroupManager.GroupList.Count) {
+					int idx = GHManager.Launcher.SelectIndex;
+					if (GroupManager.CheckRange(idx - 1)) {
 						GHManager.ItemList.KeyboardActive = true;
-						GroupManager.ShowItemList(GroupManager.GroupList[idx]);
+						GroupManager.ShowItemList(GroupManager.Items[idx]);
+					}
+					if (idx == 0) {
+						if (GHManager.MysetList.FormVisible) {
+							GHManager.MysetList.FixedActive = false;
+							GHManager.MysetList.MysetList_Hide();
+						}
+						else {
+							if (MysetManager.Items.Count > 0) {
+								GHManager.MysetList.FixedActive = true;
+								GHManager.MysetList.MysetList_Show();
+							}
+						}
 					}
 				}
 				else if (n == FormType.MysetList) {
 					int idx = GHManager.MysetList.SelectIndex;
-					if (0 <= idx && idx < MysetManager.MysetList.Count) {
+					if (0 <= idx && idx < MysetManager.Items.Count) {
 						GHManager.MysetList.KeyboardActive = true;
-						MysetManager.SetMysetNum(MysetManager.MysetList[idx]);
+						MysetManager.SetMysetNum(MysetManager.Items[idx]);
 					}
 				}
 				else {
@@ -95,14 +107,14 @@ namespace GH {
 							GHManager.MysetList.MysetList_Hide();
 						}
 						else {
-							if (MysetManager.MysetList.Count > 0) {
+							if (MysetManager.Items.Count > 0) {
 								GHManager.MysetList.FixedActive = true;
 								GHManager.MysetList.MysetList_Show();
 							}
 						}
 					}
-					else if (GroupManager.AtIndex(GHManager.Launcher.SelectIndex - 1)) {
-						GroupManager.GroupList[GHManager.Launcher.SelectIndex - 1].SwitchShowOrHide();
+					else if (GroupManager.CheckRange(GHManager.Launcher.SelectIndex - 1)) {
+						GroupManager.Items[GHManager.Launcher.SelectIndex - 1].SwitchShowOrHide();
 					}
 				}
 				else if (n == FormType.ItemList) {
@@ -111,17 +123,17 @@ namespace GH {
 					int select = GHManager.ItemList.SelectIndex;
 					if (GHManager.ItemList.ParentGHForm == 0) {
 						num = GHManager.Launcher.SelectIndex - 1;
-						if (GroupManager.AtIndex(num)) {
-							if (GroupManager.GroupList[num].AtIndex(select)) {
-								GHProcess.SwitchShowOrHide((IntPtr)GroupManager.GroupList[num].GroupItems[select].Handle);
+						if (GroupManager.CheckRange(num)) {
+							if (GroupManager.Items[num].CheckRange(select)) {
+								GHProcess.SwitchShowOrHide((IntPtr)GroupManager.Items[num].Items[select].Handle);
 							}
 						}
 					}
 					else {
 						num = GHManager.MysetList.SelectIndex;
-						if (MysetManager.AtIndex(num)) {
-							if (MysetManager.MysetList[num].AtIndex(select)) {
-								MysetManager.MysetList[num].MysetItems[select].Execute();
+						if (MysetManager.CheckRange(num)) {
+							if (MysetManager.Items[num].CheckRange(select)) {
+								MysetManager.Items[num].Items[select].Execute();
 							}
 						}
 					}
@@ -129,8 +141,8 @@ namespace GH {
 				else if (n == FormType.MysetList) {
 					// マイセット
 					int num = GHManager.MysetList.SelectIndex;
-					if (MysetManager.AtIndex(num)) {
-						MysetManager.MysetList[num].ExecuteItems();
+					if (MysetManager.CheckRange(num)) {
+						MysetManager.Items[num].ExecuteItems();
 					}
 				}
 			}
@@ -141,8 +153,8 @@ namespace GH {
 			if (n == FormType.Launcher) {
 				if (GHManager.Launcher.FormVisible) {
 					int idx = GHManager.Launcher.SelectIndex - 1;
-					if (0 <= idx && idx < GroupManager.GroupList.Count) {
-						GroupManager.DeleteGroup(GroupManager.GroupList[idx]);
+					if (0 <= idx && idx < GroupManager.Items.Count) {
+						GroupManager.DeleteGroup(GroupManager.Items[idx]);
 					}
 				}
 			}
@@ -152,19 +164,19 @@ namespace GH {
 
 					if (GHManager.ItemList.ParentGHForm == 0) {
 						select = GHManager.Launcher.SelectIndex - 1;
-						if (GroupManager.AtIndex(select)) {
-							GroupManager.GroupList[select].DeleteItem(GHManager.ItemList.SelectIndex);
-							if (GroupManager.GroupList[select].GroupItems.Count <= 0) {
+						if (GroupManager.CheckRange(select)) {
+							GroupManager.Items[select].DeleteItem(GHManager.ItemList.SelectIndex);
+							if (GroupManager.Items[select].Items.Count <= 0) {
 								GHManager.ItemList.HideItemList();
 							}
 						}
 					}
 					else {
 						select = GHManager.MysetList.SelectIndex;
-						if (MysetManager.AtIndex(select)) {
-							if (MysetManager.MysetList[select].DeleteItem(GHManager.ItemList.SelectIndex)) {
+						if (MysetManager.CheckRange(select)) {
+							if (MysetManager.Items[select].DeleteItem(GHManager.ItemList.SelectIndex)) {
 								GHManager.ItemList.HideItemList();
-								if (MysetManager.MysetList.Count <= 0) {
+								if (MysetManager.Items.Count <= 0) {
 									GHManager.MysetList.MysetList_Hide();
 								}
 							}
@@ -176,9 +188,9 @@ namespace GH {
 			else if (n == FormType.MysetList) {
 				if (GHManager.MysetList.FormVisible) {
 					int idx = GHManager.MysetList.SelectIndex;
-					if (MysetManager.AtIndex(idx)) {
-						MysetManager.DeleteMyset(MysetManager.MysetList[idx]);
-						if (MysetManager.MysetList.Count <= 0) {
+					if (MysetManager.CheckRange(idx)) {
+						MysetManager.DeleteMyset(MysetManager.Items[idx]);
+						if (MysetManager.Items.Count <= 0) {
 							GHManager.MysetList.MysetList_Hide();
 						}
 					}
@@ -215,7 +227,7 @@ namespace GH {
 		}
 
 		private static void SelectNextGroup() {
-			if (GroupManager.GroupList.Count == 0) return;
+			if (GroupManager.Items.Count == 0) return;
 
 			GHManager.Launcher.KeyboardActive = true;
 
@@ -224,7 +236,7 @@ namespace GH {
 		}
 
 		private static void SelectPrevGroup() {
-			if (GroupManager.GroupList.Count == 0) return;
+			if (GroupManager.Items.Count == 0) return;
 
 			GHManager.Launcher.KeyboardActive = true;
 			GHManager.Launcher.SelectNextGroup(-1);
@@ -233,18 +245,18 @@ namespace GH {
 
 		private static void SwitchSelectGroup() {
 			int idx = GHManager.Launcher.SelectIndex - 1;
-			if (0 <= idx && idx < GroupManager.GroupList.Count) {
+			if (0 <= idx && idx < GroupManager.Items.Count) {
 				GHManager.ItemList.KeyboardActive = true;
 				GroupManager.SwitchGroup(idx, false);
 			}
 		}
 
 		private static void SelectGroupTile() {
-			if (GroupManager.GroupList.Count == 0) return;
+			if (GroupManager.Items.Count == 0) return;
 
-			if (GroupManager.AtIndex(GHManager.Launcher.SelectIndex - 1)) {
+			if (GroupManager.CheckRange(GHManager.Launcher.SelectIndex - 1)) {
 				GHManager.Launcher.KeyboardActive = true;
-				GroupManager.GroupList[GHManager.Launcher.SelectIndex - 1].GroupItemsTile();
+				GroupManager.Items[GHManager.Launcher.SelectIndex - 1].GroupItemsTile();
 			}
 		}
 

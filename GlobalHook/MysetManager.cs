@@ -20,13 +20,13 @@ namespace GH {
 		//private static MysetXml Mysets { get; set; }
 
 		// マイセット
-		public static List<Myset> MysetList;
+		public static List<Myset> Items;
 
 		/// <summary>
 		/// 初期化 (初期量 = 10)
 		/// </summary>
 		public static void Initialize() {
-			MysetList = new List<Myset>(10);
+			Items = new List<Myset>(10);
 			//Mysets = new MysetXml();
 		}
 
@@ -35,13 +35,13 @@ namespace GH {
 		/// </summary>
 		/// <param name="group">追加するグループ</param>
 		public static void AddMyset(Group group) {
-			MysetList.Add(new Myset(group));
-			GHManager.MysetList.Controls.Add(MysetList.Last().icon.control);
+			Items.Add(new Myset(group));
+			GHManager.MysetList.Controls.Add(Items.Last().icon.control);
 		}
 
 		public static void AddMyset(string[] path) {
-			MysetList.Add(new Myset(path));
-			GHManager.MysetList.Controls.Add(MysetList.Last().icon.control);
+			Items.Add(new Myset(path));
+			GHManager.MysetList.Controls.Add(Items.Last().icon.control);
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace GH {
 		/// <param name="rect">基準位置</param>
 		/// <param name="ver">向き true = 縦 / false = 横</param>
 		public static void SetPosition(ref Rectangle rect, bool ver) {
-			foreach (var item in MysetList) {
+			foreach (var item in Items) {
 				item.icon.SetRect(ref rect);
 
 				if (ver)
@@ -65,7 +65,7 @@ namespace GH {
 		/// </summary>
 		/// <param name="graph">描画先</param>
 		public static void Draw(ref Graphics graph) {
-			foreach (var item in MysetList) {
+			foreach (var item in Items) {
 				item.Draw(ref graph);
 			}
 		}
@@ -76,7 +76,7 @@ namespace GH {
 		/// <param name="myset">表示するマイセット</param>
 		/// <returns></returns>
 		public static bool SetMysetNum(Myset myset) {
-			int n = MysetList.IndexOf(myset);
+			int n = Items.IndexOf(myset);
 
 			if (GHManager.ItemList.Item_Num == n && GHManager.ItemList.ParentGHForm == 1) {
 				GHManager.ItemList.SetMyset(n);
@@ -88,22 +88,13 @@ namespace GH {
 			}
 		}
 
-		public static bool CheckOutRange(int idx) {
-			if (0 <= idx && idx < MysetList.Count) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
 		/// <summary>
 		/// マイセットを削除
 		/// </summary>
 		/// <param name="myset">削除するマイセット</param>
 		public static void DeleteMyset(Myset myset) {
 			myset.icon.control.Dispose();
-			MysetList.Remove(myset);
+			Items.Remove(myset);
 		}
 
 		/// <summary>
@@ -111,16 +102,25 @@ namespace GH {
 		/// </summary>
 		/// <param name="item">削除するマイセットアイテム</param>
 		public static void DeleteItem(MysetItem item) {
-			for (int i = 0; i < MysetList.Count; ++i) {
-				if (MysetList[i].MysetItems.IndexOf(item) != -1) {
-					MysetList[i].DeleteItem(item);
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].Items.IndexOf(item) != -1) {
+					Items[i].DeleteItem(item);
 					return;
 				}
 			}
 		}
 
-		public static bool AtIndex(int idx) {
-			return 0 <= idx && idx < MysetList.Count;
+		public static int GetActiveIndex() {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].icon.IsEntered) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		public static bool CheckRange(int idx) {
+			return 0 <= idx && idx < Items.Count;
 		}
 
 		public static void SaveMyset() {
@@ -135,11 +135,11 @@ namespace GH {
 				writer.WriteStartDocument();
 				writer.WriteStartElement("MysetList");
 
-				for (int i = 0; i < MysetList.Count; ++i) {
+				for (int i = 0; i < Items.Count; ++i) {
 					writer.WriteStartElement("Myset");
 					
-					for (int j = 0; j < MysetList[i].MysetItems.Count; ++j) {
-						writer.WriteElementString("Item", MysetList[i].MysetItems[j].ItemPath.ToString());
+					for (int j = 0; j < Items[i].Items.Count; ++j) {
+						writer.WriteElementString("Item", Items[i].Items[j].ItemPath.ToString());
 					}
 					writer.WriteEndElement();
 				}

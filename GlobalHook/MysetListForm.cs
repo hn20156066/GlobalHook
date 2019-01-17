@@ -37,12 +37,13 @@ namespace GH {
 		protected override void Update_Visible() {
 			MouseActive = GHManager.Contains.MysetList || GHManager.Launcher.MysetIcon.IsEntered;
 
-			int cnt = 0;
-			for (int i = 0; i < MysetManager.MysetList.Count; ++i) {
-				if (MysetManager.MysetList[i].icon.IsEntered) {
-					SelectIndex = i;
-					cnt++;
-				}
+			int cnt = MysetManager.GetActiveIndex();
+			if (cnt != -1) {
+				SelectIndex = cnt;
+			}
+			else {
+				SelectIndex = -1;
+				NoSelectItem();
 			}
 		}
 
@@ -65,7 +66,7 @@ namespace GH {
 		}
 
 		protected override void Update_Bounds() {
-			int cnt = MysetManager.MysetList.Count;
+			int cnt = MysetManager.Items.Count;
 			Rectangle rect = new Rectangle(0, 0, 0, 0);
 			GHManager.Launcher.MysetIcon.GetRect(out rect);
 
@@ -125,12 +126,13 @@ namespace GH {
 		/// マイセットリストの表示
 		/// </summary>
 		public void MysetList_Show() {
-			if (MysetManager.MysetList.Count == 0) return;
+			if (MysetManager.Items.Count == 0) return;
 
 			if (!FormVisible) {
 				if (!Visible)
 					Visible = true;
-				SelectIndex = 0;
+				SelectIndex = -1;
+				NoSelectItem();
 				FixedActive = true;
 				GHFormUpdate();
 			}
@@ -152,13 +154,13 @@ namespace GH {
 		}
 
 		protected override int GetItemCount() {
-			return MysetManager.MysetList.Count;
+			return MysetManager.Items.Count;
 		}
 
 		protected override void DrawPriorUpdate() {
-			if (MysetManager.AtIndex(SelectIndex)) {
-				if (!MysetManager.MysetList[SelectIndex].icon.IsEntered) {
-					MysetManager.MysetList[SelectIndex].icon.control.Focus();
+			if (MysetManager.CheckRange(SelectIndex)) {
+				if (!MysetManager.Items[SelectIndex].icon.IsEntered) {
+					MysetManager.Items[SelectIndex].icon.control.Focus();
 				}
 			}
 		}

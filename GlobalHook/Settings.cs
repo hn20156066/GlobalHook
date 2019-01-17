@@ -81,7 +81,7 @@ namespace GH {
 			public HotKey_Settings() {
 				HotKeys = new SerializableDictionary<int, HotKeyInfo>();
 				HotKeys.AddRange(new KeyValuePair<int, HotKeyInfo>[] {
-					new KeyValuePair<int, HotKeyInfo>(GH_SHID.Show, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.L)),
+					new KeyValuePair<int, HotKeyInfo>(GH_SHID.Show, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.S)),
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.Hide, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.H)),
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.ShowConfig, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.O)),
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.OpenSelectItem, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.Enter)),

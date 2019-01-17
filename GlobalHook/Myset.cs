@@ -15,7 +15,7 @@ namespace GH {
 	public class Myset {
 
 		// マイセットアイテム
-		public List<MysetItem> MysetItems;
+		public List<MysetItem> Items;
 
 		// マイセットのアイコン
 		public GHIcon icon;
@@ -32,7 +32,7 @@ namespace GH {
 		/// <param name="group">登録するグループ</param>
 		public Myset(Group group) {
 
-			MysetItems = new List<MysetItem>(10);
+			Items = new List<MysetItem>(10);
 			icon = group.icon.Clone(FormType.MysetList);
 			icon.control.MouseEnter += new EventHandler(Myset_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Myset_Control_Leave);
@@ -43,13 +43,13 @@ namespace GH {
 			};
 			timer.Tick += new EventHandler(Myset_Control_Timer);
 
-			foreach (var item in group.GroupItems) {
+			foreach (var item in group.Items) {
 				AddMysetItem(item);
 			}
 		}
 
 		public Myset(string[] path) {
-			MysetItems = new List<MysetItem>(10);
+			Items = new List<MysetItem>(10);
 			Skin.GetSkinImage(SkinImage.Myset_Item, out Bitmap image);
 			icon = new GHIcon(ref image, FormType.MysetList);
 			icon.control.MouseEnter += new EventHandler(Myset_Control_Enter);
@@ -72,12 +72,12 @@ namespace GH {
 		/// <param name="item">登録するアイテム</param>
 		private void AddMysetItem(GroupItem item) {
 			MysetItem mysetItem = new MysetItem(item);
-			MysetItems.Add(mysetItem);
+			Items.Add(mysetItem);
 		}
 
 		private void AddMysetItem(string path) {
 			MysetItem mysetItem = new MysetItem(path);
-			MysetItems.Add(mysetItem);
+			Items.Add(mysetItem);
 		}
 
 		/// <summary>
@@ -110,7 +110,7 @@ namespace GH {
 		/// </summary>
 		/// <param name="graph">描画先</param>
 		public void DrawItems(ref Graphics graph) {
-			foreach (var item in MysetItems) {
+			foreach (var item in Items) {
 				item.Draw(ref graph);
 			}
 		}
@@ -119,7 +119,7 @@ namespace GH {
 		/// マイセットアイテムをウィンドウに追加
 		/// </summary>
 		public void AddItems() {
-			foreach (var item in MysetItems) {
+			foreach (var item in Items) {
 				GHManager.ItemList.Controls.Add(item.icon.control);
 			}
 		}
@@ -130,17 +130,17 @@ namespace GH {
 		/// <param name="item">削除するアイテム</param>
 		public void DeleteItem(MysetItem item) {
 			item.icon.control.Dispose();
-			MysetItems.Remove(item);
-			if (MysetItems.Count <= 0) {
+			Items.Remove(item);
+			if (Items.Count <= 0) {
 				MysetManager.DeleteMyset(this);
 			}
 		}
 
 		public bool DeleteItem(int idx) {
-			if (0 <= idx && idx < MysetItems.Count) {
-				MysetItems[idx].icon.control.Dispose();
-				MysetItems.RemoveAt(idx);
-				if (MysetItems.Count <= 0) {
+			if (0 <= idx && idx < Items.Count) {
+				Items[idx].icon.control.Dispose();
+				Items.RemoveAt(idx);
+				if (Items.Count <= 0) {
 					MysetManager.DeleteMyset(this);
 					return true;
 				}
@@ -158,9 +158,9 @@ namespace GH {
 			int column = GHManager.Settings.Style.ItemList.Column;
 			int baseX = rect.X;
 
-			for (int i = 0; i < MysetItems.Count; ++i) {
+			for (int i = 0; i < Items.Count; ++i) {
 
-				MysetItems[i].icon.SetRect(ref rect);
+				Items[i].icon.SetRect(ref rect);
 				rect.X += itemSize + pad;
 
 				if (i % column == column - 1) {
@@ -193,8 +193,8 @@ namespace GH {
 		}
 
 		private void MysetItemsExecute(long[] hwnds) {
-			for (int i = 0; i < MysetItems.Count; ++i) {
-				hwnds[i] = MysetItems[i].Execute();
+			for (int i = 0; i < Items.Count; ++i) {
+				hwnds[i] = Items[i].Execute();
 			}
 		}
 
@@ -202,21 +202,17 @@ namespace GH {
 			Myset_Control_Click(null, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
 		}
 
-		/// <summary>
-		/// 選択中のアイテム
-		/// </summary>
-		/// <returns></returns>
-		public int GetActiveItem() {
-			for (int i = 0; i < MysetItems.Count; ++i) {
-				if (MysetItems[i].icon.control.Focused) {
+		public int GetActiveIndex() {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].icon.IsEntered) {
 					return i;
 				}
 			}
 			return -1;
 		}
 
-		public bool AtIndex(int idx) {
-			return 0 <= idx && idx < MysetItems.Count;
+		public bool CheckRange(int idx) {
+			return 0 <= idx && idx < Items.Count;
 		}
 
 		/// <summary>
@@ -228,7 +224,7 @@ namespace GH {
 
 			if (e.Button == MouseButtons.Left) {
 				// マイセットを復元
-				long[] hwnds = new long[MysetItems.Count];
+				long[] hwnds = new long[Items.Count];
 				MysetItemsExecute(hwnds);
 				GroupManager.AddGroupAndItems(ref hwnds);
 
@@ -257,12 +253,12 @@ namespace GH {
 
 		public List<MysetXml.MysetItemInfo> GetItemsInfo() {
 			List<MysetXml.MysetItemInfo> infos = new List<MysetXml.MysetItemInfo>();
-			MysetItems.ToList().ForEach(i => infos.Add(i.GetItemInfo()));
+			Items.ToList().ForEach(i => infos.Add(i.GetItemInfo()));
 			return infos;
 		}
 
 		public bool UpdateMysetIcon() {
-			if (MysetItems.Count <= 0) {
+			if (Items.Count <= 0) {
 				return false;
 			}
 
@@ -274,7 +270,7 @@ namespace GH {
 		private void SetMysetIcon() {
 			int lsize = GHManager.Settings.Style.MysetList.ItemSize;
 			int isize = lsize / 2;
-			int cnt = MysetItems.Count;
+			int cnt = Items.Count;
 			int x = 0, y = 0;
 			System.Drawing.Drawing2D.CompositingQuality compositingQuality;
 			System.Drawing.Drawing2D.SmoothingMode smoothingMode;
@@ -310,13 +306,13 @@ namespace GH {
 					img = null;
 				}
 				else if (GHManager.Settings.MysetIconStyle == 1) {
-					g.DrawImage(MysetItems[0].icon.image, 0, 0, lsize, lsize);
+					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
 				}
 				else {
 					cnt = (cnt > 4) ? 4 : cnt;
 
 					for (int i = 0; i < cnt; ++i) {
-						g.DrawImage(MysetItems[i].icon.image, x, y, isize, isize);
+						g.DrawImage(Items[i].icon.image, x, y, isize, isize);
 						x += isize;
 						if (i == 1) {
 							x = 0;

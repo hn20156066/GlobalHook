@@ -208,6 +208,11 @@ namespace GH {
 
 		}
 
+		public void Leave() {
+			selected = false;
+			entered = false;
+		}
+
 
 		private void Control_Enter(object vender, EventArgs e) {
 			entered = true;

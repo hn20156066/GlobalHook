@@ -16,17 +16,26 @@ namespace GH {
 		/// <summary>
 		/// グループのリスト
 		/// </summary>
-		public static List<Group> GroupList { get; set; }
+		public static List<Group> Items { get; set; }
 
 		/// <summary>
 		/// グループマネージャーの初期化
 		/// </summary>
 		public static void Initialize() {
-			GroupList = new List<Group>(100);
+			Items = new List<Group>(100);
 		}
 
-		public static bool AtIndex(int idx) {
-			return 0 <= idx && idx < GroupList.Count;
+		public static bool CheckRange(int idx) {
+			return 0 <= idx && idx < Items.Count;
+		}
+
+		public static int GetActiveIndex() {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].icon.IsEntered) {
+					return i;
+				}
+			}
+			return -1;
 		}
 
 		/// <summary>
@@ -35,7 +44,7 @@ namespace GH {
 		/// <param name="rect">基準となる位置・サイズ</param>
 		public static void SetRectGroups(ref Rectangle rect) {
 
-			foreach (var item in GroupList) {
+			foreach (var item in Items) {
 
 				if (GHManager.IsVertical)
 					rect.Y += GHManager.Settings.Style.Launcher.ItemSize + GHManager.Settings.Style.Launcher.ItemSpace;
@@ -52,7 +61,7 @@ namespace GH {
 		/// </summary>
 		/// <param name="graph">描画先</param>
 		public static void Draw(ref Graphics graph) {
-			foreach (var item in GroupList) {
+			foreach (var item in Items) {
 				item.Draw(ref graph);
 			}
 		}
@@ -63,10 +72,10 @@ namespace GH {
 		/// <returns></returns>
 		public static int AddGroup() {
 
-			GroupList.Add(new Group());
-			GHManager.Launcher.Controls.Add(GroupList[GroupList.Count - 1].icon.control);
+			Items.Add(new Group());
+			GHManager.Launcher.Controls.Add(Items[Items.Count - 1].icon.control);
 
-			return GroupList.Count - 1;
+			return Items.Count - 1;
 
 		}
 
@@ -80,7 +89,7 @@ namespace GH {
 
 			for (int i = 0; i < hwnds.Length; ++i) {
 				if (hwnds[i] != 0) {
-					GroupList[idx].AddItem(ref hwnds[i]);
+					Items[idx].AddItem(ref hwnds[i]);
 				}
 			}
 
@@ -93,8 +102,8 @@ namespace GH {
 		/// <returns></returns>
 		public static int InGroup(ref long hwnd) {
 
-			for (int i = 0; i < GroupList.Count; ++i) {
-				if (GroupList[i].InGroup(ref hwnd) != -1) {
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].InGroup(ref hwnd) != -1) {
 					return i;
 				}
 			}
@@ -111,13 +120,13 @@ namespace GH {
 		/// <returns></returns>
 		public static bool AddItem(int idx, ref long hwnd) {
 
-			if (idx < 0 || GroupList.Count >= idx)
+			if (idx < 0 || Items.Count >= idx)
 				return false;
 
 			int h = InGroup(ref hwnd);
 
 			if (h == -1) {
-				GroupList[idx].AddItem(ref hwnd);
+				Items[idx].AddItem(ref hwnd);
 				return true;
 			}
 
@@ -144,21 +153,21 @@ namespace GH {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
 						AddGroup();
-						GroupList.Last().AddItem(ref items.hwnds[0]);
-						GroupList.Last().AddItem(ref items.hwnds[1]);
+						Items.Last().AddItem(ref items.hwnds[0]);
+						Items.Last().AddItem(ref items.hwnds[1]);
 					}
 					else {
-						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						Items[items.index[1]].AddItem(ref items.hwnds[0]);
 					}
 				}
 				else {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
-						GroupList[items.index[0]].AddItem(ref items.hwnds[1]);
+						Items[items.index[0]].AddItem(ref items.hwnds[1]);
 					}
 					else {
-						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
-						GroupList[items.index[0]].DeleteItem(ref items.hwnds[0]);
+						Items[items.index[1]].AddItem(ref items.hwnds[0]);
+						Items[items.index[0]].DeleteItem(ref items.hwnds[0]);
 					}
 				}
 			}			
@@ -168,21 +177,21 @@ namespace GH {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
 						AddGroup();
-						GroupList.Last().AddItem(ref items.hwnds[0]);
-						GroupList.Last().AddItem(ref items.hwnds[1]);
+						Items.Last().AddItem(ref items.hwnds[0]);
+						Items.Last().AddItem(ref items.hwnds[1]);
 						for (int i = 2; i < items.hwnds.Length; ++i) {
-							GroupList.Last().AddItem(ref items.hwnds[i]);
+							Items.Last().AddItem(ref items.hwnds[i]);
 							if (items.index[i] != -1) {
-								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+								Items[items.index[i]].DeleteItem(ref items.hwnds[i]);
 							}
 						}
 					}
 					else {
-						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						Items[items.index[1]].AddItem(ref items.hwnds[0]);
 						for (int i = 2; i < items.hwnds.Length; ++i) {
-							GroupList[items.index[1]].AddItem(ref items.hwnds[i]);
+							Items[items.index[1]].AddItem(ref items.hwnds[i]);
 							if (items.index[i] != -1) {
-								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+								Items[items.index[i]].DeleteItem(ref items.hwnds[i]);
 							}
 						}
 					}
@@ -190,21 +199,21 @@ namespace GH {
 				else {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
-						GroupList[items.index[0]].AddItem(ref items.hwnds[1]);
+						Items[items.index[0]].AddItem(ref items.hwnds[1]);
 						for (int i = 2; i < items.hwnds.Length; ++i) {
-							GroupList[items.index[0]].AddItem(ref items.hwnds[i]);
+							Items[items.index[0]].AddItem(ref items.hwnds[i]);
 							if (items.index[i] != -1) {
-								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+								Items[items.index[i]].DeleteItem(ref items.hwnds[i]);
 							}
 						}
 					}
 					else {
-						GroupList[items.index[0]].DeleteItem(ref items.hwnds[0]);
-						GroupList[items.index[1]].AddItem(ref items.hwnds[0]);
+						Items[items.index[0]].DeleteItem(ref items.hwnds[0]);
+						Items[items.index[1]].AddItem(ref items.hwnds[0]);
 						for (int i = 2; i < items.hwnds.Length; ++i) {
-							GroupList[items.index[1]].AddItem(ref items.hwnds[i]);
+							Items[items.index[1]].AddItem(ref items.hwnds[i]);
 							if (items.index[i] != -1) {
-								GroupList[items.index[i]].DeleteItem(ref items.hwnds[i]);
+								Items[items.index[i]].DeleteItem(ref items.hwnds[i]);
 							}
 						}
 					}
@@ -228,8 +237,8 @@ namespace GH {
 			// どちらもグループにない場合、新規グループに追加
 			if (p == -1 && c == -1) {
 				AddGroup();
-				GroupList.Last().AddItem(ref parent);
-				GroupList.Last().AddItem(ref child);
+				Items.Last().AddItem(ref parent);
+				Items.Last().AddItem(ref child);
 				return true;
 			}
 			else if (p != c) {
@@ -238,14 +247,14 @@ namespace GH {
 				// 両方とも追加済みの場合は親のアイテムの方のグループに追加
 
 				if (p != -1 && c == -1) {
-					GroupList[p].AddItem(ref child);
+					Items[p].AddItem(ref child);
 				}
 				else if (p == -1 && c != -1) {
-					GroupList[c].AddItem(ref parent);
+					Items[c].AddItem(ref parent);
 				}
 				else {
-					GroupList[p].AddItem(ref child);
-					GroupList[c].DeleteItem(ref child);
+					Items[p].AddItem(ref child);
+					Items[c].DeleteItem(ref child);
 				}
 			}
 
@@ -260,7 +269,7 @@ namespace GH {
 		/// <returns></returns>
 		public static bool ShowItemList(Group group) {
 
-			int n = GroupList.IndexOf(group);
+			int n = Items.IndexOf(group);
 
 			if (GHManager.ItemList.Item_Num == n && GHManager.ItemList.ParentGHForm == 0) {
 				GHManager.ItemList.SetGroup(n);
@@ -272,23 +281,14 @@ namespace GH {
 			}
 
 		}
-
-		public static bool CheckOutRange(int idx) {
-			if (0 <= idx && idx < GroupList.Count) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
+		
 		/// <summary>
 		/// グループを削除
 		/// </summary>
 		/// <param name="group">削除するグループ</param>
 		public static void DeleteGroup(Group group) {
 			group.icon.control.Dispose();
-			GroupList.Remove(group);
+			Items.Remove(group);
 			group = null;
 		}
 
@@ -297,9 +297,9 @@ namespace GH {
 		/// </summary>
 		/// <param name="item">削除するアイテム</param>
 		public static void DeleteItem(GroupItem item) {
-			for (int i = 0; i < GroupList.Count; ++i) {
-				if (GroupList[i].GroupItems.ToList().IndexOf(item) != -1) {
-					GroupList[i].DeleteItem(item);
+			for (int i = 0; i < Items.Count; ++i) {
+				if (Items[i].Items.ToList().IndexOf(item) != -1) {
+					Items[i].DeleteItem(item);
 					return;
 				}
 			}
@@ -309,9 +309,9 @@ namespace GH {
 		/// グループを更新
 		/// </summary>
 		public static void UpdateGroup() {
-			for(int i = 0; i < GroupList.Count; ++i) {
-				if (!GroupList[i].GroupUpdate())
-					DeleteGroup(GroupList[i]);
+			for(int i = 0; i < Items.Count; ++i) {
+				if (!Items[i].GroupUpdate())
+					DeleteGroup(Items[i]);
 			}
 		}
 		
@@ -321,18 +321,18 @@ namespace GH {
 		/// <param name="idx">グループ番号</param>
 		/// <param name="otherGroupHide">他のグループを最小化するか</param>
 		public static void SwitchGroup(int idx, bool otherGroupHide = true) {
-			if (0 <= idx && idx < GroupList.Count) {
+			if (0 <= idx && idx < Items.Count) {
 				if (otherGroupHide) {
-					GroupList[idx].ShowOrHideWindows(true);
+					Items[idx].ShowOrHideWindows(true);
 				}
 				else {
-					GroupList[idx].SwitchShowOrHide();
+					Items[idx].SwitchShowOrHide();
 				}
 
 				if (otherGroupHide) {
-					for(int i = 0; i < GroupList.Count; ++i) {
+					for(int i = 0; i < Items.Count; ++i) {
 						if (i == idx) continue;
-						GroupList[i].ShowOrHideWindows(false);
+						Items[i].ShowOrHideWindows(false);
 					}
 				}
 			}
