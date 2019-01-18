@@ -38,6 +38,9 @@ namespace GH {
 		/// アイテムリストの読み込み時のイベント
 		/// </summary>
 		private void ItemList_Load(object sender, EventArgs e) {
+
+			animateInfo = new GHAnimateInfo(GHManager.Settings.Animate.ItemList_DelayTime, GHManager.Settings.Animate.ItemList_AnimateTime, GHManager.Settings.Animate.ItemList_Slide, GHManager.Settings.Animate.ItemList_Fade);
+
 			// アイテムリストの位置・サイズを設定
 			Size = new Size(GHManager.Settings.Style.ItemList.Width, GHManager.Settings.Style.ItemList.Height);
 			Location = new Point(-GHManager.Launcher.Width, 0);

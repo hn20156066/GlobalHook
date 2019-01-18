@@ -25,6 +25,9 @@ namespace GH {
 		/// マイセットリストの読み込み時のイベント
 		/// </summary>
 		private void MysetList_Load(object sender, EventArgs e) {
+
+			animateInfo = new GHAnimateInfo(GHManager.Settings.Animate.MysetList_DelayTime, GHManager.Settings.Animate.MysetList_AnimateTime, GHManager.Settings.Animate.MysetList_Slide, GHManager.Settings.Animate.MysetList_Fade);
+
 			// アイテムリストの位置・サイズを設定
 			Size = new Size(GHManager.Settings.Style.MysetList.Width, GHManager.Settings.Style.MysetList.Height);
 			Location = new Point(-GHManager.Launcher.Width, 0);
@@ -45,7 +48,6 @@ namespace GH {
 				SelectIndex = -1;
 				NoSelectItem();
 			}
-			Console.WriteLine(SelectIndex);
 		}
 
 		protected override void Update_Timer() {

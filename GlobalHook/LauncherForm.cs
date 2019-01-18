@@ -114,6 +114,8 @@ namespace GH {
 			Size = new Size(GHManager.Settings.Style.Launcher.Width, GHManager.Settings.Style.Launcher.Height);
 			SetOffset(GHManager.Settings.Launcher.Offset);
 
+			animateInfo = new GHAnimateInfo(GHManager.Settings.Animate.Launcher_DelayTime, GHManager.Settings.Animate.Launcher_AnimateTime, GHManager.Settings.Animate.Launcher_Slide, GHManager.Settings.Animate.Launcher_Fade);
+
 			GHManager.RegistHotKey(Handle);
 			// タイマー開始
 			DrawTimer.Start();
