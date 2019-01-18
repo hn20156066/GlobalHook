@@ -517,9 +517,9 @@ namespace GH {
 			Column = 3;
 			UseIconSize = (int)WinAPI.SHIL.SHIL_LARGE;
 			IconSize = 30;
-			TextPadding = new GHPadding(0, 0, 0, 0);
+			TextPadding = new GHPadding(0, 2, 0, 2);
 			FontName = "メイリオ";
-			FontSize = 9;
+			FontSize = 8;
 			FontColor = new GHColor(255, 255, 255);
 		}
 
