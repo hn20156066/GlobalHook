@@ -30,6 +30,7 @@ namespace GH {
 			Shown += (sender, e) => TopMost = true;
 			Enter += (sender, e) => HideTimer.Stop();
 			TempControl = new Control();
+			TempControl.Visible = false;
 			Controls.Add(TempControl);
 			NoSelectItem();
 		}
@@ -717,6 +718,11 @@ namespace GH {
 		public void NoSelectItem() {
 			TempControl.Focus();
 			TempControl.Select();
+		}
+
+		protected void ControlsClear() {
+			Controls.Clear();
+			Controls.Add(TempControl);
 		}
 
 		/// <summary>

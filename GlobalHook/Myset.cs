@@ -175,7 +175,7 @@ namespace GH {
 		/// 表示していない場合はタイマー開始
 		/// </summary>
 		private void Myset_Control_Enter(object sender, EventArgs e) {
-			if (GHManager.ItemList.Item_Num != -1 && GHManager.ItemList.FormVisible) {
+			if (GHManager.ItemList.ItemIndex != -1 && GHManager.ItemList.FormVisible) {
 				if (MysetManager.SetMysetNum(this)) {
 					timer.Stop();
 				}
@@ -232,12 +232,18 @@ namespace GH {
 			}
 			else if (e.Button == MouseButtons.Right) {
 				// マイセットのメニュー表示
-				GHManager.ItemList.HideItemList();
 				GHManager.Launcher.FixedActive = true;
 				GHManager.MysetList.FixedActive = true;
+				GHManager.ItemList.HideItemList();
+				GHManager.ItemList.TopMost = false;
+				GHManager.MysetList.TopMost = false;
+				GHManager.Launcher.TopMost = false;
 				MysetMenuInitialize();
 				Point point = icon.control.PointToClient(Cursor.Position);
 				mysetmenu.Show(icon.control, point);
+				GHManager.ItemList.TopMost = true;
+				GHManager.MysetList.TopMost = true;
+				GHManager.Launcher.TopMost = true;
 				GHManager.MysetList.FixedActive = false;
 				GHManager.Launcher.FixedActive = false;
 			}

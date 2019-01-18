@@ -196,9 +196,13 @@ namespace GH {
 				// アイテムメニューの表示
 				GHManager.Launcher.FixedActive = true;
 				GHManager.ItemList.FixedActive = true;
+				GHManager.Launcher.TopMost = false;
+				GHManager.ItemList.TopMost = false;
 				ItemMenuInitialize();
 				Point point = icon.control.PointToClient(Cursor.Position);
 				itemmenu.Show(icon.control, point);
+				GHManager.Launcher.TopMost = true;
+				GHManager.ItemList.TopMost = true;
 				GHManager.Launcher.FixedActive = false;
 				GHManager.ItemList.FixedActive = false;
 			}

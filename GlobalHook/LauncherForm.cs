@@ -285,7 +285,7 @@ namespace GH {
 				if (MysetIcon.IsEntered) {
 					SelectIndex = 0;
 				}
-				else if (cnt == 0) {
+				else {
 					SelectIndex = -1;
 				}
 			}

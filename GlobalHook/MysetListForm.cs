@@ -45,6 +45,7 @@ namespace GH {
 				SelectIndex = -1;
 				NoSelectItem();
 			}
+			Console.WriteLine(SelectIndex);
 		}
 
 		protected override void Update_Timer() {
@@ -158,9 +159,11 @@ namespace GH {
 		}
 
 		protected override void DrawPriorUpdate() {
-			if (MysetManager.CheckRange(SelectIndex)) {
-				if (!MysetManager.Items[SelectIndex].icon.IsEntered) {
-					MysetManager.Items[SelectIndex].icon.control.Focus();
+			if (KeyboardActive) {
+				if (MysetManager.CheckRange(SelectIndex)) {
+					if (!MysetManager.Items[SelectIndex].icon.IsEntered) {
+						MysetManager.Items[SelectIndex].icon.control.Focus();
+					}
 				}
 			}
 		}

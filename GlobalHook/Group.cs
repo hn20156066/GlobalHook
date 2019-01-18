@@ -292,7 +292,7 @@ namespace GH {
 		private void Group_Control_Enter(object sender, EventArgs e) {
 
 			// 表示されていて、既にアイテム番号が設定されていた時はすぐに変える
-			if (GHManager.ItemList.Item_Num != -1 && GHManager.ItemList.FormVisible /*GHManager.ItemList.GHFormVisible*/) {
+			if (GHManager.ItemList.ItemIndex != -1 && GHManager.ItemList.FormVisible /*GHManager.ItemList.GHFormVisible*/) {
 				if (GroupManager.ShowItemList(this)) {
 					timer.Stop();
 				}
@@ -325,13 +325,13 @@ namespace GH {
 			}
 			else if (e.Button == MouseButtons.Right) {
 				// グループメニュー表示
-				GHManager.ItemList.HideItemList();
 				GHManager.Launcher.FixedActive = true;
-				GHManager.Launcher.SendToBack();
-				GHManager.ItemList.SendToBack();
+				GHManager.ItemList.HideItemList();
+				GHManager.ItemList.TopMost = false;
 				GHManager.Launcher.TopMost = false;
 				GroupMenuInitialize();
 				groupmenu.Show(icon.control, e.Location);
+				GHManager.ItemList.TopMost = true;
 				GHManager.Launcher.TopMost = true;
 				GHManager.Launcher.BringToFront();
 				GHManager.Launcher.FixedActive = false;

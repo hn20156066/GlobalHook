@@ -25,7 +25,7 @@ namespace GH {
 		}
 
 		// 表示中のアイテム番号
-		public int Item_Num { get; set; } = -1;
+		public int ItemIndex { get; set; } = -1;
 
 		// 0:ランチャー 1:マイセット
 		public int ParentGHForm { get; set; } = 0;
@@ -78,14 +78,14 @@ namespace GH {
 
 			if (ParentGHForm == 0) {
 				// グループアイテム
-				if (0 <= Item_Num && Item_Num < GroupManager.Items.Count) {
-					GroupManager.Items[Item_Num].DrawItems(ref graph);
+				if (0 <= ItemIndex && ItemIndex < GroupManager.Items.Count) {
+					GroupManager.Items[ItemIndex].DrawItems(ref graph);
 				}
 			}
 			else {
 				// マイセットアイテム
-				if (0 <= Item_Num && Item_Num < MysetManager.Items.Count) {
-					MysetManager.Items[Item_Num].DrawItems(ref graph);
+				if (0 <= ItemIndex && ItemIndex < MysetManager.Items.Count) {
+					MysetManager.Items[ItemIndex].DrawItems(ref graph);
 				}
 			}
 		}
@@ -96,8 +96,8 @@ namespace GH {
 			//KeyboardActive = ParentSelectIndex != -1;
 			int idx = 0;
 			if (ParentGHForm == 0) {
-				if (GroupManager.CheckRange(ParentSelectIndex)) {
-					if ((idx = GroupManager.Items[ParentSelectIndex].GetActiveIndex()) != -1) {
+				if (GroupManager.CheckRange(ItemIndex)) {
+					if ((idx = GroupManager.Items[ItemIndex].GetActiveIndex()) != -1) {
 						SelectIndex = idx;
 					}
 					else {
@@ -106,8 +106,8 @@ namespace GH {
 				}
 			}
 			else {
-				if (MysetManager.CheckRange(ParentSelectIndex)) {
-					if ((idx = MysetManager.Items[ParentSelectIndex].GetActiveIndex()) != -1) {
+				if (MysetManager.CheckRange(ItemIndex)) {
+					if ((idx = MysetManager.Items[ItemIndex].GetActiveIndex()) != -1) {
 						SelectIndex = idx;
 					}
 					else {
@@ -125,7 +125,7 @@ namespace GH {
 			}
 			else {
 				if (FormVisible) {
-					if ((GHManager.Contains.ItemList || ParentSelectIndex >= 0)) {
+					if (GHManager.Contains.ItemList || ParentSelectIndex >= 0) {
 						HideTimer.Stop();
 					}
 					else {
@@ -142,20 +142,20 @@ namespace GH {
 			int top = 0;
 
 			if (ParentGHForm == 0) {
-				if (!GroupManager.CheckRange(Item_Num)) return;
+				if (!GroupManager.CheckRange(ItemIndex)) return;
 
-				GroupManager.Items[Item_Num].icon.GetRect(out rect);
+				GroupManager.Items[ItemIndex].icon.GetRect(out rect);
 
-				cnt = GroupManager.Items[Item_Num].Items.Count;
+				cnt = GroupManager.Items[ItemIndex].Items.Count;
 				left = GHManager.Launcher.Left;
 				top = GHManager.Launcher.Top;
 			}
 			else {
-				if (!MysetManager.CheckRange(Item_Num)) return;
+				if (!MysetManager.CheckRange(ItemIndex)) return;
 
-				MysetManager.Items[Item_Num].icon.GetRect(out rect);
+				MysetManager.Items[ItemIndex].icon.GetRect(out rect);
 
-				cnt = MysetManager.Items[Item_Num].Items.Count;
+				cnt = MysetManager.Items[ItemIndex].Items.Count;
 				left = GHManager.MysetList.Left;
 				top = GHManager.MysetList.Top;
 			}
@@ -169,16 +169,16 @@ namespace GH {
 			Rectangle rect = new Rectangle(0, 0, 0, 0);
 
 			if (ParentGHForm == 0) {
-				if (!GroupManager.CheckRange(Item_Num)) return;
+				if (!GroupManager.CheckRange(ItemIndex)) return;
 				rect = new Rectangle(GHManager.Settings.Style.ItemList.WindowPadding.Left, GHManager.Settings.Style.ItemList.WindowPadding.Top, GHManager.Settings.Style.ItemList.ItemSize, GHManager.Settings.Style.ItemList.ItemSize);
 
-				GroupManager.Items[Item_Num].SetRectItems(ref rect);
+				GroupManager.Items[ItemIndex].SetRectItems(ref rect);
 			}
 			else {
-				if (!MysetManager.CheckRange(Item_Num)) return;
+				if (!MysetManager.CheckRange(ItemIndex)) return;
 				rect = new Rectangle(GHManager.Settings.Style.ItemList.WindowPadding.Left, GHManager.Settings.Style.ItemList.WindowPadding.Top, GHManager.Settings.Style.ItemList.ItemSize, GHManager.Settings.Style.ItemList.ItemSize);
 
-				MysetManager.Items[Item_Num].SetRectItems(ref rect);
+				MysetManager.Items[ItemIndex].SetRectItems(ref rect);
 			}
 		}
 
@@ -225,12 +225,12 @@ namespace GH {
 					Visible = true;
 				ParentGHForm = 0;
 				FixedActive = true;
-				Item_Num = n;
-				Controls.Clear();
-				GroupManager.Items[Item_Num].AddItems();
+				ItemIndex = n;
+				ControlsClear();
+				GroupManager.Items[ItemIndex].AddItems();
 				SelectIndex = -1;
-				GHFormUpdate();
 				NoSelectItem();
+				GHFormUpdate();
 			}
 		}
 
@@ -244,12 +244,12 @@ namespace GH {
 					Visible = true;
 				ParentGHForm = 1;
 				FixedActive = true;
-				Item_Num = n;
-				Controls.Clear();
-				MysetManager.Items[Item_Num].AddItems();
+				ItemIndex = n;
+				ControlsClear();
+				MysetManager.Items[ItemIndex].AddItems();
+				NoSelectItem();
 				SelectIndex = -1;
 				GHFormUpdate();
-				NoSelectItem();
 			}
 		}
 
@@ -267,13 +267,13 @@ namespace GH {
 		protected override int GetItemCount() {
 			int cnt = 0;
 			if (ParentGHForm == 0) {
-				if (GroupManager.CheckRange(Item_Num)) {
-					cnt = GroupManager.Items[Item_Num].Items.Count;
+				if (GroupManager.CheckRange(ItemIndex)) {
+					cnt = GroupManager.Items[ItemIndex].Items.Count;
 				}
 			}
 			else {
-				if (MysetManager.CheckRange(Item_Num)) {
-					cnt = MysetManager.Items[Item_Num].Items.Count;
+				if (MysetManager.CheckRange(ItemIndex)) {
+					cnt = MysetManager.Items[ItemIndex].Items.Count;
 				}
 			}
 

@@ -78,7 +78,7 @@ namespace GH {
 		public static bool SetMysetNum(Myset myset) {
 			int n = Items.IndexOf(myset);
 
-			if (GHManager.ItemList.Item_Num == n && GHManager.ItemList.ParentGHForm == 1) {
+			if (GHManager.ItemList.ItemIndex == n && GHManager.ItemList.ParentGHForm == 1) {
 				GHManager.ItemList.SetMyset(n);
 				return false;
 			}

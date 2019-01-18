@@ -271,7 +271,7 @@ namespace GH {
 
 			int n = Items.IndexOf(group);
 
-			if (GHManager.ItemList.Item_Num == n && GHManager.ItemList.ParentGHForm == 0) {
+			if (GHManager.ItemList.ItemIndex == n && GHManager.ItemList.ParentGHForm == 0) {
 				GHManager.ItemList.SetGroup(n);
 				return false;
 			}

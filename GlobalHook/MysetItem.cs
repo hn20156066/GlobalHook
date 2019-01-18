@@ -105,9 +105,15 @@ namespace GH {
 				GHManager.Launcher.FixedActive = true;
 				GHManager.MysetList.FixedActive = true;
 				GHManager.ItemList.FixedActive = true;
+				GHManager.ItemList.TopMost = false;
+				GHManager.MysetList.TopMost = false;
+				GHManager.Launcher.TopMost = false;
 				ItemMenuInitialize();
 				Point point = icon.control.PointToClient(Cursor.Position);
 				itemmenu.Show(icon.control, point);
+				GHManager.ItemList.TopMost = true;
+				GHManager.MysetList.TopMost = true;
+				GHManager.Launcher.TopMost = true;
 				GHManager.Launcher.FixedActive = false;
 				GHManager.MysetList.FixedActive = false;
 				GHManager.ItemList.FixedActive = false;
