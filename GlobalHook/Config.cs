@@ -185,12 +185,15 @@ namespace GH {
 		// スキンの一覧と選択中のスキンを選択
 		private void Load_Skin() {
 			List<string> dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory() + "\\Skin", "*", SearchOption.TopDirectoryOnly).ToList();
+			ListBoxSkin.Items.Add("[内部スキン]");
 			dirs.ForEach(s => ListBoxSkin.Items.Add(Path.GetFileName(s)));
-			for (int i = 0; i < ListBoxSkin.Items.Count; ++i) {
+			for (int i = 1; i < ListBoxSkin.Items.Count - 1; ++i) {
 				if (GHManager.TempSettings.SkinName.Equals(ListBoxSkin.Items[i])) {
 					ListBoxSkin.SelectedIndex = i;
+					return;
 				}
 			}
+			ListBoxSkin.SelectedIndex = 0;
 		}
 
 		/// <summary>
@@ -709,7 +712,13 @@ namespace GH {
 		// スキンの選択
 		private void ListBoxSkin_SelectedIndexChanged(object sender, EventArgs e) {
 			if (ListBoxSkin.SelectedItem != null) {
-				GHManager.TempSettings.SkinName = ListBoxSkin.SelectedItem.ToString();
+				Console.WriteLine(ListBoxSkin.SelectedIndex);
+				if (ListBoxSkin.SelectedIndex == 0) {
+					GHManager.TempSettings.SkinName = "";
+				}
+				else {
+					GHManager.TempSettings.SkinName = ListBoxSkin.SelectedItem.ToString();
+				}
 				Skin.LoadSkinImages();
 			}
 		}

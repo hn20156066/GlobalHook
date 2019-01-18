@@ -1605,6 +1605,7 @@
 			this.ListBoxSkin.Name = "ListBoxSkin";
 			this.ListBoxSkin.Size = new System.Drawing.Size(375, 94);
 			this.ListBoxSkin.TabIndex = 0;
+			this.ListBoxSkin.SelectedIndexChanged += new System.EventHandler(this.ListBoxSkin_SelectedIndexChanged);
 			// 
 			// ButtonCancel
 			// 

@@ -27,7 +27,7 @@ namespace GH {
 			DrawQuality = 1;
 			GroupIconStyle = 0;
 			MysetIconStyle = 0;
-			SkinName = "default";
+			SkinName = "";
 		}
 
 		public GHSettings(GHSettings settings) {

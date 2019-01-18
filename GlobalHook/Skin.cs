@@ -23,9 +23,10 @@ namespace GH {
 		/// スキンの画像を読み込む
 		/// </summary>
 		public static void LoadSkinImages() {
+			StringBuilder msg = new StringBuilder(1024);
 			for (int i = 0; i < (int)SkinImage.Kind_Null; ++i) {
 				SkinImage skinImage = (SkinImage)Enum.ToObject(typeof(SkinImage), i);
-				LoadPath(skinImage, out Images[i]);
+				LoadPath(skinImage, out Images[i], ref msg);
 			}
 		}
 
@@ -113,22 +114,39 @@ namespace GH {
 		/// </summary>
 		/// <param name="skinImage">スキン画像の種類</param>
 		/// <param name="image">画像の読み込み先</param>
-		private static bool LoadPath(SkinImage skinImage, out Bitmap image) {
-			string path = Directory.GetCurrentDirectory() + "\\Skin\\" + GHManager.Settings.SkinName + "\\" + skinImage.ToString().ToLower() + ".png";
+		private static bool LoadPath(SkinImage skinImage, out Bitmap image, ref StringBuilder msg) {
+			if (GHManager.Settings.SkinName == "") {
+				return LoadAssemblyImage(skinImage, out image);
+			}
+			else {
+				string path = Directory.GetCurrentDirectory() + "\\Skin\\" + GHManager.Settings.SkinName + "\\" + skinImage.ToString().ToLower() + ".png";
 
-			try {
-				if (File.Exists(path)) {
-					using (FileStream stream = new FileStream(path, FileMode.Open)) {
-						image = new Bitmap(stream);
-					}
+				try {
+					if (File.Exists(path)) {
+						using (FileStream stream = new FileStream(path, FileMode.Open)) {
+							image = new Bitmap(stream);
+						}
 					
-					return true;
+						return true;
+					}
+					else {
+						msg.AppendLine("\'" + path + "\'");
+						LoadAssemblyImage(skinImage, out image);
+						return false;
+					}
 				}
-				else {
-					MessageBox.Show("Skin Image: \'" + path + "\'", "Error: File not found.", MessageBoxButtons.OK);
-					image = ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
+				catch (Exception e) {
+					image = null;
+					Console.WriteLine("LoadPath:" + e.Message);
 					return false;
 				}
+			}
+		}
+
+		private static bool LoadAssemblyImage(SkinImage skinImage, out Bitmap image) {
+			try {
+				image = ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
+				return true;
 			}
 			catch (Exception e) {
 				image = null;
