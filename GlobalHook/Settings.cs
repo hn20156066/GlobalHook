@@ -200,7 +200,7 @@ namespace GH {
 			}
 
 			public Animate_Settings() {
-				_Launcher = new GHAnimateInfo(400, 100, true, false);
+				_Launcher = new GHAnimateInfo(400, 200, true, false);
 				_MysetList = new GHAnimateInfo(400, 100, true, true);
 				_ItemList = new GHAnimateInfo(400, 100, true, true);
 			}

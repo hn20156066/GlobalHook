@@ -169,40 +169,42 @@ namespace GH {
 			};
 
 			if (process.Start()) {
-				process.WaitForInputIdle(10000);
+				//process.WaitForInputIdle(10000);
 
-				if (process.MainWindowHandle != IntPtr.Zero) {
-					//WinAPI.MoveWindow(process.MainWindowHandle, rect.Left, rect.Top, rect.Width, rect.Height, 1);
-					return (long)process.MainWindowHandle;
-				}
-				else {
-					// エクスプローラのウィンドウハンドルを取得できない
-					// ウィンドウが無いエクスプローラのプロセスが常時動作しているため
+				//if (process.MainWindowHandle != IntPtr.Zero) {
+				//	//WinAPI.MoveWindow(process.MainWindowHandle, rect.Left, rect.Top, rect.Width, rect.Height, 1);
+				//	return (long)process.MainWindowHandle;
+				//}
+				//else {
+				//	// エクスプローラのウィンドウハンドルを取得できない
+				//	// ウィンドウが無いエクスプローラのプロセスが常時動作しているため
 
-					// 方法1
-					// スレッドIDとプロセスIDの比較
-					// processのスレッドIDとプロセスIDが存在しないので多分無理（Spy++）
-					// 方法2
-					// タイトルとクラスの比較
-					// タイトルとクラス名が一致するウィンドウを列挙する
-					// 場合によって複数存在するため、無作為に１つ選ぶ
-					// グループ化されていないウィンドウも範囲に含まれるため確実ではない
-					// 方法3
-					// ウィンドウの生成をフックし取得
-					// プロセスの実行前にDLLのウィンドウの生成をフックするためのbool値をtrueにする
-					// DLLがウィンドウの生成をフック
-					// EXEにフックしたウィンドウのハンドルを送信する
-					// DLLのウィンドウの生成をフックするためのbool値をfalseにする
-					// bool値をtrueにしてからフックすべきウィンドウが生成されるまでの間に
-					// 別のウィンドウが生成された時、全く別のハンドルを送信してしまう
+				//	// 方法1
+				//	// スレッドIDとプロセスIDの比較
+				//	// processのスレッドIDとプロセスIDが存在しないので多分無理（Spy++）
+				//	// 方法2
+				//	// タイトルとクラスの比較
+				//	// タイトルとクラス名が一致するウィンドウを列挙する
+				//	// 場合によって複数存在するため、無作為に１つ選ぶ
+				//	// グループ化されていないウィンドウも範囲に含まれるため確実ではない
+				//	// 方法3
+				//	// ウィンドウの生成をフックし取得
+				//	// プロセスの実行前にDLLのウィンドウの生成をフックするためのbool値をtrueにする
+				//	// DLLがウィンドウの生成をフック
+				//	// EXEにフックしたウィンドウのハンドルを送信する
+				//	// DLLのウィンドウの生成をフックするためのbool値をfalseにする
+				//	// bool値をtrueにしてからフックすべきウィンドウが生成されるまでの間に
+				//	// 別のウィンドウが生成された時、全く別のハンドルを送信してしまう
 
 
-					return 0L;
-				}
+				//	return 0L;
+				//}
 			}
 			else {
 				return 0L;
 			}
+
+			return 0L;
 		}
 	}
 }

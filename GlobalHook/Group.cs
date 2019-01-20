@@ -482,10 +482,9 @@ namespace GH {
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
 
 				if (GHManager.Settings.GroupIconStyle == 2) {
-					Skin.GetSkinImage(SkinImage.Launcher_Item, out Bitmap img);
-					g.DrawImage(img, x, y, lsize, lsize);
-					img.Dispose();
-					img = null;
+					using (Bitmap img = Skin.GetSkinImage(SkinImage.Launcher_Item)) {
+						g.DrawImage(img, x, y, lsize, lsize);
+					}
 				}
 				else if (GHManager.Settings.GroupIconStyle == 1) {
 					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
@@ -503,8 +502,10 @@ namespace GH {
 					}
 				}
 
-				icon.image.Dispose();
-				icon.image = null;
+				if(icon.image != null) {
+					icon.image.Dispose();
+				//	icon.image = null;
+				}
 				icon.image = (Bitmap)bmp.Clone();
 			}
 		}

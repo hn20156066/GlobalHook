@@ -23,7 +23,7 @@ namespace GH {
 		/// <summary>
 		/// マイセットアイコン
 		/// </summary>
-		public GHIcon MysetIcon { get; private set; }
+		public GHMysetIcon MysetIcon { get; private set; }
 
 		/// <summary>
 		/// タスクトレイアイコン
@@ -90,7 +90,7 @@ namespace GH {
 			AddNotifyIcon();
 
 			// マイセットアイコンの初期化＆追加
-			MysetIcon = new GHIcon(SkinImage.Myset_Icon, FormType.MysetList);
+			MysetIcon = new GHMysetIcon(SkinImage.Myset_Icon, FormType.MysetList);
 			MysetIcon.control.MouseClick += (s, a) => {
 				if (a.Button == MouseButtons.Left) {
 					if (GHManager.MysetList.FormVisible) {
@@ -385,9 +385,9 @@ namespace GH {
 					GHManager.ItemList.HideAnimation();
 				}
 				if (GHManager.MysetList.FormVisible) {
-					GHManager.MysetList.FixedActive = false;
-					GHManager.MysetList.HideAnimation();
+					GHManager.MysetList.MysetList_Hide();
 				}
+				FixedActive = false;
 				return true;
 			}
 			return false;

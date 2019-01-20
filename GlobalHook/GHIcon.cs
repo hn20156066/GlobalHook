@@ -42,7 +42,7 @@ namespace GH {
 
 		public GHIcon() {
 			windowType = FormType.ItemList;
-			Skin.GetSkinImage(SkinImage.Group_Item, out image);
+			image = Skin.GetSkinImage(SkinImage.Group_Item);
 
 			Init();
 		}
@@ -55,7 +55,7 @@ namespace GH {
 		public GHIcon(SkinImage skin, FormType windowType) {
 
 			this.windowType = windowType;
-			Skin.GetSkinImage(skin, out image);
+			image = Skin.GetSkinImage(skin);
 
 			Init();
 		}
@@ -81,7 +81,7 @@ namespace GH {
 		/// </summary>
 		/// <param name="bmp">画像</param>
 		/// <param name="windowType">画像の分類</param>
-		public GHIcon(ref Bitmap bmp, FormType windowType) {
+		public GHIcon(Bitmap bmp, FormType windowType) {
 			
 			image = (Bitmap)bmp.Clone();
 			
@@ -118,7 +118,7 @@ namespace GH {
 		/// <returns></returns>
 		public GHIcon Clone(FormType windowType) {
 
-			GHIcon icon = new GHIcon(ref image, windowType);
+			GHIcon icon = new GHIcon(image, windowType);
 
 			return icon;
 

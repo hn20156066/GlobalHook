@@ -16,6 +16,11 @@ namespace GH {
 		Myset_Icon,
 
 		/// <summary>
+		/// マイセットを開いた時のアイコン
+		/// </summary>
+		Myset_Open_Icon,
+
+		/// <summary>
 		/// ランチャーの背景
 		/// </summary>
 		Launcher_Background,

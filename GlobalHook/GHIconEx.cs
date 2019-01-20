@@ -40,7 +40,7 @@ namespace GH {
 			Init();
 		}
 
-		public GHIconEx(ref Bitmap bmp, FormType windowType) : base(ref bmp, windowType) {
+		public GHIconEx(Bitmap bmp, FormType windowType) : base(bmp, windowType) {
 			Init();
 		}
 
@@ -51,7 +51,7 @@ namespace GH {
 		}
 
 		public new GHIconEx Clone(FormType windowType) {
-			GHIconEx iconEx = new GHIconEx(ref image, windowType);
+			GHIconEx iconEx = new GHIconEx(image, windowType);
 
 			return iconEx;
 		}

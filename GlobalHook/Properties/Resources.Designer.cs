@@ -22,21 +22,21 @@ namespace GH.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
         ///   このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GH.Properties.Resources", typeof(Resources).Assembly);
@@ -47,11 +47,11 @@ namespace GH.Properties {
         }
         
         /// <summary>
-        ///   厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
+        ///   すべてについて、現在のスレッドの CurrentUICulture プロパティをオーバーライドします
         ///   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap group_background {
+        internal static System.Drawing.Bitmap group_background {
             get {
                 object obj = ResourceManager.GetObject("group_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap group_item {
+        internal static System.Drawing.Bitmap group_item {
             get {
                 object obj = ResourceManager.GetObject("group_item", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -83,7 +83,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap group_item_background {
+        internal static System.Drawing.Bitmap group_item_background {
             get {
                 object obj = ResourceManager.GetObject("group_item_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +93,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap group_item_background_push {
+        internal static System.Drawing.Bitmap group_item_background_push {
             get {
                 object obj = ResourceManager.GetObject("group_item_background_push", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +103,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap kind_null {
+        internal static System.Drawing.Bitmap kind_null {
             get {
                 object obj = ResourceManager.GetObject("kind_null", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +113,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap launcher_background {
+        internal static System.Drawing.Bitmap launcher_background {
             get {
                 object obj = ResourceManager.GetObject("launcher_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +123,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap launcher_item_background {
+        internal static System.Drawing.Bitmap launcher_item_background {
             get {
                 object obj = ResourceManager.GetObject("launcher_item_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +133,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap launcher_item_background_push {
+        internal static System.Drawing.Bitmap launcher_item_background_push {
             get {
                 object obj = ResourceManager.GetObject("launcher_item_background_push", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +143,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap myset_background {
+        internal static System.Drawing.Bitmap myset_background {
             get {
                 object obj = ResourceManager.GetObject("myset_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +153,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap myset_icon {
+        internal static System.Drawing.Bitmap myset_icon {
             get {
                 object obj = ResourceManager.GetObject("myset_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +163,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap myset_item {
+        internal static System.Drawing.Bitmap myset_item {
             get {
                 object obj = ResourceManager.GetObject("myset_item", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +173,7 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap myset_item_background {
+        internal static System.Drawing.Bitmap myset_item_background {
             get {
                 object obj = ResourceManager.GetObject("myset_item_background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -183,9 +183,19 @@ namespace GH.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        public static System.Drawing.Bitmap myset_item_background_push {
+        internal static System.Drawing.Bitmap myset_item_background_push {
             get {
                 object obj = ResourceManager.GetObject("myset_item_background_push", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap myset_open_icon {
+            get {
+                object obj = ResourceManager.GetObject("myset_open_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

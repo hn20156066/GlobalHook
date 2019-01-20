@@ -26,7 +26,29 @@ namespace GH {
 			StringBuilder msg = new StringBuilder(1024);
 			for (int i = 0; i < (int)SkinImage.Kind_Null; ++i) {
 				SkinImage skinImage = (SkinImage)Enum.ToObject(typeof(SkinImage), i);
-				LoadPath(skinImage, out Images[i], ref msg);
+				if (Images[i] != null) {
+					Images[i].Dispose();
+					Images[i] = null;
+				}
+				Images[i] = LoadPath(skinImage, ref msg);
+			}
+			if (msg.Length > 0) {
+				MessageBox.Show(msg.ToString(), "File Not Found.");
+			}
+		}
+
+		public static void LoadTempSkinImages() {
+			StringBuilder msg = new StringBuilder(1024);
+			for (int i = 0; i < (int)SkinImage.Kind_Null; ++i) {
+				SkinImage skinImage = (SkinImage)Enum.ToObject(typeof(SkinImage), i);
+				if (Images[i] != null) {
+					Images[i].Dispose();
+					Images[i] = null;
+				}
+				Images[i] = LoadPath(skinImage, ref msg, GHManager.TempSettings.SkinName);
+			}
+			if (msg.Length > 0) {
+				MessageBox.Show(msg.ToString(), "File Not Found.");
 			}
 		}
 
@@ -35,13 +57,13 @@ namespace GH {
 		/// </summary>
 		/// <param name="skinImage">取得する画像</param>
 		/// <param name="image">画像を格納する変数</param>
-		public static void GetSkinImage(SkinImage skinImage, out Bitmap image) {
+		public static Bitmap GetSkinImage(SkinImage skinImage) {
 			try {
-				image = (Bitmap)Images[(int)skinImage].Clone();
+				return (Bitmap)Images[(int)skinImage];
 			}
 			catch(Exception e) {
-				image = null;
-				Console.WriteLine("GetSkinImage:" + e.Message);
+				Console.WriteLine("GetSkinImage[" + skinImage.ToString() + "]:" + e.Message);
+				return null;
 			}
 		}
 
@@ -94,7 +116,7 @@ namespace GH {
 		/// <param name="push">押した時の画像</param>
 		/// <returns></returns>
 		public static SkinImage GetItemBackType(FormType windowType, bool push = false) {
-			int[] n = new int[] { 3, 7, 11 };
+			int[] n = new int[] { 4, 8, 12 };
 			return (SkinImage)Enum.ToObject(typeof(SkinImage), n[(int)windowType] + (push == true ? 1 : 0));
 		}
 
@@ -109,49 +131,49 @@ namespace GH {
 					SkinImage.Group_Background;
 		}
 
+		private static Bitmap LoadPath(SkinImage skinImage, ref StringBuilder msg, string skinName) {
+			if (skinName == "") {
+				return LoadAssemblyImage(skinImage);
+			}
+			else {
+				string path = Directory.GetCurrentDirectory() + "\\Skin\\" + skinName + "\\" + skinImage.ToString().ToLower() + ".png";
+				Bitmap temp;
+				try {
+					if (File.Exists(path)) {
+						using (FileStream stream = new FileStream(path, FileMode.Open)) {
+							temp = new Bitmap(stream);
+						}
+					}
+					else {
+						msg.AppendLine("\'" + path + "\'");
+						temp = LoadAssemblyImage(skinImage);
+					}
+
+					return (Bitmap)temp.Clone();
+				}
+				catch (Exception e) {
+					Console.WriteLine("LoadPath:" + e.Message);
+					return null;
+				}
+			}
+		}
+
 		/// <summary>
 		/// スキンの読み込み
 		/// </summary>
 		/// <param name="skinImage">スキン画像の種類</param>
 		/// <param name="image">画像の読み込み先</param>
-		private static bool LoadPath(SkinImage skinImage, out Bitmap image, ref StringBuilder msg) {
-			if (GHManager.Settings.SkinName == "") {
-				return LoadAssemblyImage(skinImage, out image);
-			}
-			else {
-				string path = Directory.GetCurrentDirectory() + "\\Skin\\" + GHManager.Settings.SkinName + "\\" + skinImage.ToString().ToLower() + ".png";
-
-				try {
-					if (File.Exists(path)) {
-						using (FileStream stream = new FileStream(path, FileMode.Open)) {
-							image = new Bitmap(stream);
-						}
-					
-						return true;
-					}
-					else {
-						msg.AppendLine("\'" + path + "\'");
-						LoadAssemblyImage(skinImage, out image);
-						return false;
-					}
-				}
-				catch (Exception e) {
-					image = null;
-					Console.WriteLine("LoadPath:" + e.Message);
-					return false;
-				}
-			}
+		private static Bitmap LoadPath(SkinImage skinImage, ref StringBuilder msg) {
+			return LoadPath(skinImage, ref msg, GHManager.Settings.SkinName);
 		}
 
-		private static bool LoadAssemblyImage(SkinImage skinImage, out Bitmap image) {
+		private static Bitmap LoadAssemblyImage(SkinImage skinImage) {
 			try {
-				image = ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
-				return true;
+				return ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
 			}
 			catch (Exception e) {
-				image = null;
 				Console.WriteLine("LoadPath:" + e.Message);
-				return false;
+				return null;
 			}
 		}
 

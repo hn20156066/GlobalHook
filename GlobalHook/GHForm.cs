@@ -29,8 +29,9 @@ namespace GH {
 			AnimationStopwatch = new Stopwatch();
 			Shown += (sender, e) => TopMost = true;
 			Enter += (sender, e) => HideTimer.Stop();
-			TempControl = new Control();
-			TempControl.Visible = false;
+			TempControl = new Control {
+				Visible = false
+			};
 			Controls.Add(TempControl);
 			NoSelectItem();
 		}
@@ -446,6 +447,8 @@ namespace GH {
 			CancelToken = TokenSource.Token;
 
 			if ((!visible && FormVisible) || (visible && !FormVisible)) {
+
+				GHFormDraw();
 
 				FormVisible = visible;
 
