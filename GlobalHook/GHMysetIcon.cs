@@ -12,7 +12,6 @@ namespace GH {
 	public class GHMysetIcon : GHIcon {
 
 		public bool OpenMysetList { private get; set; }
-		private Bitmap OpenImage { get; set; }
 
 		public GHMysetIcon() : base() {
 			Init();
@@ -27,13 +26,12 @@ namespace GH {
 			Init();
 		}
 
-		public GHMysetIcon(Bitmap bmp, FormType windowType) : base(bmp, windowType) {
+		public GHMysetIcon(Bitmap bmp, FormType windowType) : base(ref bmp, windowType) {
 			Init();
 		}
-
+		
 		private void Init() {
 			OpenMysetList = false;
-			OpenImage = Skin.GetSkinImage(SkinImage.Myset_Open_Icon);
 		}
 
 		/// <summary>
@@ -51,14 +49,11 @@ namespace GH {
 				Height = control.Height - padding.HSize
 			};
 
-			if (OpenMysetList) {
-				graph.DrawImage(OpenImage, rect);
-			}
-			else {
-				if(image != null) {
-					graph.DrawImage(image, rect);
-				}
-			}
+			SkinImage skin = OpenMysetList ? SkinImage.Myset_Open_Icon : SkinImage.Myset_Icon;
+			Skin.GetSkinImage(skin, out Bitmap bmp);
+			graph.DrawImage(bmp, rect);
+			bmp.Dispose();
+			bmp = null;
 		}
 
 	}

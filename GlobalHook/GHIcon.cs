@@ -42,7 +42,7 @@ namespace GH {
 
 		public GHIcon() {
 			windowType = FormType.ItemList;
-			image = Skin.GetSkinImage(SkinImage.Group_Item);
+			Skin.GetSkinImage(SkinImage.Group_Item, out image);
 
 			Init();
 		}
@@ -55,7 +55,7 @@ namespace GH {
 		public GHIcon(SkinImage skin, FormType windowType) {
 
 			this.windowType = windowType;
-			image = Skin.GetSkinImage(skin);
+			Skin.GetSkinImage(skin, out image);
 
 			Init();
 		}
@@ -81,11 +81,22 @@ namespace GH {
 		/// </summary>
 		/// <param name="bmp">画像</param>
 		/// <param name="windowType">画像の分類</param>
-		public GHIcon(Bitmap bmp, FormType windowType) {
+		public GHIcon(ref Bitmap bmp, FormType windowType) {
 			
 			image = (Bitmap)bmp.Clone();
 			
 			Init();
+		}
+
+		~GHIcon() {
+			if (image != null) {
+				image.Dispose();
+				image = null;
+			}
+			if (!control.IsDisposed) {
+				control.Dispose();
+				control = null;
+			}
 		}
 
 		/// <summary>
@@ -118,7 +129,7 @@ namespace GH {
 		/// <returns></returns>
 		public GHIcon Clone(FormType windowType) {
 
-			GHIcon icon = new GHIcon(image, windowType);
+			GHIcon icon = new GHIcon(ref image, windowType);
 
 			return icon;
 
@@ -159,7 +170,9 @@ namespace GH {
 				Height = control.Height - padding.HSize
 			};
 
-			graph.DrawImage(image, rect);
+			if (image != null) {
+				graph.DrawImage(image, rect);
+			}
 
 		}
 

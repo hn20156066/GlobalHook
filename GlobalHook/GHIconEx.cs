@@ -40,7 +40,7 @@ namespace GH {
 			Init();
 		}
 
-		public GHIconEx(Bitmap bmp, FormType windowType) : base(bmp, windowType) {
+		public GHIconEx(Bitmap bmp, FormType windowType) : base(ref bmp, windowType) {
 			Init();
 		}
 

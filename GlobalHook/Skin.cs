@@ -19,18 +19,11 @@ namespace GH {
 		/// </summary>
 		public static Bitmap[] Images = new Bitmap[Enum.GetNames(typeof(SkinImage)).Length];
 
-		/// <summary>
-		/// スキンの画像を読み込む
-		/// </summary>
 		public static void LoadSkinImages() {
 			StringBuilder msg = new StringBuilder(1024);
 			for (int i = 0; i < (int)SkinImage.Kind_Null; ++i) {
 				SkinImage skinImage = (SkinImage)Enum.ToObject(typeof(SkinImage), i);
-				if (Images[i] != null) {
-					Images[i].Dispose();
-					Images[i] = null;
-				}
-				Images[i] = LoadPath(skinImage, ref msg);
+				LoadPath(skinImage, out Images[i], ref msg);
 			}
 			if (msg.Length > 0) {
 				MessageBox.Show(msg.ToString(), "File Not Found.");
@@ -41,11 +34,7 @@ namespace GH {
 			StringBuilder msg = new StringBuilder(1024);
 			for (int i = 0; i < (int)SkinImage.Kind_Null; ++i) {
 				SkinImage skinImage = (SkinImage)Enum.ToObject(typeof(SkinImage), i);
-				if (Images[i] != null) {
-					Images[i].Dispose();
-					Images[i] = null;
-				}
-				Images[i] = LoadPath(skinImage, ref msg, GHManager.TempSettings.SkinName);
+				LoadPath(skinImage, out Images[i], ref msg, GHManager.TempSettings.SkinName);
 			}
 			if (msg.Length > 0) {
 				MessageBox.Show(msg.ToString(), "File Not Found.");
@@ -57,13 +46,13 @@ namespace GH {
 		/// </summary>
 		/// <param name="skinImage">取得する画像</param>
 		/// <param name="image">画像を格納する変数</param>
-		public static Bitmap GetSkinImage(SkinImage skinImage) {
+		public static void GetSkinImage(SkinImage skinImage, out Bitmap image) {
 			try {
-				return (Bitmap)Images[(int)skinImage];
+				image = (Bitmap)Images[(int)skinImage].Clone();
 			}
-			catch(Exception e) {
-				Console.WriteLine("GetSkinImage[" + skinImage.ToString() + "]:" + e.Message);
-				return null;
+			catch (Exception e) {
+				image = null;
+				Console.WriteLine("GetSkinImage:" + e.Message);
 			}
 		}
 
@@ -131,29 +120,30 @@ namespace GH {
 					SkinImage.Group_Background;
 		}
 
-		private static Bitmap LoadPath(SkinImage skinImage, ref StringBuilder msg, string skinName) {
+		private static bool LoadPath(SkinImage skinImage, out Bitmap image, ref StringBuilder msg, string skinName) {
 			if (skinName == "") {
-				return LoadAssemblyImage(skinImage);
+				LoadAssemblyImage(skinImage, out image);
+				return false;
 			}
 			else {
 				string path = Directory.GetCurrentDirectory() + "\\Skin\\" + skinName + "\\" + skinImage.ToString().ToLower() + ".png";
-				Bitmap temp;
 				try {
 					if (File.Exists(path)) {
 						using (FileStream stream = new FileStream(path, FileMode.Open)) {
-							temp = new Bitmap(stream);
+							image = new Bitmap(stream);
 						}
 					}
 					else {
 						msg.AppendLine("\'" + path + "\'");
-						temp = LoadAssemblyImage(skinImage);
+						LoadAssemblyImage(skinImage, out image);
 					}
 
-					return (Bitmap)temp.Clone();
+					return true;
 				}
 				catch (Exception e) {
 					Console.WriteLine("LoadPath:" + e.Message);
-					return null;
+					image = null;
+					return false;
 				}
 			}
 		}
@@ -163,17 +153,19 @@ namespace GH {
 		/// </summary>
 		/// <param name="skinImage">スキン画像の種類</param>
 		/// <param name="image">画像の読み込み先</param>
-		private static Bitmap LoadPath(SkinImage skinImage, ref StringBuilder msg) {
-			return LoadPath(skinImage, ref msg, GHManager.Settings.SkinName);
+		private static bool LoadPath(SkinImage skinImage, out Bitmap image,  ref StringBuilder msg) {
+			return LoadPath(skinImage, out image, ref msg, GHManager.Settings.SkinName);
 		}
 
-		private static Bitmap LoadAssemblyImage(SkinImage skinImage) {
+		private static bool LoadAssemblyImage(SkinImage skinImage, out Bitmap image) {
 			try {
-				return ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
+				image = ((Bitmap)(Properties.Resources.ResourceManager.GetObject(skinImage.ToString().ToLower(), Properties.Resources.Culture)));
+				return true;
 			}
 			catch (Exception e) {
 				Console.WriteLine("LoadPath:" + e.Message);
-				return null;
+				image = null;
+				return false;
 			}
 		}
 

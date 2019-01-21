@@ -50,9 +50,10 @@ namespace GH {
 
 		public Myset(string[] path) {
 			Items = new List<MysetItem>(10);
-			using (Bitmap image = Skin.GetSkinImage(SkinImage.Myset_Item)) {
-				icon = new GHIcon(image, FormType.MysetList);
-			}
+			Skin.GetSkinImage(SkinImage.Myset_Item, out Bitmap image);
+			icon = new GHIcon(ref image, FormType.MysetList);
+			image.Dispose();
+			image = null;
 			icon.control.MouseEnter += new EventHandler(Myset_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Myset_Control_Leave);
 			icon.control.MouseClick += new MouseEventHandler(Myset_Control_Click);
@@ -65,6 +66,20 @@ namespace GH {
 			}
 
 			SetMysetIcon();
+		}
+
+		~Myset() {
+			Items.Clear();
+			Items = null;
+			icon = null;
+			if (mysetmenu != null) {
+				mysetmenu.Dispose();
+				mysetmenu = null;
+			}
+			if (timer != null) {
+				timer.Dispose();
+				timer = null;
+			}
 		}
 
 		/// <summary>
@@ -307,9 +322,10 @@ namespace GH {
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
 
 				if (GHManager.Settings.MysetIconStyle == 2) {
-					using (Bitmap img = Skin.GetSkinImage(SkinImage.Myset_Item)) {
-						g.DrawImage(img, x, y, lsize, lsize);
-					}
+					Skin.GetSkinImage(SkinImage.Myset_Item, out Bitmap image);
+					g.DrawImage(image, x, y, lsize, lsize);
+					image.Dispose();
+					image = null;
 				}
 				else if (GHManager.Settings.MysetIconStyle == 1) {
 					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
@@ -327,8 +343,9 @@ namespace GH {
 					}
 				}
 
-				icon.image.Dispose();
-				icon.image = null;
+				if (icon.image != null) {
+					icon.image.Dispose();
+				}
 				icon.image = (Bitmap)bmp.Clone();
 			}
 		}

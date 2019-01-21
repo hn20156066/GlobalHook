@@ -92,6 +92,11 @@ namespace GH {
 		/// デストラクタ
 		/// </summary>
 		~GroupItem() {
+			icon = null;
+			if (itemmenu != null) {
+				itemmenu.Dispose();
+				itemmenu = null;
+			}
 			//WinAPI.DwmUnregisterThumbnail(thumb);
 		}
 
@@ -124,6 +129,9 @@ namespace GH {
 		/// </summary>
 		private void ItemMenuInitialize() {
 
+			if (itemmenu != null) {
+				itemmenu.Dispose();
+			}
 			itemmenu = new ContextMenu();
 			MenuItem menuItem = new MenuItem("グループから削除", ItemMenu_DelItem_Click);
 			itemmenu.MenuItems.Add(menuItem);

@@ -60,10 +60,21 @@ namespace GH {
 			icon.control.MouseClick += new MouseEventHandler(Item_Control_Click);
 		}
 
+		~MysetItem() {
+			icon = null;
+			if (itemmenu != null) {
+				itemmenu.Dispose();
+				itemmenu = null;
+			}
+		}
+
 		/// <summary>
 		/// メニュー初期化
 		/// </summary>
 		private void ItemMenuInitialize() {
+			if (itemmenu != null) {
+				itemmenu.Dispose();
+			}
 			itemmenu = new ContextMenu();
 			MenuItem menuItem = new MenuItem("マイセットから削除", ItemMenu_DelItem_Click);
 			itemmenu.MenuItems.Add(menuItem);

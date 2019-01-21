@@ -54,6 +54,20 @@ namespace GH {
 
 		}
 
+		~Group() {
+			Items.Clear();
+			Items = null;
+			icon = null;
+			if (groupmenu != null) {
+				groupmenu.Dispose();
+				groupmenu = null;
+			}
+			if (timer != null) {
+				timer.Dispose();
+				timer = null;
+			}
+		}
+
 		/// <summary>
 		/// グループメニューの初期化
 		/// </summary>
@@ -482,9 +496,10 @@ namespace GH {
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
 
 				if (GHManager.Settings.GroupIconStyle == 2) {
-					using (Bitmap img = Skin.GetSkinImage(SkinImage.Launcher_Item)) {
-						g.DrawImage(img, x, y, lsize, lsize);
-					}
+					Skin.GetSkinImage(SkinImage.Launcher_Item, out Bitmap image);
+					g.DrawImage(image, x, y, lsize, lsize);
+					image.Dispose();
+					image = null;
 				}
 				else if (GHManager.Settings.GroupIconStyle == 1) {
 					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
@@ -501,11 +516,7 @@ namespace GH {
 						}
 					}
 				}
-
-				if(icon.image != null) {
-					icon.image.Dispose();
-				//	icon.image = null;
-				}
+				
 				icon.image = (Bitmap)bmp.Clone();
 			}
 		}
