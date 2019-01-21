@@ -221,6 +221,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	CWPSTRUCT* const p = (CWPSTRUCT*)lParam;
 	long wp = p->wParam & 0xFFF0;
 	DSIZE scale;
+	RECT rect[2];
 
 	if (nCode == HC_ACTION) {
 		switch (p->message) {
@@ -234,8 +235,6 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 						windows.clear();
 						parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
 						EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
-
-						RECT rect[2];
 
 						GetWindowRect(p->hwnd, &rect[0]);
 						GetWindowRect2(p->hwnd, &rect[1]);
@@ -336,20 +335,26 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 						//if (1 <= dir && dir <= 8)
 						//{
-						//	RECT rect;
+						//	//RECT rect;
 						//	nResizing = dir;
 						//	//INT nCount = 0;
 						//	//EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
 						//	SendMessage(p->hwnd, WM_CANCELMODE, 0, 0);
 						//	SetCapture(p->hwnd);
-						//	GetWindowRect2(p->hwnd, &rect);
-						//	ptCurFromLT.x = LOWORD(p->lParam) - rect.left + 7;
-						//	ptCurFromLT.y = HIWORD(p->lParam) - rect.top;
-						//	GetWindowRect(p->hwnd, &rect);
-						//	ptCurFromRB.x = LOWORD(p->lParam) - rect.right;
-						//	ptCurFromRB.y = HIWORD(p->lParam) - rect.bottom;
-						//	ptDispFromRB.x = rect.right;
-						//	ptDispFromRB.y = rect.bottom;
+						//	GetWindowRect(p->hwnd, &rect[0]);
+						//	GetWindowRect2(p->hwnd, &rect[1]);
+						//	ModifiedRect(p->hwnd, rect[1]);
+
+						//	POINT dif = { rect[1].left - rect[0].left, rect[1].top - rect[0].top };
+						//	LONG x = (LONG)((double)LOWORD(p->lParam));
+						//	LONG y = (LONG)((double)HIWORD(p->lParam));
+						//	ptCurFromLT.x = x + dif.x - rect[1].left;
+						//	ptCurFromLT.y = y + dif.y - rect[1].top;
+
+						//	//ptCurFromRB.x = 
+						//	//ptCurFromRB.y = HIWORD(p->lParam) - rect.bottom;
+						//	ptDispFromRB.x = rect[1].right;
+						//	ptDispFromRB.y = rect[1].bottom;
 						//	CallNextHookEx(hookCwp, nCode, wParam, lParam);
 						//	break;
 						//}
@@ -408,7 +413,7 @@ _DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam
 _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	MOUSEHOOKSTRUCTEX* const mhex = (MOUSEHOOKSTRUCTEX*)lParam; // マウスデータ
 
-	int width, height; // ウィンドウサイズ
+	//int width, height; // ウィンドウサイズ
 	SIZE extSize;// , aero;  // 拡張ウィンドウサイズ
 	RECT rect[2]; // 移動中ウィンドウのサイズ
 	//RECT rect2; // 他のウィンドウのサイズ
@@ -595,11 +600,16 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				bAddGroupFlag = bMagnetflag;
 			}
 			else if (nResizing > 0) {
+			
 				GetWindowRect(mhex->hwnd, &rect[0]);
-				GetWindowRect(mhex->hwnd, &rect[1]);
-				//ModifiedRect(mhex->hwnd, rect);
-				width = rect[1].right - rect[1].left;
-				height = rect[1].bottom - rect[1].top;
+				GetWindowRect2(mhex->hwnd, &rect[1]);
+				ModifiedRect(mhex->hwnd, rect[1]);
+				dif.x = rect[1].left - rect[0].left;
+				dif.y = rect[1].top - rect[0].top;
+
+				extSize = { rect[1].right - rect[1].left, rect[1].bottom - rect[1].top };
+				int width = extSize.cx;
+				int height = extSize.cy;
 				RECT tempRect = rect[1];
 
 				//for (int i = 0; i < windows.size(); i++)
@@ -615,34 +625,38 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					// topright    5 0x0101  bottom      6 0x0110
 					// bottomleft  7 0x0111  bottomright 8 0x1000
 
-				int movex = ptCurFromLT.x - (LONG)round((double)mhex->pt.x * scale.cx);
-				int movey = ptCurFromLT.y - (LONG)round((double)mhex->pt.y * scale.cy);
+
+				
+				//int movex = ptCurFromLT.x - (LONG)round((double)mhex->pt.x * scale.cx);
+				//int movey = ptCurFromLT.y - (LONG)round((double)mhex->pt.y * scale.cy);
+
+
 
 				// left 1 3 7
 				if (nResizing == 1 || nResizing == 4 || nResizing == 7) {
 					tempRect.left = srcPos.x - ptCurFromLT.x;
 					width = rect[1].right - srcPos.x + ptCurFromLT.x;
-					if (tempRect.left + width > ptDispFromRB.x - 7) {
+					//if (tempRect.left + width > ptDispFromRB.x - dif.x) {
 						tempRect.left = rect[1].left;
-					}
+					//}
 				}
 				// right 2 5 8
-				else if (nResizing == 2 || nResizing == 5 || nResizing == 8) {
-					width = srcPos.x - rect[1].left - ptCurFromRB.x;
-				}
+				//else if (nResizing == 2 || nResizing == 5 || nResizing == 8) {
+				//	width = srcPos.x - rect[1].left - ptCurFromRB.x;
+				//}
 
 				// top 3 4 5
 				if (3 <= nResizing && nResizing <= 5) {
 					tempRect.top = srcPos.y - ptCurFromLT.y;
 					height = rect[1].bottom - srcPos.y + ptCurFromLT.y;
-					if (tempRect.top + height > ptDispFromRB.y - 7) {
+					//if (tempRect.top + height > ptDispFromRB.y - dif.x) {
 						tempRect.top = rect[1].top;
-					}
+					//}
 				}
 				// bottom 6 7 8
-				else if (6 <= nResizing && nResizing <= 8) {
-					height = srcPos.y - rect[1].top - ptCurFromRB.y;
-				}
+				//else if (6 <= nResizing && nResizing <= 8) {
+				//	height = srcPos.y - rect[1].top - ptCurFromRB.y;
+				//}
 
 				//}
 
@@ -657,7 +671,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				//	}
 				//}
 
-				MoveWindow(mhex->hwnd, rect[1].left, rect[1].top, width, height, TRUE);
+				MoveWindow(mhex->hwnd, rect[1].left, rect[1].top, width, height, FALSE);
 				//SetWindowPos(mhex->hwnd, NULL, tx, rect.top, w, rect.bottom - rect.top, NULL);
 			}
 
