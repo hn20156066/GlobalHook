@@ -89,14 +89,14 @@ namespace GH {
 		}
 
 		~GHIcon() {
-			if (image != null) {
-				image.Dispose();
-				image = null;
-			}
-			if (!control.IsDisposed) {
-				control.Dispose();
-				control = null;
-			}
+			//if (image != null) {
+			//	image.Dispose();
+			//	image = null;
+			//}
+			//if (!control.IsDisposed) {
+			//	control.Dispose();
+			//	control = null;
+			//}
 		}
 
 		/// <summary>
