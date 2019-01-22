@@ -1,4 +1,4 @@
-# GlobalHookProject
+# GlobalHook
 複数のウィンドウをグループ化して一括管理することを目的としたアプリケーションです。
 
 ## 機能
