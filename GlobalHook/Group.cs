@@ -74,7 +74,11 @@ namespace GH {
 		private void GroupMenuInitialize() {
 
 			groupmenu = new ContextMenu();
-			MenuItem item = new MenuItem("グループ削除", MenuItem_DelGroup_Click);
+			MenuItem item = new MenuItem("前に移動", MenuItem_MovePrev_Click);
+			groupmenu.MenuItems.Add(item);
+			item = new MenuItem("次に移動", MenuItem_MoveNext_Click);
+			groupmenu.MenuItems.Add(item);
+			item = new MenuItem("グループ削除", MenuItem_DelGroup_Click);
 			groupmenu.MenuItems.Add(item);
 			item = new MenuItem("すべて閉じる", MenuItem_AllClose_Click);
 			groupmenu.MenuItems.Add(item);
@@ -88,6 +92,14 @@ namespace GH {
 			}
 			groupmenu.MenuItems.Add(item);
 
+		}
+
+		private void MenuItem_MoveNext_Click(object sender, EventArgs e) {
+			GroupManager.GroupMove(this, true);
+		}
+
+		private void MenuItem_MovePrev_Click(object sender, EventArgs e) {
+			GroupManager.GroupMove(this, false);
 		}
 
 		/// <summary>
@@ -381,7 +393,7 @@ namespace GH {
 			}
 
 		}
-
+		
 		/// <summary>
 		/// アイテムリストにアイテムを追加
 		/// </summary>

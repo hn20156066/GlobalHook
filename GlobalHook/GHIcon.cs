@@ -47,6 +47,13 @@ namespace GH {
 			Init();
 		}
 
+		public GHIcon(GHIcon icon) {
+			windowType = icon.windowType;
+			image = (Bitmap)icon.image.Clone();
+
+			Init();
+		}
+
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>

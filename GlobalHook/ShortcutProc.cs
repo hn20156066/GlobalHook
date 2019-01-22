@@ -41,7 +41,7 @@ namespace GH {
 					int idx = GHManager.Launcher.SelectIndex;
 					if (GroupManager.CheckRange(idx - 1)) {
 						GHManager.ItemList.KeyboardActive = true;
-						GroupManager.ShowItemList(GroupManager.Items[idx]);
+						GroupManager.ShowItemList(GroupManager.Items[idx - 1]);
 					}
 					if (idx == 0) {
 						if (GHManager.MysetList.FormVisible) {

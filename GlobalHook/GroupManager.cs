@@ -16,7 +16,7 @@ namespace GH {
 		/// <summary>
 		/// グループのリスト
 		/// </summary>
-		public static List<Group> Items { get; set; }
+		public static List<Group> Items;
 
 		/// <summary>
 		/// グループマネージャーの初期化
@@ -109,6 +109,37 @@ namespace GH {
 			}
 
 			return -1;
+
+		}
+
+		public static int InGroupItem(GroupItem item, out int itemIndex) {
+			for (int i = 0; i < Items.Count; ++i) {
+				if ((itemIndex = Items[i].Items.IndexOf(item)) != -1) {
+					return i;
+				}
+			}
+			itemIndex = -1;
+			return -1;
+		}
+
+		public static void GroupMove(Group group, bool next) {
+			int srcIdx = Items.IndexOf(group);
+			Console.WriteLine(srcIdx);
+			if (srcIdx == -1) return;
+			GHManager.MoveElement(ref Items, srcIdx, next);
+		}
+
+		public static void GroupItemMove(GroupItem item, bool next) {
+			int groupIndex = InGroupItem(item, out int itemIndex);
+			Console.WriteLine(groupIndex + " : " + itemIndex);
+			if (groupIndex == -1 || itemIndex == -1) return;
+			int newIndex = itemIndex + (next ? 1 : -1);
+			Console.WriteLine("newIndex:" + newIndex);
+			if (newIndex < 0 || Items[groupIndex].Items.Count <= newIndex) return;
+			GroupItem temp = new GroupItem(item);
+			Items[groupIndex].Items.RemoveAt(itemIndex);
+			Items[groupIndex].Items.Insert(newIndex, temp);
+			Console.WriteLine(Items[groupIndex].Items.Count);
 
 		}
 

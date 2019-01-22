@@ -88,6 +88,12 @@ namespace GH {
 
 		}
 
+		public GroupItem(GroupItem item) {
+			hwnd = item.Handle;
+			icon = new GHIconEx(item.icon);
+			PrevRect = item.PrevRect;
+		}
+
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
@@ -133,11 +139,23 @@ namespace GH {
 				itemmenu.Dispose();
 			}
 			itemmenu = new ContextMenu();
-			MenuItem menuItem = new MenuItem("グループから削除", ItemMenu_DelItem_Click);
+			MenuItem menuItem = new MenuItem("前に移動", ItemMenu_MovePrev_Click);
+			itemmenu.MenuItems.Add(menuItem);
+			menuItem = new MenuItem("次に移動", ItemMenu_MoveNext_Click);
+			itemmenu.MenuItems.Add(menuItem);
+			menuItem = new MenuItem("グループから削除", ItemMenu_DelItem_Click);
 			itemmenu.MenuItems.Add(menuItem);
 			menuItem = new MenuItem("閉じる", ItemMenu_Close_Click);
 			itemmenu.MenuItems.Add(menuItem);
 
+		}
+
+		private void ItemMenu_MoveNext_Click(object sender, EventArgs e) {
+			GroupManager.GroupItemMove(this, true);
+		}
+
+		private void ItemMenu_MovePrev_Click(object sender, EventArgs e) {
+			GroupManager.GroupItemMove(this, false);
 		}
 
 		/// <summary>

@@ -31,6 +31,13 @@ namespace GH {
 			Init();
 		}
 
+		public GHIconEx(GHIconEx icon) :base(icon) {
+			rect_text = icon.rect_text;
+			rect_icon = icon.rect_icon;
+			item_name = new StringBuilder(64);
+			item_name.Append(icon.item_name);
+		}
+
 		public GHIconEx(SkinImage skin, FormType windowType) : base(skin, windowType) {
 			Init();
 		}

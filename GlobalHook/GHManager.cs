@@ -296,6 +296,14 @@ namespace GH {
 			}
 		}
 
+		public static void MoveElement<T>(ref List<T> list, int currentIndex, bool next) {
+			int newIndex = currentIndex + (next ? 2 : -2);
+			if (newIndex < 0 || list.Count >= newIndex) return;
+
+			T temp = list[currentIndex];
+			list.RemoveAt(currentIndex);
+			list.Insert(newIndex, temp);
+		}
 	}
 
 	/// <summary>
