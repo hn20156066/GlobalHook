@@ -186,11 +186,12 @@ namespace GH {
 		private void Load_Skin() {
 			string skinPath = Directory.GetCurrentDirectory() + "\\Skin";
 			ListBoxSkin.Items.Add("[内部スキン]");
+			Console.WriteLine(GHManager.Settings.SkinName);
 			if (Directory.Exists(skinPath)) {
 				List<string> dirs = Directory.EnumerateDirectories(skinPath, "*", SearchOption.TopDirectoryOnly).ToList();
 				dirs.ForEach(s => ListBoxSkin.Items.Add(Path.GetFileName(s)));
 				for (int i = 1; i < ListBoxSkin.Items.Count; ++i) {
-					if (GHManager.TempSettings.SkinName.Equals(ListBoxSkin.Items[i])) {
+					if (GHManager.Settings.SkinName.Equals(ListBoxSkin.Items[i].ToString())) {
 						ListBoxSkin.SelectedIndex = i;
 						return;
 					}
