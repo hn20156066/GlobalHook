@@ -86,7 +86,9 @@ namespace GH {
 				item = new MenuItem("元に戻す", MenuItem_AutoTilePrev_Click);
 			}
 			else {
-				item = new MenuItem("ウィンドウを並べる", MenuItem_AutoTile_Click);
+				item = new MenuItem("ウィンドウを左右に並べる", MenuItem_AutoTile_Click);
+				groupmenu.MenuItems.Add(item);
+				item = new MenuItem("ウィンドウを上下に並べる", MenuItem_AutoTile2_Click);
 			}
 			groupmenu.MenuItems.Add(item);
 			//item = new MenuItem("前に移動", MenuItem_MovePrev_Click);
@@ -143,48 +145,29 @@ namespace GH {
 				tileCnt++;
 			}
 			else {
-				int column = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
-				int[] row = new int[column];
-				int cnt = Items.Count;
-				int col = column;
-				for (int i = 0; i < row.Length; ++i) {
-					row[i] = (int)(Math.Floor((decimal)(cnt / col)));
-					cnt -= row[i];
-					--col;
+				tileCnt = HorizontalTile();
+			}
+			if (tileCnt > 0)
+				IsTiledWindows = true;
+		}
+		
+		/// <summary>
+		/// メニューの ウィンドウを並べる をクリックした時のイベント
+		/// </summary>
+		private void MenuItem_AutoTile2_Click(object sender, EventArgs e) {
+
+			int tileCnt = 0;
+			if (Items.Count == 1) {
+				if (GHProcess.IsMinimize((IntPtr)Items.First().Handle)) {
+					return;
 				}
-
-				int n = 0;
-				int width, height;
-				IntPtr Handle;
-				WinAPI.DSIZE scale = GHManager.Scale;
-
-				Rectangle workRect = GHManager.WorkingArea;
-				workRect = new Rectangle(
-					(int)(workRect.Left / scale.cx),
-					(int)(workRect.Top / scale.cy),
-					(int)(workRect.Width / scale.cx),
-					(int)(workRect.Height / scale.cy)
-					);
-				
-				width = (workRect.Width / column);
-				for (int i = 0; i < column; ++i) {
-					height = (workRect.Height / row[i]);
-					for (int j = 0; j < row[i]; ++j) {
-						Handle = (IntPtr)Items[n].Handle;
-						if (GHProcess.IsMinimize(Handle)) {
-							GHProcess.Normalize(Handle);
-						}
-						WinAPI.GetWindowRect(Handle, out WinAPI.RECT rect1);
-						DwmAPI.GetWindowRect(Handle, out Rectangle rect2);
-						int dif = rect2.Left - rect1.left;
-
-						Items[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
-						WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * i - dif + workRect.Left, height * j + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
-						WinAPI.SetWindowPos(Handle, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
-						++n;
-						tileCnt++;
-					}
-				}
+				DwmAPI.GetWindowRect((IntPtr)Items[0].Handle, out Rectangle rect);
+				Items[0].PrevRect = rect;
+				GHProcess.Maximize((IntPtr)Items[0].Handle);
+				tileCnt++;
+			}
+			else {
+				tileCnt = VerticalTile();
 			}
 			if (tileCnt > 0)
 				IsTiledWindows = true;
@@ -201,7 +184,103 @@ namespace GH {
 			IsTiledWindows = false;
 		}
 
-		public void GroupItemsTile() {
+		private int HorizontalTile() {
+			int tileCnt = 0;
+			int column = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
+			int[] row = new int[column];
+			int cnt = Items.Count;
+			int col = column;
+			for (int i = 0; i < row.Length; ++i) {
+				row[i] = (int)(Math.Floor((decimal)(cnt / col)));
+				cnt -= row[i];
+				--col;
+			}
+
+			int n = 0;
+			int width, height;
+			IntPtr Handle;
+			WinAPI.DSIZE scale = GHManager.Scale;
+
+			Rectangle workRect = GHManager.WorkingArea;
+			workRect = new Rectangle(
+				(int)(workRect.Left / scale.cx),
+				(int)(workRect.Top / scale.cy),
+				(int)(workRect.Width / scale.cx),
+				(int)(workRect.Height / scale.cy)
+				);
+
+			width = (workRect.Width / column);
+			for (int i = 0; i < column; ++i) {
+				height = (workRect.Height / row[i]);
+				for (int j = 0; j < row[i]; ++j) {
+					Handle = (IntPtr)Items[n].Handle;
+					if (GHProcess.IsMinimize(Handle)) {
+						GHProcess.Normalize(Handle);
+					}
+					WinAPI.GetWindowRect(Handle, out WinAPI.RECT rect1);
+					DwmAPI.GetWindowRect(Handle, out Rectangle rect2);
+					int dif = rect2.Left - rect1.left;
+
+					Items[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
+					WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * i - dif + workRect.Left, height * j + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
+					WinAPI.SetWindowPos(Handle, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
+					++n;
+					tileCnt++;
+				}
+			}
+
+			return tileCnt;
+		}
+
+		private int VerticalTile() {
+			int tileCnt = 0;
+			int row = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
+			int[] column = new int[row];
+			int cnt = Items.Count;
+			int col = row;
+			for (int i = 0; i < column.Length; ++i) {
+				column[i] = (int)(Math.Floor((decimal)(cnt / col)));
+				cnt -= column[i];
+				--col;
+			}
+
+			int n = 0;
+			int width, height;
+			IntPtr Handle;
+			WinAPI.DSIZE scale = GHManager.Scale;
+
+			Rectangle workRect = GHManager.WorkingArea;
+			workRect = new Rectangle(
+				(int)(workRect.Left / scale.cx),
+				(int)(workRect.Top / scale.cy),
+				(int)(workRect.Width / scale.cx),
+				(int)(workRect.Height / scale.cy)
+				);
+
+			height = (workRect.Height / row);
+			for (int i = 0; i < row; ++i) {
+				width = (workRect.Width / column[i]);
+				for (int j = 0; j < column[i]; ++j) {
+					Handle = (IntPtr)Items[n].Handle;
+					if (GHProcess.IsMinimize(Handle)) {
+						GHProcess.Normalize(Handle);
+					}
+					WinAPI.GetWindowRect(Handle, out WinAPI.RECT rect1);
+					DwmAPI.GetWindowRect(Handle, out Rectangle rect2);
+					int dif = rect2.Left - rect1.left;
+
+					Items[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
+					WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * i - dif + workRect.Left, height * j + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
+					WinAPI.SetWindowPos(Handle, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
+					++n;
+					tileCnt++;
+				}
+			}
+
+			return tileCnt;
+		}
+
+		public void GroupItemsTile(bool vertical = false) {
 			if (IsTiledWindows) {
 				MenuItem_AutoTilePrev_Click(null, null);
 			}

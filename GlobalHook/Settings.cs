@@ -90,7 +90,8 @@ namespace GH {
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectPrevItem, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.Left)),
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectNextGroup, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.Down)),
 					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectPrevGroup, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.Up)),
-					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectGroupTile, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.M))
+					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectGroupTile, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.M)),
+					new KeyValuePair<int, HotKeyInfo>(GH_SHID.SelectGroupTile2, new HotKeyInfo(Keys.Alt | Keys.Shift, Keys.V))
 				});
 			}
 

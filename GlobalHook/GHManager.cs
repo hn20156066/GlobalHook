@@ -770,6 +770,7 @@ namespace GH {
 		public const int SelectNextGroup = 0x0040;
 		public const int SelectPrevGroup = 0x0080;
 		public const int SelectGroupTile = 0x00A0;
+		public const int SelectGroupTile2 = 0x00A2;
 	}
 
 }

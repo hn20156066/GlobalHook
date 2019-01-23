@@ -25,6 +25,7 @@ namespace GH {
 				{ GH_SHID.SelectNextGroup	, SelectNextGroup	},
 				{ GH_SHID.SelectPrevGroup	, SelectPrevGroup	},
 				{ GH_SHID.SelectGroupTile	, SelectGroupTile	},
+				{ GH_SHID.SelectGroupTile2	, SelectGroupTile2	},
 			};
 		}
 
@@ -257,6 +258,15 @@ namespace GH {
 			if (GroupManager.CheckRange(GHManager.Launcher.SelectIndex - 1)) {
 				GHManager.Launcher.KeyboardActive = true;
 				GroupManager.Items[GHManager.Launcher.SelectIndex - 1].GroupItemsTile();
+			}
+		}
+
+		private static void SelectGroupTile2() {
+			if (GroupManager.Items.Count == 0) return;
+
+			if (GroupManager.CheckRange(GHManager.Launcher.SelectIndex - 1)) {
+				GHManager.Launcher.KeyboardActive = true;
+				GroupManager.Items[GHManager.Launcher.SelectIndex - 1].GroupItemsTile(true);
 			}
 		}
 

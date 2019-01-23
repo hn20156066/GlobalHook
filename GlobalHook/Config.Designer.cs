@@ -53,6 +53,9 @@
 			System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectGroupTile",
             ""}, -1);
+			System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            "SelectGroupTile2",
+            ""}, -1);
 			this.ConfigTabControl = new System.Windows.Forms.TabControl();
 			this.TabPageLauncher = new System.Windows.Forms.TabPage();
 			this.GroupBoxTime = new System.Windows.Forms.GroupBox();
@@ -245,7 +248,7 @@
 			this.GroupBoxTime.Location = new System.Drawing.Point(8, 124);
 			this.GroupBoxTime.Name = "GroupBoxTime";
 			this.GroupBoxTime.Padding = new System.Windows.Forms.Padding(5);
-			this.GroupBoxTime.Size = new System.Drawing.Size(394, 351);
+			this.GroupBoxTime.Size = new System.Drawing.Size(394, 320);
 			this.GroupBoxTime.TabIndex = 20;
 			this.GroupBoxTime.TabStop = false;
 			this.GroupBoxTime.Text = "アニメーション・遅延時間";
@@ -884,7 +887,8 @@
             listViewItem7,
             listViewItem8,
             listViewItem9,
-            listViewItem10});
+            listViewItem10,
+            listViewItem11});
 			this.ListViewShortcut.LabelWrap = false;
 			this.ListViewShortcut.Location = new System.Drawing.Point(8, 21);
 			this.ListViewShortcut.MultiSelect = false;

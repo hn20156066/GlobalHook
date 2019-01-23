@@ -271,7 +271,8 @@ namespace GH {
 				{ GH_SHID.SelectPrevItem, "前の項目を選択" },
 				{ GH_SHID.SelectNextGroup, "次のグループを選択" },
 				{ GH_SHID.SelectPrevGroup, "前のグループを選択" },
-				{ GH_SHID.SelectGroupTile, "グループのウィンドウを並べて表示" }
+				{ GH_SHID.SelectGroupTile, "グループのウィンドウを左右に並べて表示" },
+				{ GH_SHID.SelectGroupTile2, "グループのウィンドウを上下に並べて表示" }
 			};
 
 			foreach (var item in GHManager.Settings.Hotkey.HotKeys.Select((kv, i) => new { kv, i })) {
@@ -795,6 +796,7 @@ namespace GH {
 			}
 			GHManager.TempSettings.MysetIconStyle = idx;
 		}
+
 	}
 
 	public class ListViewInputBox : TextBox {
