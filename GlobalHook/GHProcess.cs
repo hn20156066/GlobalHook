@@ -128,6 +128,11 @@ namespace GH {
 			WinAPI.SetForegroundWindow(hwnd);
 		}
 
+		public static void WindowTop(IntPtr hwnd) {
+			WinAPI.SetWindowPos(hwnd, new IntPtr(-1), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
+			WinAPI.SetWindowPos(hwnd, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
+		}
+
 		public static bool IsNormalize(IntPtr hwnd) {
 			return !(WinAPI.IsIconic(hwnd) | WinAPI.IsZoomed(hwnd));
 		}
@@ -144,18 +149,23 @@ namespace GH {
 			return (hwnd == WinAPI.GetForegroundWindow());
 		}
 
-		public static void SwitchShowOrHide(IntPtr hwnd) {
-
+		public static bool WindowActive(IntPtr hwnd) {
 			if (IsMinimize(hwnd)) {
 				Normalize(hwnd);
 			}
+			else if (!IsActive(hwnd)) {
+				Active(hwnd);
+			}
 			else {
-				if (IsActive(hwnd)) {
-					Minimize(hwnd);
-				}
-				else {
-					Active(hwnd);
-				}
+				return false;
+			}
+
+			return true;
+		}
+
+		public static void SwitchShowOrHide(IntPtr hwnd) {
+			if (!WindowActive(hwnd)) {
+				Minimize(hwnd);
 			}
 		}
 

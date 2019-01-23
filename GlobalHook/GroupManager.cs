@@ -16,6 +16,8 @@ namespace GH {
 		/// <summary>
 		/// グループのリスト
 		/// </summary>
+		//public static SortedDictionary<int, Group> Items;
+
 		public static List<Group> Items;
 
 		/// <summary>
@@ -23,6 +25,7 @@ namespace GH {
 		/// </summary>
 		public static void Initialize() {
 			Items = new List<Group>(100);
+			//Items = new SortedDictionary<int, Group>();
 		}
 
 		public static bool CheckRange(int idx) {
@@ -44,16 +47,20 @@ namespace GH {
 		/// <param name="rect">基準となる位置・サイズ</param>
 		public static void SetRectGroups(ref Rectangle rect) {
 
-			foreach (var item in Items) {
+			SortedDictionary<int, int> pri = new SortedDictionary<int, int>();
+			for (int i = 0; i < Items.Count; ++i) {
+				pri.Add(i, Items[i].priority);
+			}
+			var sorted = pri.OrderBy(kvp => kvp.Value);
 
+			foreach (var kv in sorted) {
 				if (GHManager.IsVertical)
 					rect.Y += GHManager.Settings.Style.Launcher.ItemSize + GHManager.Settings.Style.Launcher.ItemSpace;
 				else
 					rect.X += GHManager.Settings.Style.Launcher.ItemSize + GHManager.Settings.Style.Launcher.ItemSpace;
 
-				item.icon.SetRect(ref rect);
+				Items[kv.Key].icon.SetRect(ref rect);
 			}
-
 		}
 
 		/// <summary>
@@ -74,7 +81,6 @@ namespace GH {
 
 			Items.Add(new Group());
 			GHManager.Launcher.Controls.Add(Items[Items.Count - 1].icon.control);
-
 			return Items.Count - 1;
 
 		}
@@ -102,12 +108,12 @@ namespace GH {
 		/// <returns></returns>
 		public static int InGroup(ref long hwnd) {
 
-			for (int i = 0; i < Items.Count; ++i) {
+			for (int i = 0;i < Items.Count; ++i) {
 				if (Items[i].InGroup(ref hwnd) != -1) {
 					return i;
 				}
 			}
-
+			
 			return -1;
 
 		}
@@ -123,10 +129,13 @@ namespace GH {
 		}
 
 		public static void GroupMove(Group group, bool next) {
-			int srcIdx = Items.IndexOf(group);
-			Console.WriteLine(srcIdx);
-			if (srcIdx == -1) return;
-			GHManager.MoveElement(ref Items, srcIdx, next);
+			int src = Items.IndexOf(group);
+			if (src == -1) return;
+			int dest = src + (next ? 1 : -1);
+			if (dest < 0 || Items.Count <= dest) return;
+			int srcPri = Items[src].priority;
+			Items[src].priority = Items[dest].priority;
+			Items[dest].priority = srcPri;
 		}
 
 		public static void GroupItemMove(GroupItem item, bool next) {
@@ -176,6 +185,7 @@ namespace GH {
 			int[] index = new int[hwnds.Length];
 			for (int i = 0; i < hwnds.Length; ++i) index[i] = InGroup(ref hwnds[i]);
 			var items = new { hwnds, index };
+			int idx = 0;
 
 			// ウィンドウ移動
 			if (hwnds.Length == 2) {
@@ -183,9 +193,9 @@ namespace GH {
 				if (items.index[0] == -1) {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
-						AddGroup();
-						Items.Last().AddItem(ref items.hwnds[0]);
-						Items.Last().AddItem(ref items.hwnds[1]);
+						idx = AddGroup();
+						Items[idx].AddItem(ref items.hwnds[0]);
+						Items[idx].AddItem(ref items.hwnds[1]);
 					}
 					else {
 						Items[items.index[1]].AddItem(ref items.hwnds[0]);
@@ -207,11 +217,11 @@ namespace GH {
 				if (items.index[0] == -1) {
 					// ひっつくウィンドウが非グループ
 					if (items.index[1] == -1) {
-						AddGroup();
-						Items.Last().AddItem(ref items.hwnds[0]);
-						Items.Last().AddItem(ref items.hwnds[1]);
+						idx = AddGroup();
+						Items[idx].AddItem(ref items.hwnds[0]);
+						Items[idx].AddItem(ref items.hwnds[1]);
 						for (int i = 2; i < items.hwnds.Length; ++i) {
-							Items.Last().AddItem(ref items.hwnds[i]);
+							Items[idx].AddItem(ref items.hwnds[i]);
 							if (items.index[i] != -1) {
 								Items[items.index[i]].DeleteItem(ref items.hwnds[i]);
 							}
@@ -264,12 +274,13 @@ namespace GH {
 
 			int p = InGroup(ref parent);
 			int c = InGroup(ref child);
+			int idx = -1;
 
 			// どちらもグループにない場合、新規グループに追加
 			if (p == -1 && c == -1) {
-				AddGroup();
-				Items.Last().AddItem(ref parent);
-				Items.Last().AddItem(ref child);
+				idx = AddGroup();
+				Items[idx].AddItem(ref parent);
+				Items[idx].AddItem(ref child);
 				return true;
 			}
 			else if (p != c) {

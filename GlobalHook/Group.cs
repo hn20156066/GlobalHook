@@ -34,6 +34,8 @@ namespace GH {
 		/// </summary>
 		private Timer timer;
 
+		public int priority;
+
 		private bool IsTiledWindows = false;
 
 		/// <summary>
@@ -46,7 +48,7 @@ namespace GH {
 			icon.control.MouseEnter += new EventHandler(Group_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Group_Control_Leave);
 			icon.control.MouseClick += new MouseEventHandler(Group_Control_Click);
-
+			priority = 0;
 			timer = new Timer {
 				Interval = 400
 			};
@@ -74,11 +76,7 @@ namespace GH {
 		private void GroupMenuInitialize() {
 
 			groupmenu = new ContextMenu();
-			MenuItem item = new MenuItem("前に移動", MenuItem_MovePrev_Click);
-			groupmenu.MenuItems.Add(item);
-			item = new MenuItem("次に移動", MenuItem_MoveNext_Click);
-			groupmenu.MenuItems.Add(item);
-			item = new MenuItem("グループ削除", MenuItem_DelGroup_Click);
+			MenuItem item = new MenuItem("グループ削除", MenuItem_DelGroup_Click);
 			groupmenu.MenuItems.Add(item);
 			item = new MenuItem("すべて閉じる", MenuItem_AllClose_Click);
 			groupmenu.MenuItems.Add(item);
@@ -91,6 +89,10 @@ namespace GH {
 				item = new MenuItem("ウィンドウを並べる", MenuItem_AutoTile_Click);
 			}
 			groupmenu.MenuItems.Add(item);
+			//item = new MenuItem("前に移動", MenuItem_MovePrev_Click);
+			//groupmenu.MenuItems.Add(item);
+			//item = new MenuItem("次に移動", MenuItem_MoveNext_Click);
+			//groupmenu.MenuItems.Add(item);
 
 		}
 
@@ -285,11 +287,17 @@ namespace GH {
 			int column = GHManager.Settings.Style.ItemList.Column;
 			int baseX = rect.X;
 
-			foreach (var item in Items.Select((item, i) => new { item, i })) {
-				item.item.icon.SetRect(ref rect);
+			SortedDictionary<int, int> pri = new SortedDictionary<int, int>();
+			for (int i = 0; i < Items.Count; ++i) {
+				pri.Add(i, Items[i].priority);
+			}
+			var sorted = pri.OrderBy(kvp => kvp.Value);
+
+			foreach (var kvi in sorted.Select((item, i) => new { item, i })) {
+				Items[kvi.item.Key].icon.SetRect(ref rect);
 				rect.X += itemSize + pad;
 
-				if (item.i % column == column - 1) {
+				if (kvi.i % column == column - 1) {
 					rect.X = baseX;
 					rect.Y += itemSize + pad;
 				}

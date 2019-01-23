@@ -47,6 +47,8 @@ namespace GH {
 		/// </summary>
 		public ContextMenu itemmenu;
 
+		public int priority;
+
 		public Rectangle PrevRect;
 		
 		/// <summary>
@@ -75,7 +77,7 @@ namespace GH {
 
 			ic.Dispose();
 			ic = null;
-
+			priority = 0;
 			WinAPI.GetWindowText((IntPtr)this.hwnd, icon.item_name, icon.item_name.Capacity);
 
 			icon.control.MouseClick += new MouseEventHandler(Item_Control_Click);
@@ -92,6 +94,7 @@ namespace GH {
 			hwnd = item.Handle;
 			icon = new GHIconEx(item.icon);
 			PrevRect = item.PrevRect;
+			priority = item.priority;
 		}
 
 		/// <summary>
@@ -139,14 +142,14 @@ namespace GH {
 				itemmenu.Dispose();
 			}
 			itemmenu = new ContextMenu();
-			MenuItem menuItem = new MenuItem("前に移動", ItemMenu_MovePrev_Click);
-			itemmenu.MenuItems.Add(menuItem);
-			menuItem = new MenuItem("次に移動", ItemMenu_MoveNext_Click);
-			itemmenu.MenuItems.Add(menuItem);
-			menuItem = new MenuItem("グループから削除", ItemMenu_DelItem_Click);
+			MenuItem menuItem = new MenuItem("グループから削除", ItemMenu_DelItem_Click);
 			itemmenu.MenuItems.Add(menuItem);
 			menuItem = new MenuItem("閉じる", ItemMenu_Close_Click);
 			itemmenu.MenuItems.Add(menuItem);
+			//menuItem = new MenuItem("前に移動", ItemMenu_MovePrev_Click);
+			//itemmenu.MenuItems.Add(menuItem);
+			//menuItem = new MenuItem("次に移動", ItemMenu_MoveNext_Click);
+			//itemmenu.MenuItems.Add(menuItem);
 
 		}
 
