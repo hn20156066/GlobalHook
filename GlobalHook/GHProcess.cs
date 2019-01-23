@@ -128,11 +128,6 @@ namespace GH {
 			WinAPI.SetForegroundWindow(hwnd);
 		}
 
-		public static void WindowTop(IntPtr hwnd) {
-			WinAPI.SetWindowPos(hwnd, new IntPtr(-1), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
-			WinAPI.SetWindowPos(hwnd, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
-		}
-
 		public static bool IsNormalize(IntPtr hwnd) {
 			return !(WinAPI.IsIconic(hwnd) | WinAPI.IsZoomed(hwnd));
 		}
