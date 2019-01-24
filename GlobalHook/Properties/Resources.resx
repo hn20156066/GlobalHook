@@ -130,6 +130,12 @@
   <data name="group_item_background_push" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\group_item_background_push.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="item_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\myset_icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="item_open_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\myset_open_icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="kind_null" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\kind_null.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

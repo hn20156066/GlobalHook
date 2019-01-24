@@ -1,96 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+using System.Windows.Forms;
 
 namespace GH {
 
-	/// <summary>
-	/// アイコンとテキスト
-	/// </summary>
+	// マイセットのアイコン
 	public class GHIconEx : GHIcon {
 
-		/// <summary>
-		/// テキストのサイズ
-		/// </summary>
-		private Rectangle rect_text;
+		public bool opened { private get; set; }
 
-		/// <summary>
-		/// アイコンのサイズ
-		/// </summary>
-		private Rectangle rect_icon;
-
-		/// <summary>
-		/// アイテムの名前
-		/// </summary>
-		public StringBuilder item_name;
+		public SkinImage OpendImage { get; set; }
+		public SkinImage ClosedImage { get; set; }
 
 		public GHIconEx() : base() {
 			Init();
 		}
 
-		public GHIconEx(GHIconEx icon) :base(icon) {
-			rect_text = icon.rect_text;
-			rect_icon = icon.rect_icon;
-			item_name = new StringBuilder(64);
-			item_name.Append(icon.item_name);
+		public GHIconEx(SkinImage opened, SkinImage closed, FormType windowType) : base(closed, windowType) {
+			OpendImage = opened;
+			ClosedImage = closed;
+			Init();
 		}
 
 		public GHIconEx(SkinImage skin, FormType windowType) : base(skin, windowType) {
+			OpendImage = ClosedImage = skin;
 			Init();
 		}
 
 
 		public GHIconEx(ref Icon hIcon, FormType windowType) : base(ref hIcon, windowType) {
+			OpendImage = ClosedImage = SkinImage.Kind_Null;
 			Init();
 		}
 
 		public GHIconEx(Bitmap bmp, FormType windowType) : base(ref bmp, windowType) {
+			OpendImage = ClosedImage = SkinImage.Kind_Null;
 			Init();
 		}
-
+		
 		private void Init() {
-			rect_icon = new Rectangle(0, 0, GHManager.Settings.Style.ItemList.IconSize, GHManager.Settings.Style.ItemList.IconSize);
-			rect_text = new Rectangle(0, GHManager.Settings.Style.ItemList.IconSize, 0, (int)Math.Floor((decimal)GHManager.Settings.Style.ItemList.FontSize));
-			item_name = new StringBuilder(64);
+			opened = false;
 		}
 
+		/// <summary>
+		/// アイコンのクローンを生成（簡易版・分類指定）
+		/// </summary>
+		/// <param name="windowType">画像の分類</param>
+		/// <returns></returns>
 		public new GHIconEx Clone(FormType windowType) {
-			GHIconEx iconEx = new GHIconEx(image, windowType);
 
-			return iconEx;
+			GHIconEx icon = new GHIconEx(image, windowType);
+			icon.OpendImage = OpendImage;
+			icon.ClosedImage = ClosedImage;
+			icon.opened = opened;
+
+			return icon;
+
 		}
 
-		public new void Draw(ref Graphics graph) {
+		/// <summary>
+		/// アイコンの描画
+		/// </summary>
+		/// <param name="graph">描画先</param>
+		public void Draw(ref Graphics graph, bool open) {
+
 			GHPadding padding = GHManager.GetStyle(windowType).ItemPadding;
-			GHPadding text_pad = GHManager.Settings.Style.ItemList.TextPadding;
 
-			Rectangle iconrc = new Rectangle {
-				X = control.Left + (control.Width - GHManager.Settings.Style.ItemList.IconSize) / 2,
-				Y = control.Top + padding.Top,
-				Width = GHManager.Settings.Style.ItemList.IconSize,
-				Height = GHManager.Settings.Style.ItemList.IconSize
-			};
-			rect_text = new Rectangle {
-				X = control.Left + text_pad.Left,
-				Y = iconrc.Bottom + padding.Bottom + text_pad.Top,
-				Width = control.Width - text_pad.WSize,
-				Height = control.Height - iconrc.Height - padding.Top - text_pad.HSize - GHManager.Settings.Style.ItemList.WindowPadding.Top
-			};
-			SolidBrush solidBrush = new SolidBrush(GHManager.GetColor());
-			graph.DrawImage(image, iconrc);
-			StringFormat format = new StringFormat {
-				Alignment = StringAlignment.Center,
-				LineAlignment = StringAlignment.Center,
-				Trimming = StringTrimming.EllipsisCharacter
+			Rectangle rect = new Rectangle {
+				X = control.Location.X + padding.Left,
+				Y = control.Location.Y + padding.Top,
+				Width = control.Width - padding.WSize,
+				Height = control.Height - padding.HSize
 			};
 
-			graph.DrawString(item_name.ToString(), GHManager.GetFont(), solidBrush, rect_text, format);
-			
-			solidBrush.Dispose();
-			format.Dispose();
+			if (open) {
+				SkinImage skin = opened ? OpendImage : ClosedImage;
+				Skin.GetSkinImage(skin, out Bitmap bmp);
+				graph.DrawImage(bmp, rect);
+				bmp.Dispose();
+				bmp = null;
+			}
+			else {
+				Draw(ref graph);
+			}
 		}
 
 	}

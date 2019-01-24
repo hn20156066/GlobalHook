@@ -22,7 +22,7 @@ namespace GH {
 		/// <summary>
 		/// グループアイコン
 		/// </summary>
-		public GHIcon icon;
+		public GHIconEx icon;
 
 		/// <summary>
 		/// グループのメニュー
@@ -44,7 +44,7 @@ namespace GH {
 		/// <param name="name">グループ名</param>
 		public Group() {
 			Items = new List<GroupItem>();
-			icon = new GHIcon(SkinImage.Launcher_Item, FormType.Launcher);
+			icon = new GHIconEx(SkinImage.Item_Open_Icon, SkinImage.Item_Icon, FormType.Launcher);
 			icon.control.MouseEnter += new EventHandler(Group_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Group_Control_Leave);
 			icon.control.MouseClick += new MouseEventHandler(Group_Control_Click);
@@ -61,11 +61,11 @@ namespace GH {
 			Items = null;
 			icon = null;
 			if (groupmenu != null) {
-				groupmenu.Dispose();
+				//groupmenu.Dispose();
 				groupmenu = null;
 			}
 			if (timer != null) {
-				timer.Dispose();
+				//timer.Dispose();
 				timer = null;
 			}
 		}
@@ -336,10 +336,10 @@ namespace GH {
 		/// グループを描画
 		/// </summary>
 		/// <param name="graph">描画先</param>
-		public void Draw(ref Graphics graph) {
+		public void Draw(ref Graphics graph, bool open) {
 
 			icon.DrawBackGround(ref graph);
-			icon.Draw(ref graph);
+			icon.Draw(ref graph, open);
 
 		}
 
@@ -407,6 +407,7 @@ namespace GH {
 			// 表示されていて、既にアイテム番号が設定されていた時はすぐに変える
 			if (GHManager.ItemList.ItemIndex != -1 && GHManager.ItemList.FormVisible /*GHManager.ItemList.GHFormVisible*/) {
 				if (GroupManager.ShowItemList(this)) {
+					//icon.opened = true;
 					timer.Stop();
 				}
 			}
@@ -587,7 +588,9 @@ namespace GH {
 			}
 
 			using (Bitmap bmp = new Bitmap(lsize, lsize))
-			using (Graphics g = Graphics.FromImage(bmp)) {
+			/*using (Graphics g = Graphics.FromImage(bmp))*/ {
+
+				Graphics g = Graphics.FromImage(bmp);
 
 				g.CompositingQuality = compositingQuality;
 				g.SmoothingMode = smoothingMode;
@@ -595,12 +598,13 @@ namespace GH {
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
 
 				if (GHManager.Settings.GroupIconStyle == 2) {
-					Skin.GetSkinImage(SkinImage.Launcher_Item, out Bitmap image);
-					if (image != null) {
-						g.DrawImage(image, x, y, lsize, lsize);
-						image.Dispose();
-						image = null;
-					}
+					icon.Draw(ref g);
+					//Skin.GetSkinImage(SkinImage.Launcher_Item, out Bitmap image);
+					//if (image != null) {
+					//	g.DrawImage(image, x, y, lsize, lsize);
+					//	image.Dispose();
+					//	image = null;
+					//}
 				}
 				else if (GHManager.Settings.GroupIconStyle == 1) {
 					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
@@ -619,6 +623,8 @@ namespace GH {
 				}
 				
 				icon.image = (Bitmap)bmp.Clone();
+				g.Dispose();
+				g = null;
 			}
 		}
 	}

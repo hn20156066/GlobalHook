@@ -20,7 +20,7 @@ namespace GH {
 		public StringBuilder ItemPath => ExePath;
 
 		// アイコン
-		public GHIconEx icon;
+		public GHItemIcon icon;
 
 		// メニュー
 		public ContextMenu itemmenu;
@@ -45,10 +45,10 @@ namespace GH {
 			ExePath = new StringBuilder(path);
 
 			if (GHProcess.GetPathIcon(ref ExePath,out Icon ic)) {
-				icon = new GHIconEx(ref ic, FormType.ItemList);
+				icon = new GHItemIcon(ref ic, FormType.ItemList);
 			}
 			else {
-				icon = new GHIconEx(SkinImage.Group_Item, FormType.ItemList);
+				icon = new GHItemIcon(SkinImage.Group_Item, FormType.ItemList);
 			}
 
 			ic.Dispose();
@@ -63,7 +63,7 @@ namespace GH {
 		~MysetItem() {
 			icon = null;
 			if (itemmenu != null) {
-				itemmenu.Dispose();
+				//itemmenu.Dispose();
 				itemmenu = null;
 			}
 		}
@@ -73,7 +73,7 @@ namespace GH {
 		/// </summary>
 		private void ItemMenuInitialize() {
 			if (itemmenu != null) {
-				itemmenu.Dispose();
+				//itemmenu.Dispose();
 			}
 			itemmenu = new ContextMenu();
 			MenuItem menuItem = new MenuItem("マイセットから削除", ItemMenu_DelItem_Click);

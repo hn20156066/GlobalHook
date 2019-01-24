@@ -68,8 +68,9 @@ namespace GH {
 		/// </summary>
 		/// <param name="graph">描画先</param>
 		public static void Draw(ref Graphics graph) {
+			bool open = GHManager.Settings.GroupIconStyle == 2;
 			foreach (var item in Items) {
-				item.Draw(ref graph);
+				item.Draw(ref graph, open);
 			}
 		}
 
@@ -377,6 +378,12 @@ namespace GH {
 						Items[i].ShowOrHideWindows(false);
 					}
 				}
+			}
+		}
+
+		public static void OpenedItemList(int idx, bool open) {
+			if (CheckRange(idx)) {
+				Items[idx].icon.opened = open;
 			}
 		}
 

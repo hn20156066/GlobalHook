@@ -18,7 +18,7 @@ namespace GH {
 		public List<MysetItem> Items;
 
 		// マイセットのアイコン
-		public GHIcon icon;
+		public GHIconEx icon;
 
 		// マイセットメニュー
 		public ContextMenu mysetmenu;
@@ -51,9 +51,9 @@ namespace GH {
 		public Myset(string[] path) {
 			Items = new List<MysetItem>(10);
 			Skin.GetSkinImage(SkinImage.Myset_Item, out Bitmap image);
-			icon = new GHIcon(ref image, FormType.MysetList);
-			image.Dispose();
-			image = null;
+			//icon = new GHIconEx(SkinImage.Item_Open_Icon, SkinImage.Item_Icon, FormType.MysetList);
+			//image.Dispose();
+			//image = null;
 			icon.control.MouseEnter += new EventHandler(Myset_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Myset_Control_Leave);
 			icon.control.MouseClick += new MouseEventHandler(Myset_Control_Click);
@@ -73,11 +73,11 @@ namespace GH {
 			Items = null;
 			icon = null;
 			if (mysetmenu != null) {
-				mysetmenu.Dispose();
+				//mysetmenu.Dispose();
 				mysetmenu = null;
 			}
 			if (timer != null) {
-				timer.Dispose();
+				//timer.Dispose();
 				timer = null;
 			}
 		}
@@ -116,9 +116,11 @@ namespace GH {
 		/// マイセットアイコンの描画
 		/// </summary>
 		/// <param name="graph">描画先</param>
-		public void Draw(ref Graphics graph) {
+		public void Draw(ref Graphics graph, bool open) {
+
 			icon.DrawBackGround(ref graph);
-			icon.Draw(ref graph);
+			icon.Draw(ref graph, open);
+
 		}
 
 		/// <summary>

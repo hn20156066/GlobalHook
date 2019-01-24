@@ -35,7 +35,7 @@ namespace GH {
 		/// <summary>
 		/// アイテムアイコン
 		/// </summary>
-		public GHIconEx icon;
+		public GHItemIcon icon;
 
 		/// <summary>
 		/// アイテムの名前
@@ -69,10 +69,10 @@ namespace GH {
 			this.hwnd = hwnd;
 			
 			if (GHProcess.GetProcessIcon(ref this.hwnd, out Icon ic)) {
-				icon = new GHIconEx(ref ic, FormType.ItemList);
+				icon = new GHItemIcon(ref ic, FormType.ItemList);
 			}
 			else {
-				icon = new GHIconEx(SkinImage.Group_Item, FormType.ItemList);
+				icon = new GHItemIcon(SkinImage.Group_Item, FormType.ItemList);
 			}
 
 			if (ic != null) {
@@ -95,7 +95,7 @@ namespace GH {
 
 		public GroupItem(GroupItem item) {
 			hwnd = item.Handle;
-			icon = new GHIconEx(item.icon);
+			icon = new GHItemIcon(item.icon);
 			PrevRect = item.PrevRect;
 			priority = item.priority;
 		}
@@ -106,7 +106,7 @@ namespace GH {
 		~GroupItem() {
 			icon = null;
 			if (itemmenu != null) {
-				itemmenu.Dispose();
+				//itemmenu.Dispose();
 				itemmenu = null;
 			}
 			//WinAPI.DwmUnregisterThumbnail(thumb);

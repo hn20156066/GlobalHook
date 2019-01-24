@@ -71,6 +71,9 @@ namespace GH {
 
 		Myset_Item_Background_Push,
 
+		Item_Icon,
+		Item_Open_Icon,
+
 		/// <summary>
 		/// NULL
 		/// </summary>

@@ -113,7 +113,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GHIcon.cs" />
-    <Compile Include="GHIconEx.cs" />
+    <Compile Include="GHItemIcon.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GroupItem.cs" />
     <Compile Include="ItemListForm.cs">
@@ -130,7 +130,7 @@
       <DependentUpon>LauncherForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Myset.cs" />
-    <Compile Include="GHMysetIcon.cs" />
+    <Compile Include="GHIconEx.cs" />
     <Compile Include="MysetItem.cs" />
     <Compile Include="MysetListForm.cs">
       <SubType>Form</SubType>
@@ -235,6 +235,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\myset_icon1.png" />
+    <None Include="Resources\myset_open_icon1.png" />
     <Content Include="Skin\sample_white\group_background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

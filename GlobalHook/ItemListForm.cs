@@ -62,13 +62,31 @@ namespace GH {
 			if (FormVisible) {
 				bool n = ParentGHForm == 0 ? GHManager.Launcher.SelectIndex - 1 >= 0 : GHManager.MysetList.SelectIndex != -1;
 				if (GHManager.Contains.ItemList || n) {
+					if (ParentGHForm == 0) {
+						GroupManager.OpenedItemList(ItemIndex, true);
+					}
+					else {
+						MysetManager.OpenedItemList(ItemIndex, true);
+					}
 					return false;
 				}
 
 				if (!IsAnimation) {
+					if (ParentGHForm == 0) {
+						GroupManager.OpenedItemList(ItemIndex, false);
+					}
+					else {
+						MysetManager.OpenedItemList(ItemIndex, false);
+					}
 					FixedActive = false;
 					return true;
 				}
+			}
+			if (ParentGHForm == 0) {
+				GroupManager.OpenedItemList(ItemIndex, true);
+			}
+			else {
+				MysetManager.OpenedItemList(ItemIndex, true);
 			}
 			return false;
 		}
@@ -234,6 +252,7 @@ namespace GH {
 				SelectIndex = -1;
 				NoSelectItem();
 				GHFormUpdate();
+				GroupManager.OpenedItemList(ItemIndex, true);
 			}
 		}
 
@@ -253,6 +272,7 @@ namespace GH {
 				NoSelectItem();
 				SelectIndex = -1;
 				GHFormUpdate();
+				MysetManager.OpenedItemList(ItemIndex, true);
 			}
 		}
 
@@ -264,6 +284,12 @@ namespace GH {
 				HideAnimation();
 				FixedActive = false;
 				HideTimer.Stop();
+				if (ParentGHForm == 0) {
+					GroupManager.OpenedItemList(ItemIndex, false);
+				}
+				else {
+					MysetManager.OpenedItemList(ItemIndex, false);
+				}
 			}
 		}
 

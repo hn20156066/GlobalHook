@@ -53,7 +53,7 @@ namespace GH {
 		protected override void Update_Timer() {
 			if (FixedActive && (MouseActive || KeyboardActive)) {
 				if (!FormVisible) {
-					GHManager.Launcher.MysetIcon.OpenMysetList = true;
+					GHManager.Launcher.MysetIcon.opened = true;
 					ShowAnimation();
 				}
 			}
@@ -103,18 +103,18 @@ namespace GH {
 		protected override bool Hide_Criteria() {
 			if (FormVisible) {
 				if (GHManager.Contains.MysetList || GHManager.Launcher.MysetIcon.IsEntered || (GHManager.ItemList.ParentGHForm == 1 && GHManager.Contains.ItemList || GHManager.ItemList.FormVisible)) {
-					GHManager.Launcher.MysetIcon.OpenMysetList = true;
+					GHManager.Launcher.MysetIcon.opened = true;
 					return false;
 				}
 
 				if (!IsAnimation) {
-					GHManager.Launcher.MysetIcon.OpenMysetList = false;
+					GHManager.Launcher.MysetIcon.opened = false;
 					FixedActive = false;
 					return true;
 				}
 			}
 
-			GHManager.Launcher.MysetIcon.OpenMysetList = true;
+			GHManager.Launcher.MysetIcon.opened = true;
 			return false;
 		}
 
@@ -142,7 +142,7 @@ namespace GH {
 				NoSelectItem();
 				FixedActive = true;
 				GHFormUpdate();
-				GHManager.Launcher.MysetIcon.OpenMysetList = true;
+				GHManager.Launcher.MysetIcon.opened = true;
 			}
 		}
 
@@ -157,7 +157,7 @@ namespace GH {
 				}
 				FixedActive = false;
 				HideTimer.Stop();
-				GHManager.Launcher.MysetIcon.OpenMysetList = false;
+				GHManager.Launcher.MysetIcon.opened = false;
 				HideAnimation();
 			}
 		}

@@ -23,7 +23,7 @@ namespace GH {
 		/// <summary>
 		/// マイセットアイコン
 		/// </summary>
-		public GHMysetIcon MysetIcon { get; private set; }
+		public GHIconEx MysetIcon { get; private set; }
 
 		/// <summary>
 		/// タスクトレイアイコン
@@ -81,14 +81,12 @@ namespace GH {
 		/// ランチャーの読み込み時のイベント
 		/// </summary>
 		private void Launcher_Load(object sender, EventArgs e) {
-
-
-
+			
 			// タスクトレイに追加
 			AddNotifyIcon();
 
 			// マイセットアイコンの初期化＆追加
-			MysetIcon = new GHMysetIcon(SkinImage.Myset_Icon, FormType.MysetList);
+			MysetIcon = new GHIconEx(SkinImage.Myset_Open_Icon, SkinImage.Myset_Icon, FormType.Launcher);
 			MysetIcon.control.MouseClick += (s, a) => {
 				if (a.Button == MouseButtons.Left) {
 					if (GHManager.MysetList.FormVisible) {
@@ -400,7 +398,7 @@ namespace GH {
 
 			// マイセットアイコン
 			MysetIcon.DrawBackGround(ref graph);
-			MysetIcon.Draw(ref graph);
+			MysetIcon.Draw(ref graph, true);
 
 			// グループ
 			GroupManager.Draw(ref graph);

@@ -65,8 +65,9 @@ namespace GH {
 		/// </summary>
 		/// <param name="graph">描画先</param>
 		public static void Draw(ref Graphics graph) {
+			bool open = GHManager.Settings.MysetIconStyle == 2;
 			foreach (var item in Items) {
-				item.Draw(ref graph);
+				item.Draw(ref graph, open);
 			}
 		}
 
@@ -121,6 +122,12 @@ namespace GH {
 
 		public static bool CheckRange(int idx) {
 			return 0 <= idx && idx < Items.Count;
+		}
+
+		public static void OpenedItemList(int idx, bool open) {
+			if (CheckRange(idx)) {
+				Items[idx].icon.opened = open;
+			}
 		}
 
 		public static void SaveMyset() {
