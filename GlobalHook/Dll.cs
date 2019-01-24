@@ -22,11 +22,13 @@ namespace GH {
 		[return: MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
 		public static extern long KeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
-		private static extern void SetLauncherWindowText(char[] windowText);
+		private static extern void SetLauncherClassName(char[] className);
 		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
-		private static extern void SetSubWindowText(char[] mysetlist, char[] itemlist);
+		private static extern void SetSubClassName(char[] mysetlist, char[] itemlist);
 		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
-		public static extern void SetConfigWindowText(char[] windowText);
+		public static extern void SetConfigClassName(char[] className);
+		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
+		public static extern void SetSubConfigClassName(char[] className);
 		[DllImport("GlobalHook.dll")]
 		private static extern int SetHook();
 		[DllImport("GlobalHook.dll")]
@@ -76,11 +78,19 @@ namespace GH {
 
 		private static bool DllLoadSuccess = false;
 
-		public static bool StartHook(string launcherText, string mysetText, string itemlistText) {
+		public static bool StartHook() {
 
 			try {
-				SetLauncherWindowText(launcherText.ToCharArray());
-				SetSubWindowText(mysetText.ToCharArray(), itemlistText.ToCharArray());
+				StringBuilder sb = new StringBuilder(255);
+				string[] className = new string[3];
+				WinAPI.GetClassName(GHManager.Launcher.Handle, sb, 255);
+				className[0] = sb.ToString();
+				WinAPI.GetClassName(GHManager.MysetList.Handle, sb, 255);
+				className[1] = sb.ToString();
+				WinAPI.GetClassName(GHManager.ItemList.Handle, sb, 255);
+				className[2] = sb.ToString();
+				SetLauncherClassName(className[0].ToCharArray());
+				SetSubClassName(className[1].ToCharArray(), className[2].ToCharArray());
 				DllLoadSuccess = SetHook() != -1;
 			}
 			catch(Exception ex) {

@@ -75,8 +75,11 @@ namespace GH {
 				icon = new GHIconEx(SkinImage.Group_Item, FormType.ItemList);
 			}
 
-			ic.Dispose();
-			ic = null;
+			if (ic != null) {
+				ic.Dispose();
+				ic = null;
+			}
+
 			priority = 0;
 			WinAPI.GetWindowText((IntPtr)this.hwnd, icon.item_name, icon.item_name.Capacity);
 

@@ -229,6 +229,10 @@ namespace GH {
 		
 		private void Config_Load(object sender, EventArgs e) {
 
+			StringBuilder sb = new StringBuilder(255);
+			WinAPI.GetClassName(Handle, sb, 255);
+			Dll.SetConfigClassName(sb.ToString().ToCharArray());
+
 			ConfigTabControl.SelectedIndex = Page;
 
 			BringToFront();
@@ -236,9 +240,7 @@ namespace GH {
 			Activate();
 
 			KeysMap.Init();
-
-			Dll.SetConfigWindowText(Text.ToCharArray());
-
+			
 			// 現在の設定を退避
 			GHManager.SavePoint(1);
 
@@ -582,46 +584,38 @@ namespace GH {
 		#region デザイン ページ
 
 		// ランチャーアイテムサイズ
-		private void UpDownLauncherItemSize_ValueChanged(object sender, EventArgs e) {
+		private void UpDownLauncherItemSize_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.Launcher.ItemSize = UpDownCheckOfLimit(ref sender);
 		}
-
-		// ランチャーアイテム間隔
-		private void UpDownLauncherItemSpace_ValueChanged(object sender, EventArgs e) {
+		private void UpDownLauncherItemSpace_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.Launcher.ItemSpace = UpDownCheckOfLimit(ref sender);
 		}
 
-		// マイセットリストアイテムサイズ
-		private void UpDownMysetItemSize_ValueChanged(object sender, EventArgs e) {
+		private void UpDownMysetItemSize_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.MysetList.ItemSize = UpDownCheckOfLimit(ref sender);
 		}
 
-		// マイセットリストアイテム間隔
-		private void UpDownMysetItemSpace_ValueChanged(object sender, EventArgs e) {
+		private void UpDownMysetItemSpace_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.MysetList.ItemSpace = UpDownCheckOfLimit(ref sender);
 		}
 
-		// アイテムリストアイテムサイズ
-		private void UpDownItemListItemSizeWidth_ValueChanged(object sender, EventArgs e) {
+		private void UpDownItemListItemSizeWidth_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.ItemList.ItemSizeWidth = UpDownCheckOfLimit(ref sender);
 		}
 
-		private void UpDwonItemListItemSizeHeight_ValueChanged(object sender, EventArgs e) {
+		private void UpDownItemListItemSizeHeight_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.ItemList.ItemSizeHeight = UpDownCheckOfLimit(ref sender);
 		}
 
-		// アイテムリストアイテムサイズ
-		private void UpDownItemListItemSpace_ValueChanged(object sender, EventArgs e) {
+		private void UpDownItemListItemSpace_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.ItemList.ItemSpace = UpDownCheckOfLimit(ref sender);
 		}
 
-		// 列数
-		private void UpDownItemList_Column_ValueChanged(object sender, EventArgs e) {
+		private void UpDownItemList_Column_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.ItemList.Column = UpDownCheckOfLimit(ref sender);
 		}
 
-		// アイコンサイズ
-		private void UpDownItemListIconSize_ValueChanged(object sender, EventArgs e) {
+		private void UpDownItemListIconSize_Leave(object sender, EventArgs e) {
 			GHManager.TempSettings.Style.ItemList.IconSize = UpDownCheckOfLimit(ref sender);
 		}
 
@@ -691,7 +685,7 @@ namespace GH {
 				fd.ShowEffects = false;
 				fd.ShowHelp = false;
 				fd.ShowApply = false;
-
+				
 				if (fd.ShowDialog() == DialogResult.OK) {
 					GHManager.TempSettings.Style.ItemList.FontName = fd.Font.FontFamily.Name;
 					GHManager.TempSettings.Style.ItemList.FontSize = fd.Font.Size;

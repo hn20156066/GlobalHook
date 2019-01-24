@@ -82,9 +82,7 @@ namespace GH {
 		/// </summary>
 		private void Launcher_Load(object sender, EventArgs e) {
 
-			Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
-			GHManager.MysetList.Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
-			GHManager.ItemList.Text += "-" + Application.ProductName + "-" + Application.ProductVersion;
+
 
 			// タスクトレイに追加
 			AddNotifyIcon();
@@ -106,7 +104,7 @@ namespace GH {
 			Controls.Add(MysetIcon.control);
 
 			// フック開始
-			if (!Dll.StartHook(Text, GHManager.MysetList.Text, GHManager.ItemList.Text)) {
+			if (!Dll.StartHook()) {
 				Application.Exit();
 			}
 
@@ -224,7 +222,7 @@ namespace GH {
 
 		private void MenuItem_ResetDLL_Click(object sender, EventArgs e) {
 			Dll.EndHook();
-			Dll.StartHook(Text, GHManager.MysetList.Text, GHManager.ItemList.Text);
+			Dll.StartHook();
 		}
 
 		/// <summary>

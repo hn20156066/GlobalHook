@@ -74,6 +74,11 @@ namespace GH {
 		public static WinAPI.DSIZE Scale => Dll.GetScale2((long)Launcher.Handle);
 
 		/// <summary>
+		/// Textに入れる識別子
+		/// </summary>
+		//public static string TextIdentifier { get; private set; } = "";
+
+		/// <summary>
 		/// カーソル位置
 		/// </summary>
 		public static Point CursorPosition => Cursor.Position;
@@ -117,6 +122,8 @@ namespace GH {
 
 				GroupManager.Initialize();
 				MysetManager.Initialize();
+
+				//TextIdentifier = "-" + Application.ProductName + "-" + Application.ProductVersion;
 
 				Launcher = new LauncherForm();
 				ItemList = new ItemListForm();

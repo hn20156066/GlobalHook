@@ -45,13 +45,13 @@ bool isFitWindows(true);
 bool isFitDisplay(true);
 bool isFitTaskbar(true);
 bool KeyHook(false);
-//Neighbor neighbor{ 0 };
 intptr_t neighbors[255]{ 0 };
 std::vector<Movement> movement;
-TCHAR launcherWindowText[255]{ 0 };
-TCHAR mysetlistWindowText[255]{ 0 };
-TCHAR itemlistWindowText[255]{ 0 };
-TCHAR configWindowText[255]{ 0 };
+TCHAR launcherClassName[255]{ 0 };
+TCHAR mysetlistClassName[255]{ 0 };
+TCHAR itemlistClassName[255]{ 0 };
+TCHAR configClassName[255]{ 0 };
+TCHAR subConfigClassName[255]{ 0 };
 #pragma data_seg()
 
 HINSTANCE hInst;
@@ -60,9 +60,9 @@ HWND configHwnd;
 COPYDATASTRUCT cdsNeighbor;
 COPYDATASTRUCT cdsMovement;
 
-TCHAR WinAppClassName[] = L"Notepad";
-TCHAR ChildWinClassName[] = L"Edit";
-HWND hWinAppHandle;
+//TCHAR WinAppClassName[] = L"Notepad";
+//TCHAR ChildWinClassName[] = L"Edit";
+//HWND hWinAppHandle;
 
 BOOL(__stdcall *GetWindowRect2)(HWND, LPRECT);
 
@@ -85,21 +85,26 @@ _DLLEXPORT DSIZE GetScale2(intptr_t hwnd) {
 	return scale;
 }
 
-_DLLEXPORT void SetLauncherWindowText(TCHAR windowText[]) {
-	memset(launcherWindowText, 0, sizeof(TCHAR) * 255);
-	lstrcpyn(launcherWindowText, windowText, 255);
+_DLLEXPORT void SetLauncherClassName(TCHAR className[]) {
+	memset(launcherClassName, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(launcherClassName, className, 255);
 }
 
-_DLLEXPORT void SetSubWindowText(TCHAR mysetlist[], TCHAR itemlist[]) {
-	memset(mysetlistWindowText, 0, sizeof(TCHAR) * 255);
-	memset(itemlistWindowText, 0, sizeof(TCHAR) * 255);
-	lstrcpyn(mysetlistWindowText, mysetlist, 255);
-	lstrcpyn(itemlistWindowText, itemlist, 255);
+_DLLEXPORT void SetSubClassName(TCHAR mysetlist[], TCHAR itemlist[]) {
+	memset(mysetlistClassName, 0, sizeof(TCHAR) * 255);
+	memset(itemlistClassName, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(mysetlistClassName, mysetlist, 255);
+	lstrcpyn(itemlistClassName, itemlist, 255);
 }
 
-_DLLEXPORT void SetConfigWindowText(TCHAR windowText[]) {
-	memset(configWindowText, 0, sizeof(TCHAR) * 255);
-	lstrcpyn(configWindowText, windowText, 255);
+_DLLEXPORT void SetConfigClassName(TCHAR className[]) {
+	memset(configClassName, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(configClassName, className, 255);
+}
+
+_DLLEXPORT void SetSubConfigClassName(TCHAR className[]) {
+	memset(subConfigClassName, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(subConfigClassName, className, 255);
 }
 
 _DLLEXPORT void SetFitRange(int range) {
@@ -233,7 +238,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					{
 						UINT nCount = 0;
 						windows.clear();
-						parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
+						parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, NULL);
 						EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
 
 						GetWindowRect(p->hwnd, &rect[0]);
@@ -316,15 +321,15 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 						ptCurFromLT.x = x + dif.x - rect[1].left;
 						ptCurFromLT.y = y + dif.y - rect[1].top;
 
-						TCHAR buf[1024] = { 0 };
-						swprintf_s(buf, TEXT("%d,%d "), dif.x, dif.y);
-						hWinAppHandle = FindWindow(WinAppClassName, NULL);
-						if (hWinAppHandle != NULL) {
-							HWND hChildWinHandle = FindWindowEx(hWinAppHandle, NULL, ChildWinClassName, NULL);
-							if (hChildWinHandle != NULL) {
-								SendMessage(hChildWinHandle, WM_SETTEXT, 0, (LPARAM)buf);
-							}
-						}
+						//TCHAR buf[1024] = { 0 };
+						//swprintf_s(buf, TEXT("%s %s"), launcherClassName, configClassName);
+						//hWinAppHandle = FindWindow(WinAppClassName, NULL);
+						//if (hWinAppHandle != NULL) {
+						//	HWND hChildWinHandle = FindWindowEx(hWinAppHandle, NULL, ChildWinClassName, NULL);
+						//	if (hChildWinHandle != NULL) {
+						//		SendMessage(hChildWinHandle, WM_SETTEXT, 0, (LPARAM)buf);
+						//	}
+						//}
 
 						CallNextHookEx(hookCwp, nCode, wParam, lParam);
 						break;
@@ -370,7 +375,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 _DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (KeyHook) {
 		if (nCode == HC_ACTION) {
-			configHwnd = FindWindowEx(NULL, NULL, NULL, configWindowText);
+			configHwnd = FindWindowEx(NULL, NULL, configClassName, NULL);
 
 			KBDLLHOOKSTRUCT* pk = (KBDLLHOOKSTRUCT*)lParam;
 			Key key;
@@ -683,7 +688,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				ReleaseCapture();
 
 				if (bAddGroupFlag && neighbors[1] != NULL) {
-					parentHwnd = FindWindowEx(NULL, NULL, NULL, launcherWindowText);
+					parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, NULL);
 
 					cdsNeighbor.dwData = 0;
 					cdsNeighbor.cbData = sizeof(intptr_t) * 255;
@@ -747,18 +752,21 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	LONG style = GetWindowLong(hWnd, GWL_STYLE);
 	LONG exstyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	TCHAR windowText[255];
+	TCHAR className[255];
 
 	GetWindowText(hWnd, windowText, 255);
+	GetClassName(hWnd, className, 255);
 
-	TCHAR* excludeWindowText[4] = {
-		launcherWindowText,
-		mysetlistWindowText,
-		itemlistWindowText,
-		configWindowText
+	TCHAR* excludeClassNames[5] = {
+		launcherClassName,
+		mysetlistClassName,
+		itemlistClassName,
+		configClassName,
+		subConfigClassName
 	};
 
 	for (int i = 0; i < 4; ++i) {
-		if (_tcsncmp(excludeWindowText[i], windowText, 255) == 0) {
+		if (_tcsncmp(excludeClassNames[i], className, 255) == 0) {
 			return TRUE;
 		}
 	}

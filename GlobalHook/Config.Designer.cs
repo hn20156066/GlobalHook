@@ -23,37 +23,37 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem78 = new System.Windows.Forms.ListViewItem(new string[] {
             "Show",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem79 = new System.Windows.Forms.ListViewItem(new string[] {
             "Hide",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem80 = new System.Windows.Forms.ListViewItem(new string[] {
             "ShowConfig",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem81 = new System.Windows.Forms.ListViewItem(new string[] {
             "OpenSelectItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem82 = new System.Windows.Forms.ListViewItem(new string[] {
             "DeleteSelectItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem83 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectNextItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem84 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectPrevItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem85 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectNextGroup",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem86 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectPrevGroup",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem87 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectGroupTile",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem88 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectGroupTile2",
             ""}, -1);
 			this.ConfigTabControl = new System.Windows.Forms.TabControl();
@@ -878,17 +878,17 @@
 			this.ListViewShortcut.FullRowSelect = true;
 			this.ListViewShortcut.GridLines = true;
 			this.ListViewShortcut.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11});
+            listViewItem78,
+            listViewItem79,
+            listViewItem80,
+            listViewItem81,
+            listViewItem82,
+            listViewItem83,
+            listViewItem84,
+            listViewItem85,
+            listViewItem86,
+            listViewItem87,
+            listViewItem88});
 			this.ListViewShortcut.LabelWrap = false;
 			this.ListViewShortcut.Location = new System.Drawing.Point(8, 21);
 			this.ListViewShortcut.MultiSelect = false;
@@ -1118,7 +1118,7 @@
             0,
             0,
             0});
-			this.UpDownItemListIconSize.ValueChanged += new System.EventHandler(this.UpDownItemListIconSize_ValueChanged);
+			this.UpDownItemListIconSize.Leave += new System.EventHandler(this.UpDownItemListIconSize_Leave);
 			// 
 			// LabelIconSize
 			// 
@@ -1195,7 +1195,7 @@
             0,
             0,
             0});
-			this.UpDownItemList_Column.ValueChanged += new System.EventHandler(this.UpDownItemList_Column_ValueChanged);
+			this.UpDownItemList_Column.Leave += new System.EventHandler(this.UpDownItemList_Column_Leave);
 			// 
 			// LabelItemList_Column
 			// 
@@ -1232,7 +1232,7 @@
             0,
             0,
             0});
-			this.UpDownItemListItemSizeHeight.ValueChanged += new System.EventHandler(this.UpDwonItemListItemSizeHeight_ValueChanged);
+			this.UpDownItemListItemSizeHeight.Leave += new System.EventHandler(this.UpDownItemListItemSizeHeight_Leave);
 			// 
 			// LabelItemListItemSizeWidth
 			// 
@@ -1260,7 +1260,7 @@
             0,
             0,
             0});
-			this.UpDownItemListItemSpace.ValueChanged += new System.EventHandler(this.UpDownItemListItemSpace_ValueChanged);
+			this.UpDownItemListItemSpace.Leave += new System.EventHandler(this.UpDownItemListItemSpace_Leave);
 			// 
 			// LabelItemListItemSpace
 			// 
@@ -1288,7 +1288,7 @@
             0,
             0,
             0});
-			this.UpDownItemListItemSizeWidth.ValueChanged += new System.EventHandler(this.UpDownItemListItemSizeWidth_ValueChanged);
+			this.UpDownItemListItemSizeWidth.Leave += new System.EventHandler(this.UpDownItemListItemSizeWidth_Leave);
 			// 
 			// LabelItemListItemSize
 			// 
@@ -1357,7 +1357,7 @@
             0,
             0,
             0});
-			this.UpDownMysetItemSpace.ValueChanged += new System.EventHandler(this.UpDownMysetItemSpace_ValueChanged);
+			this.UpDownMysetItemSpace.Leave += new System.EventHandler(this.UpDownMysetItemSpace_Leave);
 			// 
 			// LabelMysetItemSpace
 			// 
@@ -1400,7 +1400,7 @@
             0,
             0,
             0});
-			this.UpDownMysetItemSize.ValueChanged += new System.EventHandler(this.UpDownMysetItemSize_ValueChanged);
+			this.UpDownMysetItemSize.Leave += new System.EventHandler(this.UpDownMysetItemSize_Leave);
 			// 
 			// LabelMysetItemSize
 			// 
@@ -1479,7 +1479,7 @@
             0,
             0,
             0});
-			this.UpDownLauncherItemSpace.ValueChanged += new System.EventHandler(this.UpDownLauncherItemSpace_ValueChanged);
+			this.UpDownLauncherItemSpace.Leave += new System.EventHandler(this.UpDownLauncherItemSpace_Leave);
 			// 
 			// LabelLauncherItemSpace
 			// 
@@ -1522,7 +1522,7 @@
             0,
             0,
             0});
-			this.UpDownLauncherItemSize.ValueChanged += new System.EventHandler(this.UpDownLauncherItemSize_ValueChanged);
+			this.UpDownLauncherItemSize.Leave += new System.EventHandler(this.UpDownLauncherItemSize_Leave);
 			// 
 			// LabelLauncherItemSize
 			// 

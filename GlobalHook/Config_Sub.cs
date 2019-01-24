@@ -22,6 +22,11 @@ namespace GH {
 		private GHPadding RefPadding { get; set; }
 
 		private void Config_Sub_Load(object sender, EventArgs e) {
+
+			StringBuilder sb = new StringBuilder(255);
+			WinAPI.GetClassName(Handle, sb, 255);
+			Dll.SetSubConfigClassName(sb.ToString().ToCharArray());
+
 			UpDownRight.Value = RefPadding.Right;
 			UpDownTop.Value = RefPadding.Top;
 			UpDownLeft.Value = RefPadding.Left;

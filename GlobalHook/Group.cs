@@ -596,9 +596,11 @@ namespace GH {
 
 				if (GHManager.Settings.GroupIconStyle == 2) {
 					Skin.GetSkinImage(SkinImage.Launcher_Item, out Bitmap image);
-					g.DrawImage(image, x, y, lsize, lsize);
-					image.Dispose();
-					image = null;
+					if (image != null) {
+						g.DrawImage(image, x, y, lsize, lsize);
+						image.Dispose();
+						image = null;
+					}
 				}
 				else if (GHManager.Settings.GroupIconStyle == 1) {
 					g.DrawImage(Items[0].icon.image, 0, 0, lsize, lsize);
