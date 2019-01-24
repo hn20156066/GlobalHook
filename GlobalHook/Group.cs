@@ -234,13 +234,13 @@ namespace GH {
 
 		private int VerticalTile() {
 			int tileCnt = 0;
-			int row = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
-			int[] column = new int[row];
+			int column = (int)(Math.Ceiling((decimal)((Items.Count - 1) / 7.0f)) + 1);
+			int[] row = new int[column];
 			int cnt = Items.Count;
-			int col = row;
-			for (int i = 0; i < column.Length; ++i) {
-				column[i] = (int)(Math.Floor((decimal)(cnt / col)));
-				cnt -= column[i];
+			int col = column;
+			for (int i = 0; i < row.Length; ++i) {
+				row[i] = (int)(Math.Floor((decimal)(cnt / col)));
+				cnt -= row[i];
 				--col;
 			}
 
@@ -257,10 +257,10 @@ namespace GH {
 				(int)(workRect.Height / scale.cy)
 				);
 
-			height = (workRect.Height / row);
-			for (int i = 0; i < row; ++i) {
-				width = (workRect.Width / column[i]);
-				for (int j = 0; j < column[i]; ++j) {
+			height = (workRect.Height / column);
+			for (int i = 0; i < column; ++i) {
+				width = (workRect.Width / row[i]);
+				for (int j = 0; j < row[i]; ++j) {
 					Handle = (IntPtr)Items[n].Handle;
 					if (GHProcess.IsMinimize(Handle)) {
 						GHProcess.Normalize(Handle);
@@ -270,7 +270,7 @@ namespace GH {
 					int dif = rect2.Left - rect1.left;
 
 					Items[n].PrevRect = new Rectangle(rect1.left, rect1.top, rect1.right - rect1.left, rect1.bottom - rect1.top);
-					WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * i - dif + workRect.Left, height * j + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
+					WinAPI.SetWindowPos(Handle, new IntPtr(-1), width * j - dif + workRect.Left, height * i + workRect.Top, width + dif * 2, height + dif, WinAPI.SWP_SHOWWINDOW);
 					WinAPI.SetWindowPos(Handle, new IntPtr(-2), 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
 					++n;
 					tileCnt++;
