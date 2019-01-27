@@ -21,6 +21,8 @@ namespace GH {
 		public GHForm() {
 			FormBorderStyle = FormBorderStyle.None;
 			ShowInTaskbar = false;
+			ComponentResourceManager resources = new ComponentResourceManager(typeof(Config));
+			Icon = ((Icon)(resources.GetObject("$this.Icon")));
 			HideTimer = new System.Windows.Forms.Timer() {
 				Interval = 400,
 				Enabled = false
@@ -546,7 +548,7 @@ namespace GH {
 			Point point = Location.IsEmpty ? new Point(0, 0) : Location;
 			Size size = Size.IsEmpty ? new Size(1, 1) : Size;
 
-			using (Bitmap bmp = new Bitmap(size.Width, size.Height)) {
+			using (Bitmap bmp = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb)) {
 
 				Graphics graph = Graphics.FromImage(bmp);
 
@@ -554,14 +556,14 @@ namespace GH {
 					graph.SmoothingMode = SmoothingMode.HighQuality;
 					graph.InterpolationMode = InterpolationMode.HighQualityBilinear;
 					graph.CompositingQuality = CompositingQuality.HighQuality;
-					graph.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+					graph.TextRenderingHint = TextRenderingHint.AntiAlias;
 					graph.PixelOffsetMode = PixelOffsetMode.HighQuality;
 				}
 				else if (GHManager.Settings.DrawQuality == 1) {
 					graph.SmoothingMode = SmoothingMode.AntiAlias;
 					graph.InterpolationMode = InterpolationMode.Bilinear;
 					graph.CompositingQuality = CompositingQuality.AssumeLinear;
-					graph.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+					graph.TextRenderingHint = TextRenderingHint.AntiAlias;
 					graph.PixelOffsetMode = PixelOffsetMode.Half;
 				}
 				else {

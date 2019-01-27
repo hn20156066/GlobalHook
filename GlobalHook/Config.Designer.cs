@@ -23,39 +23,40 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.Windows.Forms.ListViewItem listViewItem78 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Show",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem79 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "Hide",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem80 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "ShowConfig",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem81 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "OpenSelectItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem82 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "DeleteSelectItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem83 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectNextItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem84 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectPrevItem",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem85 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectNextGroup",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem86 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectPrevGroup",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem87 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectGroupTile",
             ""}, -1);
-			System.Windows.Forms.ListViewItem listViewItem88 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "SelectGroupTile2",
             ""}, -1);
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Config));
 			this.ConfigTabControl = new System.Windows.Forms.TabControl();
 			this.TabPageLauncher = new System.Windows.Forms.TabPage();
 			this.GroupBoxTime = new System.Windows.Forms.GroupBox();
@@ -878,17 +879,17 @@
 			this.ListViewShortcut.FullRowSelect = true;
 			this.ListViewShortcut.GridLines = true;
 			this.ListViewShortcut.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem78,
-            listViewItem79,
-            listViewItem80,
-            listViewItem81,
-            listViewItem82,
-            listViewItem83,
-            listViewItem84,
-            listViewItem85,
-            listViewItem86,
-            listViewItem87,
-            listViewItem88});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11});
 			this.ListViewShortcut.LabelWrap = false;
 			this.ListViewShortcut.Location = new System.Drawing.Point(8, 21);
 			this.ListViewShortcut.MultiSelect = false;
@@ -1324,7 +1325,7 @@
 			this.ComboBoxMysetIcon.Items.AddRange(new object[] {
             "複数のアイコンを表示",
             "最初のアイコンのみ表示",
-            "アイコンを表示しない"});
+            "既定のアイコンを表示"});
 			this.ComboBoxMysetIcon.Location = new System.Drawing.Point(147, 79);
 			this.ComboBoxMysetIcon.Name = "ComboBoxMysetIcon";
 			this.ComboBoxMysetIcon.Size = new System.Drawing.Size(149, 23);
@@ -1446,7 +1447,7 @@
 			this.ComboBoxGroupIcon.Items.AddRange(new object[] {
             "複数のアイコンを表示",
             "最初のアイコンのみ表示",
-            "アイコンを表示しない"});
+            "既定のアイコンを表示"});
 			this.ComboBoxGroupIcon.Location = new System.Drawing.Point(147, 79);
 			this.ComboBoxGroupIcon.Name = "ComboBoxGroupIcon";
 			this.ComboBoxGroupIcon.Size = new System.Drawing.Size(149, 23);
@@ -1646,6 +1647,7 @@
 			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;

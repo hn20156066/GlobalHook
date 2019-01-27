@@ -186,7 +186,6 @@ namespace GH {
 		private void Load_Skin() {
 			string skinPath = Directory.GetCurrentDirectory() + "\\Skin";
 			ListBoxSkin.Items.Add("[内部スキン]");
-			Console.WriteLine(GHManager.Settings.SkinName);
 			if (Directory.Exists(skinPath)) {
 				List<string> dirs = Directory.EnumerateDirectories(skinPath, "*", SearchOption.TopDirectoryOnly).ToList();
 				dirs.ForEach(s => ListBoxSkin.Items.Add(Path.GetFileName(s)));
@@ -700,7 +699,7 @@ namespace GH {
 			using (ColorDialog cd = new ColorDialog()) {
 				GHColor color = GHManager.TempSettings.Style.ItemList.FontColor;
 				cd.Color = Color.FromArgb(color.Red, color.Green, color.Blue);
-
+				Console.WriteLine(color.Red + "," + color.Green + "," + color.Blue);
 				if (cd.ShowDialog() == DialogResult.OK) {
 					GHManager.TempSettings.Style.ItemList.FontColor.SetColor(cd.Color.R, cd.Color.G, cd.Color.B);
 				}

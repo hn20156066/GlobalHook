@@ -533,8 +533,8 @@ namespace GH {
 			UseIconSize = (int)WinAPI.SHIL.SHIL_LARGE;
 			IconSize = 30;
 			TextPadding = new GHPadding(0, 2, 0, 2);
-			FontName = "メイリオ";
-			FontSize = 8;
+			FontName = "Meiryo UI";
+			FontSize = 9;
 			FontColor = new GHColor(255, 255, 255);
 		}
 

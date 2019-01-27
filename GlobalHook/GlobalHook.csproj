@@ -78,6 +78,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -237,6 +240,8 @@
   <ItemGroup>
     <None Include="Resources\myset_icon1.png" />
     <None Include="Resources\myset_open_icon1.png" />
+    <Content Include="icon.ico" />
+    <Content Include="Resources\icon.ico" />
     <Content Include="Skin\sample_white\group_background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

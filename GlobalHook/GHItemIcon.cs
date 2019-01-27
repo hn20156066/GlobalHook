@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace GH {
 
@@ -84,7 +85,8 @@ namespace GH {
 			StringFormat format = new StringFormat {
 				Alignment = StringAlignment.Center,
 				LineAlignment = StringAlignment.Center,
-				Trimming = StringTrimming.EllipsisCharacter
+				Trimming = StringTrimming.EllipsisCharacter,
+				FormatFlags = StringFormatFlags.NoWrap
 			};
 
 			graph.DrawString(item_name.ToString(), GHManager.GetFont(), solidBrush, rect_text, format);
