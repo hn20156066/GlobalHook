@@ -678,8 +678,8 @@ namespace GH {
 		private void ButtonItemListFont_Click(object sender, EventArgs e) {
 
 			using (FontDialog fd = new FontDialog()) {
-
-				fd.Font = new Font(GHManager.TempSettings.Style.ItemList.FontName, GHManager.TempSettings.Style.ItemList.FontSize);
+				FontStyle fs = (FontStyle)Enum.ToObject(typeof(FontStyle), GHManager.TempSettings.Style.ItemList.FontStyles);
+				fd.Font = new Font(GHManager.TempSettings.Style.ItemList.FontName, GHManager.TempSettings.Style.ItemList.FontSize, fs);
 				fd.ShowColor = false;
 				fd.ShowEffects = false;
 				fd.ShowHelp = false;
@@ -688,6 +688,7 @@ namespace GH {
 				if (fd.ShowDialog() == DialogResult.OK) {
 					GHManager.TempSettings.Style.ItemList.FontName = fd.Font.FontFamily.Name;
 					GHManager.TempSettings.Style.ItemList.FontSize = fd.Font.Size;
+					GHManager.TempSettings.Style.ItemList.FontStyles = (int)fd.Font.Style;
 				}
 
 			}

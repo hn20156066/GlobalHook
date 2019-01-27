@@ -164,7 +164,8 @@ namespace GH {
 		/// </summary>
 		/// <returns>フォント</returns>
 		public static Font GetFont() {
-			return new Font(Settings.Style.ItemList.FontName, Settings.Style.ItemList.FontSize, FontStyle.Regular);
+			FontStyle fs = (FontStyle)Enum.ToObject(typeof(FontStyle), Settings.Style.ItemList.FontStyles);
+			return new Font(Settings.Style.ItemList.FontName, Settings.Style.ItemList.FontSize, fs);
 		}
 
 		/// <summary>
@@ -510,6 +511,7 @@ namespace GH {
 		public GHPadding TextPadding;
 		public string FontName;
 		public float FontSize;
+		public int FontStyles;
 		public GHColor FontColor;
 
 		public int GetUseIconSize() {
@@ -535,6 +537,7 @@ namespace GH {
 			TextPadding = new GHPadding(0, 2, 0, 2);
 			FontName = "Meiryo UI";
 			FontSize = 9;
+			FontStyles = 0;
 			FontColor = new GHColor(255, 255, 255);
 		}
 
@@ -545,6 +548,7 @@ namespace GH {
 			TextPadding = new GHPadding(itemListStyle.TextPadding);
 			FontName = itemListStyle.FontName;
 			FontSize = itemListStyle.FontSize;
+			FontStyles = itemListStyle.FontStyles;
 			FontColor = new GHColor(itemListStyle.FontColor);
 		}
 

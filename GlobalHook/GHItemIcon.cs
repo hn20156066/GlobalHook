@@ -88,7 +88,7 @@ namespace GH {
 				Trimming = StringTrimming.EllipsisCharacter,
 				FormatFlags = StringFormatFlags.NoWrap
 			};
-
+			
 			graph.DrawString(item_name.ToString(), GHManager.GetFont(), solidBrush, rect_text, format);
 			
 			solidBrush.Dispose();
