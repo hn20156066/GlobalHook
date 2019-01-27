@@ -584,7 +584,6 @@ namespace GH {
 				graph.Dispose();
 				graph = null;
 			}
-
 		}
 
 		/// <summary>
@@ -624,6 +623,7 @@ namespace GH {
 		/// ウィンドウの更新
 		/// </summary>
 		public void GHFormUpdate() {
+			SuspendLayout();
 			// 表示状態の更新
 			Update_Visible();
 			// タイマーの更新
@@ -632,6 +632,7 @@ namespace GH {
 			Update_Bounds();
 			Update_ItemPos();
 			Update_SlideMaxAndMin();
+			ResumeLayout();
 		}
 
 		/// <summary>
