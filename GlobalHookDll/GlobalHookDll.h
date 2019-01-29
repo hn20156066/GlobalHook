@@ -19,6 +19,8 @@ extern "C" {
 	_DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 	_DLLEXPORT DSIZE GetScale2(intptr_t hwnd);
+	_DLLEXPORT void SetLancherText(TCHAR windowText[]);
+	_DLLEXPORT void SetConfigText(TCHAR windowText[]);
 	_DLLEXPORT void SetLauncherClassName(TCHAR className[]);
 	_DLLEXPORT void SetSubClassName(TCHAR mysetlist[], TCHAR itemlist[]);
 	_DLLEXPORT void SetConfigClassName(TCHAR className[]);

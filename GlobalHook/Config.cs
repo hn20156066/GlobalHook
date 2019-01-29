@@ -231,6 +231,7 @@ namespace GH {
 			StringBuilder sb = new StringBuilder(255);
 			WinAPI.GetClassName(Handle, sb, 255);
 			Dll.SetConfigClassName(sb.ToString().ToCharArray());
+			Dll.SetConfigText(Text.ToCharArray());
 
 			ConfigTabControl.SelectedIndex = Page;
 
@@ -470,12 +471,12 @@ namespace GH {
 				else {
 					ListViewHitInfo = ListViewShortcut.HitTest(ListViewShortcut.SelectedItems[0].Position);
 					if (ListViewHitInfo.SubItem != null) {
+						Dll.SetKeyboardHook(true);
 						HotKey = new HotKeyInfo();
 						ListViewInput = new ListViewInputBox(ListViewShortcut, ListViewHitInfo.Item, 1);
 						ListViewInput.FinishInput += new ListViewInputBox.InputEventHandler(Input_FinishInput);
 						ListViewInput.Disposed += new EventHandler(Input_Disposed);
 						ListViewInput.Show();
-						Dll.SetKeyboardHook(true);
 					}
 				}
 			}
@@ -489,12 +490,12 @@ namespace GH {
 		private void ListViewShortcut_MouseDoubleClick(object sender, MouseEventArgs e) {
 			ListViewHitInfo = ListViewShortcut.HitTest(e.X, e.Y);
 			if (ListViewHitInfo.SubItem != null && e.Button == MouseButtons.Left) {
+				Dll.SetKeyboardHook(true);
 				HotKey = new HotKeyInfo();
 				ListViewInput = new ListViewInputBox(ListViewShortcut, ListViewHitInfo.Item, 1);
 				ListViewInput.FinishInput += new ListViewInputBox.InputEventHandler(Input_FinishInput);
 				ListViewInput.Disposed += new EventHandler(Input_Disposed);
 				ListViewInput.Show();
-				Dll.SetKeyboardHook(true);
 			}
 		}
 

@@ -52,6 +52,8 @@ TCHAR mysetlistClassName[255]{ 0 };
 TCHAR itemlistClassName[255]{ 0 };
 TCHAR configClassName[255]{ 0 };
 TCHAR subConfigClassName[255]{ 0 };
+TCHAR launcherWindowText[255]{ 0 };
+TCHAR configWindowText[255]{ 0 };
 #pragma data_seg()
 
 HINSTANCE hInst;
@@ -83,6 +85,16 @@ _DLLEXPORT DSIZE GetScale2(intptr_t hwnd) {
 	DSIZE scale;
 	GetScale((HWND)hwnd, scale);
 	return scale;
+}
+
+_DLLEXPORT void SetLancherText(TCHAR windowText[]) {
+	memset(launcherWindowText, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(launcherWindowText, windowText, 255);
+}
+
+_DLLEXPORT void SetConfigText(TCHAR windowText[]) {
+	memset(configWindowText, 0, sizeof(TCHAR) * 255);
+	lstrcpyn(configWindowText, windowText, 255);
 }
 
 _DLLEXPORT void SetLauncherClassName(TCHAR className[]) {
@@ -228,6 +240,8 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	DSIZE scale;
 	RECT rect[2];
 
+	if (KeyHook) return CallNextHookEx(hookCwp, nCode, wParam, lParam);
+
 	if (nCode == HC_ACTION) {
 		switch (p->message) {
 			case WM_SYSCOMMAND:
@@ -238,7 +252,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					{
 						UINT nCount = 0;
 						windows.clear();
-						parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, NULL);
+						parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, launcherWindowText);
 						EnumWindows(EnumWindowsProc, (LPARAM)&nCount);
 
 						GetWindowRect(p->hwnd, &rect[0]);
@@ -375,7 +389,7 @@ _DLLEXPORT LRESULT CALLBACK CwpProc(int nCode, WPARAM wParam, LPARAM lParam) {
 _DLLEXPORT LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (KeyHook) {
 		if (nCode == HC_ACTION) {
-			configHwnd = FindWindowEx(NULL, NULL, configClassName, NULL);
+			configHwnd = FindWindowEx(NULL, NULL, configClassName, configWindowText);
 
 			KBDLLHOOKSTRUCT* pk = (KBDLLHOOKSTRUCT*)lParam;
 			Key key;
@@ -435,7 +449,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	DSIZE scale;
 	GetScale(mhex->hwnd, scale);
 
-	if (nMoving < 0) return CallNextHookEx(hookMouse, nCode, wParam, lParam);
+	if (KeyHook || nMoving < 0) return CallNextHookEx(hookMouse, nCode, wParam, lParam);
 
 	switch (wParam) {
 
@@ -688,7 +702,7 @@ _DLLEXPORT LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 				ReleaseCapture();
 
 				if (bAddGroupFlag && neighbors[1] != NULL) {
-					parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, NULL);
+					parentHwnd = FindWindowEx(NULL, NULL, launcherClassName, launcherWindowText);
 
 					cdsNeighbor.dwData = 0;
 					cdsNeighbor.cbData = sizeof(intptr_t) * 255;

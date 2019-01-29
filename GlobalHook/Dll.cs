@@ -22,6 +22,10 @@ namespace GH {
 		[return: MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
 		public static extern long KeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
+		private static extern void SetLancherText(char[] windowText);
+		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
+		public static extern void SetConfigText(char[] windowText);
+		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
 		private static extern void SetLauncherClassName(char[] className);
 		[DllImport("GlobalHook.dll", CharSet = CharSet.Unicode)]
 		private static extern void SetSubClassName(char[] mysetlist, char[] itemlist);
@@ -81,6 +85,7 @@ namespace GH {
 		public static bool StartHook() {
 
 			try {
+				SetLancherText(GHManager.Launcher.Text.ToCharArray());
 				StringBuilder sb = new StringBuilder(255);
 				string[] className = new string[3];
 				WinAPI.GetClassName(GHManager.Launcher.Handle, sb, 255);
