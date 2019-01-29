@@ -175,6 +175,7 @@ namespace GH {
 							while (reader.NodeType != XmlNodeType.EndElement) {
 								if (reader.Name == "Item") {
 									path.Add(reader.ReadElementContentAsString());
+									Console.WriteLine(path.Last());
 								}
 							}
 

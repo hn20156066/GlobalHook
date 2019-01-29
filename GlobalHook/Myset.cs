@@ -51,9 +51,9 @@ namespace GH {
 		public Myset(string[] path) {
 			Items = new List<MysetItem>(10);
 			Skin.GetSkinImage(SkinImage.Myset_Item, out Bitmap image);
-			//icon = new GHIconEx(SkinImage.Item_Open_Icon, SkinImage.Item_Icon, FormType.MysetList);
-			//image.Dispose();
-			//image = null;
+			icon = new GHIconEx(SkinImage.Item_Open_Icon, SkinImage.Item_Icon, FormType.MysetList);
+			image.Dispose();
+			image = null;
 			icon.control.MouseEnter += new EventHandler(Myset_Control_Enter);
 			icon.control.MouseLeave += new EventHandler(Myset_Control_Leave);
 			icon.control.MouseClick += new MouseEventHandler(Myset_Control_Click);
