@@ -259,16 +259,17 @@ namespace GH {
 			// ランチャーの位置に対応した範囲
 			int[,] range = new int[,] {
 				{ curPos.X, GHManager.Settings.Launcher.ReactRange },
-				{ curPos.Y, GHManager.Settings.Launcher.ReactRange},
+				{ curPos.Y, GHManager.Settings.Launcher.ReactRange },
 				{ GHManager.ScreenSize.Width - GHManager.Settings.Launcher.ReactRange, curPos.X },
 				{ GHManager.ScreenSize.Height - GHManager.Settings.Launcher.ReactRange, curPos.Y }
 			};
 
-			// 認識範囲内なら表示
+			// 認識範囲内なら表示 
 			if (range[GHManager.Settings.Launcher.Pos, 0] <= range[GHManager.Settings.Launcher.Pos, 1]) {
 				MouseActive = true;
 			}
-			// ランチャー上にカーソルがあるなら表示
+
+			// ランチャー上にカーソルがあるなら表示 
 			else if (GHManager.Contains.Launcher) {
 				MouseActive = true;
 			}
@@ -357,17 +358,22 @@ namespace GH {
 
 		protected override void Update_SlideMaxAndMin() {
 			// ループ毎に最大値と最小値を設定
-			int max = GHManager.ScreenSize.Left;
-			int min = max - Width;
-			if (GHManager.Settings.Launcher.Pos == 1)
-				max = GHManager.ScreenSize.Top; min = max - Height;
-			if (GHManager.Settings.Launcher.Pos == 2)
-				max = GHManager.ScreenSize.Right; min = max - Width;
-			if (GHManager.Settings.Launcher.Pos == 3)
-				max = GHManager.ScreenSize.Bottom; min = max - Height;
-
-			GHFormDestPosition = max;
-			GHFormSrcPosition = min;
+			int showPos = GHManager.ScreenSize.Left;
+			int hidePos = GHManager.ScreenSize.Left - Width;
+			if (GHManager.Settings.Launcher.Pos == 1) {
+				showPos = GHManager.ScreenSize.Top;
+				hidePos = GHManager.ScreenSize.Top - Height;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 2) {
+				hidePos = GHManager.ScreenSize.Right;
+				showPos = GHManager.ScreenSize.Right - Width;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 3) {
+				hidePos = GHManager.ScreenSize.Bottom;
+				showPos = GHManager.ScreenSize.Bottom - Height;
+			}
+			GHFormShowPosition = showPos;
+			GHFormHidePosition = hidePos;
 		}
 
 		protected override bool Hide_Criteria() {
@@ -411,16 +417,17 @@ namespace GH {
 		/// </summary>
 		public void MovingCenter() {
 			uint pos = GHManager.Settings.Launcher.Pos;
+			int offset = Math.Min(Width, Height);
 
 			if (GHManager.IsVertical) {
 				Top = (GHManager.ScreenSize.Height - Height) / 2;
 				GHManager.Settings.Launcher.Offset = Top;
-				Left = FormVisible ? pos == 0 ? GHManager.ScreenSize.Left : GHManager.ScreenSize.Right - Width : -Width;
+				Left = FormVisible ? pos == 0 ? GHManager.ScreenSize.Left : GHManager.ScreenSize.Right - offset : -offset;
 			}
 			else {
 				Left = (GHManager.ScreenSize.Width - Width) / 2;
 				GHManager.Settings.Launcher.Offset = Left;
-				Top = FormVisible ? pos == 1 ? GHManager.ScreenSize.Top : GHManager.ScreenSize.Bottom - Height : -Height;
+				Top = FormVisible ? pos == 1 ? GHManager.ScreenSize.Top : GHManager.ScreenSize.Bottom - offset: -offset;
 			}
 		}
 

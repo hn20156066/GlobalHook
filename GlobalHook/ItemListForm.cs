@@ -204,10 +204,29 @@ namespace GH {
 		}
 
 		protected override void Update_SlideMaxAndMin() {
-			int ls = GHManager.IsVertical ? GHManager.Launcher.Width : GHManager.Launcher.Height;
-			int ms = GHManager.IsVertical ? GHManager.MysetList.Width : GHManager.MysetList.Height;
-			GHFormDestPosition = ParentGHForm == 0 ? ls : ls + ms;
-			GHFormSrcPosition = ParentGHForm == 0 ? GHManager.Launcher.Left : GHManager.MysetList.Left;
+			Size launcher = GHManager.Launcher.Size;
+			Point ShowOffset = new Point(
+				launcher.Width + (ParentGHForm == 0 ? 0 : GHManager.MysetList.Width),
+				launcher.Height + (ParentGHForm == 0 ? 0 : GHManager.MysetList.Height)
+			);
+			Point HideOffset = new Point(ParentGHForm == 0 ? 0 : launcher.Width, ParentGHForm == 0 ? 0 : launcher.Height);
+			int showPos = GHManager.ScreenSize.Left + ShowOffset.X;
+			int hidePos = GHManager.ScreenSize.Left + HideOffset.X;
+			if (GHManager.Settings.Launcher.Pos == 1) {
+				showPos = GHManager.ScreenSize.Top + ShowOffset.Y;
+				hidePos = GHManager.ScreenSize.Top + HideOffset.Y;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 2) {
+				hidePos = GHManager.ScreenSize.Right - HideOffset.X;
+				showPos = GHManager.ScreenSize.Right - Width - ShowOffset.X;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 3) {
+				hidePos = GHManager.ScreenSize.Bottom - HideOffset.Y;
+				showPos = GHManager.ScreenSize.Bottom - Height - ShowOffset.Y;
+			}
+
+			GHFormShowPosition = showPos;
+			GHFormHidePosition = hidePos;
 		}
 
 		#endregion
@@ -229,7 +248,7 @@ namespace GH {
 			// 行数 * アイテム間隔 - アイテム間隔 + 縦の余白
 			int h = (int)(Math.Ceiling((decimal)((cnt - 1) / GHManager.Settings.Style.ItemList.Column)) + 1) * (GHManager.Settings.Style.ItemList.ItemSize + GHManager.Settings.Style.ItemList.ItemSpace) - GHManager.Settings.Style.ItemList.ItemSpace + GHManager.Settings.Style.ItemList.WindowPadding.HSize;
 
-			int x = GHManager.IsVertical ? Left : left + iconRect.X - (w - iconRect.Width);
+			int x = GHManager.IsVertical ? Left : left + iconRect.X - (w - iconRect.Width) / 2;
 			int y = GHManager.IsVertical ? top + iconRect.Y - (h - iconRect.Height) / 2 : Top;
 
 			rect = new Rectangle(x, y, w, h);

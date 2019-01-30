@@ -92,14 +92,14 @@ namespace GH {
 		public bool IsAnimation { get; private set; } = false;
 
 		/// <summary>
-		/// 移動元の位置
+		/// 非表示にする位置
 		/// </summary>
-		protected int GHFormSrcPosition { get; set; } = 0;
+		protected int GHFormHidePosition { get; set; } = 0;
 
 		/// <summary>
-		/// 移動先の位置
+		/// 表示する位置
 		/// </summary>
-		protected int GHFormDestPosition { get; set; } = 0;
+		protected int GHFormShowPosition { get; set; } = 0;
 
 		private int RemainingDistanceOfSlide { get; set; } = 0;
 
@@ -235,11 +235,11 @@ namespace GH {
 		}
 
 		private int GetGetSrcPosition() {
-			return GHFormSrcPosition;
+			return GHFormHidePosition;
 		}
 
 		private int GetGetDestPosition() {
-			return GHFormDestPosition;
+			return GHFormShowPosition;
 		}
 
 		private byte GetAlpha() {
@@ -267,12 +267,11 @@ namespace GH {
 		/// <returns>スライドが終了したか</returns>
 		private bool GHFormSlider(bool visible, int srcPos, int destPos, int loopMax, int loopCount, long animateTime, long totalTime, ref IntPtr handle, ref int slideDistance, ref DelegateGetLeftOrTop getLeftOrTop, ref DelegateSetLeftOrTop setLeftOrTop) {
 
-			//Rectangle screen = Screen.FromHandle(handle).Bounds;
 			int BasePos = (int)Invoke(getLeftOrTop);
 			bool reverse = GHManager.Settings.Launcher.Pos >= 2;
 
 			// 全体距離
-			int total = destPos - srcPos;
+			int total = Math.Abs(destPos - srcPos);
 
 			// 進む距離
 			int spd = (int)Math.Ceiling((decimal)total / loopMax);
@@ -287,7 +286,6 @@ namespace GH {
 				spd = 0;
 			}
 
-			// 反対なら逆向きにする
 			if (reverse)
 				spd *= -1;
 
@@ -299,10 +297,18 @@ namespace GH {
 			slideDistance += Math.Abs(spd);
 
 			// 位置を補正
-			if (BasePos < srcPos)
-				BasePos = srcPos;
-			if (BasePos > destPos)
-				BasePos = destPos;
+			if (reverse) {
+				if (BasePos > srcPos)
+					BasePos = srcPos;
+				if (BasePos < destPos)
+					BasePos = destPos;
+			}
+			else {
+				if (BasePos < srcPos)
+					BasePos = srcPos;
+				if (BasePos > destPos)
+					BasePos = destPos;
+			}
 
 			// 移動させる
 			Invoke(setLeftOrTop, BasePos);
@@ -364,6 +370,7 @@ namespace GH {
 				long totalTime = 0;
 				bool slide = false;
 				bool fade = false;
+				bool reverse = GHManager.Settings.Launcher.Pos >= 2;
 				bool visible = (bool)Invoke(new DelegateGetVisible(GetVisible));
 				int srcPos = (int)Invoke(new DelegateGetSrcPosition(GetGetSrcPosition));
 				int destPos = (int)Invoke(new DelegateGetDestPosition(GetGetDestPosition));
@@ -389,7 +396,7 @@ namespace GH {
 				if (!slideEnd && !fadeEnd) {
 					loopMax = 0;
 				}
-
+				
 				for (int i = 0; i < loopMax; ++i) {
 
 					if (token.IsCancellationRequested) {
@@ -409,14 +416,13 @@ namespace GH {
 				}
 
 				// 正確な位置に修正
-				bool reverse = GHManager.Settings.Launcher.Pos >= 2;
 
 				if (slide) {
 					if (!visible) {
-						Invoke(setLeftOrTop, (reverse ? destPos : srcPos));
+						Invoke(setLeftOrTop, srcPos);
 					}
 					if (visible) {
-						Invoke(setLeftOrTop, (reverse ? srcPos : destPos));
+						Invoke(setLeftOrTop, destPos);
 					}
 				}
 				else {
@@ -459,30 +465,23 @@ namespace GH {
 				IsAnimation = true;
 				StopwatchTotal = 0;
 
-				// 移動元と移動先の位置を修正
-				if (GHManager.Settings.Launcher.Pos >= 2) {
-					int temp = GHFormDestPosition;
-					GHFormDestPosition = GHFormSrcPosition;
-					GHFormSrcPosition = temp;
-				}
-
 				// スライドアニメーション
 				if (animateInfo._Slide) {
 					RemainingDistanceOfSlide = 0;
 					if (GHManager.IsVertical) {
-						Left = !visible ? GHFormDestPosition : GHFormSrcPosition;
+						Left = !visible ? GHFormShowPosition : GHFormHidePosition;
 					}
 					else {
-						Top = !visible ? GHFormDestPosition : GHFormSrcPosition;
+						Top = !visible ? GHFormShowPosition : GHFormHidePosition;
 					}
 				}
 				else {
 					// スライドなしフェード
 					if (GHManager.IsVertical) {
-						Left = GHFormSrcPosition = GHFormDestPosition;
+						Left = GHFormHidePosition = GHFormShowPosition;
 					}
 					else {
-						Top = GHFormSrcPosition = GHFormDestPosition;
+						Top = GHFormHidePosition = GHFormShowPosition;
 					}
 				}
 

@@ -52,7 +52,7 @@ namespace GH {
 			public int Offset { get; set; }
 
 			public Launcher_Settings() {
-				Pos = 0;
+				Pos = 1;
 				ReactRange = 1;
 				ShownMouseButton = false;
 				Offset = -1;

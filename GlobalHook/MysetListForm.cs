@@ -95,9 +95,27 @@ namespace GH {
 		}
 
 		protected override void Update_SlideMaxAndMin() {
-			int ls = GHManager.IsVertical ? GHManager.Launcher.Width : GHManager.Launcher.Height;
-			GHFormDestPosition = ls;
-			GHFormSrcPosition = GHFormDestPosition - Width + 5;
+			Point offset = new Point(
+				GHManager.Launcher.Width,
+				GHManager.Launcher.Height
+			);
+			int showPos = GHManager.ScreenSize.Left + offset.X;
+			int hidePos = GHManager.ScreenSize.Left;
+			if (GHManager.Settings.Launcher.Pos == 1) {
+				showPos = GHManager.ScreenSize.Top + offset.Y;
+				hidePos = GHManager.ScreenSize.Top;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 2) {
+				hidePos = GHManager.ScreenSize.Right - offset.X;
+				showPos = GHManager.ScreenSize.Right - Width - offset.X;
+			}
+			else if (GHManager.Settings.Launcher.Pos == 3) {
+				hidePos = GHManager.ScreenSize.Bottom - offset.Y;
+				showPos = GHManager.ScreenSize.Bottom - Height - offset.Y;
+			}
+
+			GHFormShowPosition = showPos;
+			GHFormHidePosition = hidePos;
 		}
 
 		protected override bool Hide_Criteria() {

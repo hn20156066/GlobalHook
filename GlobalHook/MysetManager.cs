@@ -138,21 +138,26 @@ namespace GH {
 				NewLineOnAttributes = true
 			};
 
-			using (XmlWriter writer = XmlWriter.Create("Myset.xml", writerSettings)) {
-				writer.WriteStartDocument();
-				writer.WriteStartElement("MysetList");
+			try {
+				using (XmlWriter writer = XmlWriter.Create("Myset.xml", writerSettings)) {
+					writer.WriteStartDocument();
+					writer.WriteStartElement("MysetList");
 
-				for (int i = 0; i < Items.Count; ++i) {
-					writer.WriteStartElement("Myset");
-					
-					for (int j = 0; j < Items[i].Items.Count; ++j) {
-						writer.WriteElementString("Item", Items[i].Items[j].ItemPath.ToString());
+					for (int i = 0; i < Items.Count; ++i) {
+						writer.WriteStartElement("Myset");
+
+						for (int j = 0; j < Items[i].Items.Count; ++j) {
+							writer.WriteElementString("Item", Items[i].Items[j].ItemPath.ToString());
+						}
+						writer.WriteEndElement();
 					}
-					writer.WriteEndElement();
-				}
 
-				writer.WriteEndElement();
-				writer.WriteEndDocument();
+					writer.WriteEndElement();
+					writer.WriteEndDocument();
+				}
+			}
+			catch (Exception e) {
+				Console.WriteLine("SaveMyset: " + e.Message);
 			}
 		}
 

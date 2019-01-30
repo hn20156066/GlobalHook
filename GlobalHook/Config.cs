@@ -701,7 +701,7 @@ namespace GH {
 			using (ColorDialog cd = new ColorDialog()) {
 				GHColor color = GHManager.TempSettings.Style.ItemList.FontColor;
 				cd.Color = Color.FromArgb(color.Red, color.Green, color.Blue);
-				Console.WriteLine(color.Red + "," + color.Green + "," + color.Blue);
+				
 				if (cd.ShowDialog() == DialogResult.OK) {
 					GHManager.TempSettings.Style.ItemList.FontColor.SetColor(cd.Color.R, cd.Color.G, cd.Color.B);
 				}
