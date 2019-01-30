@@ -552,8 +552,8 @@ namespace GH {
 				Graphics graph = Graphics.FromImage(bmp);
 
 				if (GHManager.Settings.DrawQuality == 2) {
-					graph.SmoothingMode = SmoothingMode.HighQuality;
-					graph.InterpolationMode = InterpolationMode.HighQualityBilinear;
+					graph.SmoothingMode = SmoothingMode.AntiAlias;
+					graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
 					graph.CompositingQuality = CompositingQuality.HighQuality;
 					graph.TextRenderingHint = TextRenderingHint.AntiAlias;
 					graph.PixelOffsetMode = PixelOffsetMode.HighQuality;

@@ -24,7 +24,7 @@ namespace GH {
 			Magnet = new Magnet_Settings();
 			FitRangeMax = 100;
 			FitRangeMin = 0;
-			DrawQuality = 2;
+			DrawQuality = 1;
 			GroupIconStyle = 0;
 			MysetIconStyle = 0;
 			SkinName = "";
