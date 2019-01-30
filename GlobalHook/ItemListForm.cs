@@ -261,6 +261,14 @@ namespace GH {
 		/// <param name="n">グループ番号</param>
 		public void SetGroup(int n) {
 			if (0 <= n && n < GroupManager.Items.Count) {
+				if (ParentGHForm == 1 && GHManager.MysetList.FormVisible) {
+					GHManager.MysetList.MysetList_Hide();
+					uint pos = GHManager.Settings.Launcher.Pos;
+					if (pos == 0) Left = GHManager.ScreenSize.Left;
+					else if (pos == 1) Top = GHManager.ScreenSize.Top;
+					else if (pos == 2) Left = GHManager.ScreenSize.Right - GHManager.Launcher.Width;
+					else if (pos == 3) Top = GHManager.ScreenSize.Bottom - GHManager.Launcher.Height;
+				}
 				if (!Visible)
 					Visible = true;
 				ParentGHForm = 0;
@@ -281,6 +289,14 @@ namespace GH {
 		/// <param name="n">マイセット番号</param>
 		public void SetMyset(int n) {
 			if (0 <= n && n < MysetManager.Items.Count) {
+				if (ParentGHForm == 0 && FixedActive) {
+					uint pos = GHManager.Settings.Launcher.Pos;
+					Size myset = GHManager.MysetList.Size;
+					if (pos == 0) Left = GHManager.ScreenSize.Left + GHManager.Launcher.Width + myset.Width;
+					else if (pos == 1) Top = GHManager.ScreenSize.Top + GHManager.Launcher.Height + myset.Height;
+					else if (pos == 2) Left = GHManager.ScreenSize.Right - GHManager.Launcher.Width - myset.Width;
+					else if (pos == 3) Top = GHManager.ScreenSize.Bottom - GHManager.Launcher.Height - myset.Height;
+				}
 				if (!Visible)
 					Visible = true;
 				ParentGHForm = 1;
