@@ -24,7 +24,7 @@ namespace GH {
 			Magnet = new Magnet_Settings();
 			FitRangeMax = 100;
 			FitRangeMin = 0;
-			DrawQuality = 1;
+			DrawQuality = 2;
 			GroupIconStyle = 0;
 			MysetIconStyle = 0;
 			SkinName = "";
@@ -52,7 +52,7 @@ namespace GH {
 			public int Offset { get; set; }
 
 			public Launcher_Settings() {
-				Pos = 1;
+				Pos = 0;
 				ReactRange = 1;
 				ShownMouseButton = false;
 				Offset = -1;
