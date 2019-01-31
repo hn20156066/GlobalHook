@@ -39,14 +39,19 @@ namespace GH {
 
 		protected override void Update_Visible() {
 			MouseActive = GHManager.Contains.MysetList || GHManager.Launcher.MysetIcon.IsEntered;
-
-			int cnt = MysetManager.GetActiveIndex();
-			if (cnt != -1) {
-				SelectIndex = cnt;
+			if (MysetManager.Items.Count == 0) {
+				MouseActive = false;
+				FixedActive = false;
 			}
 			else {
-				SelectIndex = -1;
-				NoSelectItem();
+				int cnt = MysetManager.GetActiveIndex();
+				if (cnt != -1) {
+					SelectIndex = cnt;
+				}
+				else {
+					SelectIndex = -1;
+					NoSelectItem();
+				}
 			}
 		}
 
@@ -120,6 +125,15 @@ namespace GH {
 
 		protected override bool Hide_Criteria() {
 			if (FormVisible) {
+				if (MysetManager.Items.Count == 0) {
+					if (!IsAnimation) {
+						GHManager.Launcher.MysetIcon.opened = false;
+						FixedActive = false;
+						return true;
+					}
+				}
+
+
 				if (GHManager.Contains.MysetList || GHManager.Launcher.MysetIcon.IsEntered || (GHManager.ItemList.ParentGHForm == 1 && GHManager.Contains.ItemList || GHManager.ItemList.FormVisible)) {
 					GHManager.Launcher.MysetIcon.opened = true;
 					return false;

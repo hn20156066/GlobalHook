@@ -285,7 +285,12 @@ namespace GH {
 				MenuItem_AutoTilePrev_Click(null, null);
 			}
 			else {
-				MenuItem_AutoTile_Click(null, null);
+				if (vertical) {
+					MenuItem_AutoTile2_Click(null, null);
+				}
+				else {
+					MenuItem_AutoTile_Click(null, null);
+				}
 			}
 		}
 
